@@ -1,102 +1,124 @@
 .container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    background-color: #FFFFFF;
-    border-radius: 15px;
-    margin: 2em;
-    .form {
-
+    bottom: 0;
+    top: 0;
+    position: fixed !important;
+    left: 0;
+    right: 0;
+    background: linear-gradient(108deg, #60ADF3 0%, #97C1E8 100%);
+    width: 100%;
+    gap: 40px;
+    padding: 20px;
+    
+    .formContainer {
         display: flex;
-        flex-direction: column;
+        border-radius: 20px;
+        background: #ECE1A7;
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
         align-items: center;
-        padding: 2em;
 
-        .information {
+        .form {
             display: flex;
             flex-direction: column;
-            .title {
+            align-items: center;
+            border-radius: 20px;
+            background: #ECE1A7;
 
-                color: var(--color-link-default, #5D3D9A);
-                font-family: Inter;
-                font-size: 14px;
-                font-style: normal;
-                font-weight: 500;
-                line-height: 20px;
+            .information {
+                display: flex;
+                flex-direction: column;
+
+                .title {
+
+                    color: var(--color-link-default, #5D3D9A);
+                    font-family: Arial, Helvetica, sans-serif;
+
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 20px;
+                }
+
+                h1 {
+                    color: var(--color-text-neutral-default, #1E1A34);
+                    font-family: Arial, Helvetica, sans-serif;
+
+                    margin: .3em;
+
+                    font-size: 24px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 32px;
+                }
+
+                span {
+                    margin: .5em;
+                }
+
+                .lable {
+                    margin: .5em;
+
+                    color: var(--color-text-neutral-subtle, #474359);
+                    font-family: Arial, Helvetica, sans-serif;
+
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px;
+                }
             }
 
-            h1 {
-                color: var(--color-text-neutral-default, #1E1A34);
-                font-family: Inter;
-                margin: .3em;
-
-                font-size: 24px;
-                font-style: normal;
-                font-weight: 500;
-                line-height: 32px;
-            }
-
-            span {
+            .senha {
                 margin: .5em;
+
+                span {
+                    display: flex;
+                    align-items: flex-start;
+                    flex: 1 0 0;
+                    margin: .5em;
+                }
+
+                input {
+                    display: flex;
+
+                    height: 56px;
+                    padding: 0px 20px 0px 24px;
+                    align-items: center;
+                    gap: 12px;
+                    align-self: stretch;
+                    width: 28em;
+                    border-radius: 8px;
+                    border: 1px solid var(--color-border-input, #C0BFC6);
+                    background: var(--color-backgrounds-input-subtle-default, #FFF);
+                }
             }
 
-            .lable {
-                margin: .5em;
+
+            .dica {
+                width: 31em;
+                margin: 1em;
+                padding: 1em;
+                align-self: stretch;
+                border-radius: 8px;
+                background: var(--color-backgrounds-discovery-subtle-default, #CEBFE8);
 
                 color: var(--color-text-neutral-subtle, #474359);
-                font-family: Inter;
-                font-size: 16px;
+                font-family: Arial, Helvetica, sans-serif;
+
+                font-size: 12px;
                 font-style: normal;
                 font-weight: 400;
-                line-height: 24px;
+                line-height: 16px;
+                letter-spacing: -0.06px;
             }
         }
 
 
-
-        .senha {
-            margin: .5em;
-
-            span {
-                display: flex;
-                align-items: flex-start;
-                flex: 1 0 0;
-                margin: .5em;
-            }
-
-            input {
-                display: flex;
-
-                height: 56px;
-                padding: 0px 20px 0px 24px;
-                align-items: center;
-                gap: 12px;
-                align-self: stretch;
-                width: 28em;
-                border-radius: 8px;
-                border: 1px solid var(--color-border-input, #C0BFC6);
-                background: var(--color-backgrounds-input-subtle-default, #FFF);
-            }
-        }
-
-
-        .dica {
-            width: 31em;
-            margin: 1em;
-            padding: 1em;
-            align-self: stretch;
-            border-radius: 8px;
-            background: var(--color-backgrounds-discovery-subtle-default, #CEBFE8);
-
-            color: var(--color-text-neutral-subtle, #474359);
-            font-family: Inter;
-            font-size: 12px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 16px;
-            letter-spacing: -0.06px;
-        }
     }
 
 
@@ -105,8 +127,11 @@
         align-items: center;
         width: 100%;
         justify-content: space-between;
-        padding: 0.5em;
+        padding: 0.8em 2em;
+
         margin: 0.5em;
+        border-radius: 20px;
+        background: #ECE1A7;
 
         button {
             display: flex;
@@ -116,14 +141,15 @@
             align-items: center;
             gap: 12px;
             border: 1px solid #EEEEED;
+            border-radius: 4px;
+            background: #599E52;
+            color: white;
             cursor: pointer;
-            border-radius: 8px;
-            background: var(--color-backgrounds-disabled-default, #EEEEED);
             transition: all .9s;
 
             &:hover {
-                background: var(--color-backgrounds-disabled-default, #413535);
-                color:#FFFFFF ;
+                background: #315f2c;
+                color: #FFFFFF;
 
             }
         }
