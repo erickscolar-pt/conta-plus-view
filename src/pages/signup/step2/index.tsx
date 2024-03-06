@@ -1,3 +1,4 @@
+import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import styles from './styles.module.scss';
 import { toast } from 'react-toastify';
 
@@ -29,39 +30,40 @@ export default function Step2({ userData, setUserData, nextStep, prevStep }) {
 
   return (
     <div className={styles.container}>
-      <div className={styles.form}>
-        <div className={styles.information}>
-          <span>Senha</span>
-          <h1>Agora, crie uma senha</h1>
-          <span>Crie uma senha forte e garanta segurança para sua conta</span>
-        </div>
+      <div className={styles.formContainer}>
+        <div className={styles.form}>
+          <div className={styles.information}>
+            <h1>Agora, crie uma senha</h1>
+            <span>Crie uma senha forte e garanta segurança para sua conta</span>
+          </div>
 
-        <div className={styles.senha}>
-          <span>Digite a senha</span>
-          <input
-            type="password"
-            placeholder="Senha"
-            value={userData.password}
-            onChange={(e) => setUserData({ ...userData, password: e.target.value })}
-          />
-        </div>
+          <div className={styles.senha}>
+            <span>Digite a senha</span>
+            <input
+              type="password"
+              placeholder="Senha"
+              value={userData.password}
+              onChange={(e) => setUserData({ ...userData, password: e.target.value })}
+            />
+          </div>
 
-        <div className={styles.senha}>
-          <span>Repita a senha</span>
-          <input
-            type="password"
-            placeholder="Confirme a senha"
-            value={userData.confirmPassword}
-            onChange={(e) => setUserData({ ...userData, confirmPassword: e.target.value })}
-          />
-        </div>
-        <div className={styles.dica}>
-          <span>Dica para a sua senha:</span> ela deve conter no mínimo 8 caracteres, sendo ao menos 1 letra maiúscula, 1 número e 1 caractere especial.
+          <div className={styles.senha}>
+            <span>Repita a senha</span>
+            <input
+              type="password"
+              placeholder="Confirme a senha"
+              value={userData.confirmPassword}
+              onChange={(e) => setUserData({ ...userData, confirmPassword: e.target.value })}
+            />
+          </div>
+          <div className={styles.dica}>
+            <span>Dica para a sua senha:</span> ela deve conter no mínimo 8 caracteres, sendo ao menos 1 letra maiúscula, 1 número e 1 caractere especial.
+          </div>
         </div>
       </div>
       <div className={styles.buttonContainer}>
-        <button onClick={handlePrevious}>Voltar</button>
-        <button onClick={handleNext}>Avançar</button>
+        <button onClick={handlePrevious}><FaArrowLeft/> Voltar</button>
+        <button onClick={handleNext}>Avançar <FaArrowRight /></button>
       </div>
     </div>
   );
