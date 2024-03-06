@@ -3,58 +3,14 @@
     display: flex;
     align-items: center;
     gap: 24px;
-    border-radius: 16px;
-    background: var(--color-backgrounds-neutral-bold-default, #1E1A34);
     box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.08);
     color: #fff;
     padding: 10px 20px;
     margin: .5em 1em 0 1em;
-
-    nav{
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: flex-end;
-    }
-
-    nav ul {
-        list-style: none;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-    }
-
-    nav ul li {
-        display: inline;
-        margin-right: 20px;
-    
-        button {
-            display: flex;
-            height: 44px;
-            padding: 0px 16px;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid #EEEEED;
-            border-radius: 6px;
-            background: var(--color-backgrounds-neutral-subtle-default, #EEEEED);
-    
-            color: var(--color-text-neutral-default, #1E1A34);
-            font-family: Inter;
-            font-size: 14px;
-            font-style: normal;
-            font-weight: 500;
-            line-height: 20px;
-
-            cursor: pointer;
-        }
-    }
-
-    nav ul li a {
-        text-decoration: none;
-        color: #fff;
+    border-radius: 20px;
+    background: #599E52;
+    justify-content: space-between;
+    .perfil{
+        cursor: pointer;
     }
 }
