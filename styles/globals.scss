@@ -1,0 +1,56 @@
+html {
+    width: 100%;
+    background: #EEEEED;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+:root {
+
+    --letra-nav: #0A53A8;
+
+    --btn-1: #1260BC;
+    --btn-2: #0A53A8;
+    --btn-3: #6637A0;
+    --btn-4: #26BB85;
+
+
+    --roxo: #1E1A34;
+    --verde: #BEDE18;
+
+    --white: #FFF;
+    --black: #000;
+    --cinza: #D6D8D9;
+}
+
+/* Works on Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 4px;
+}
+
+*::-webkit-scrollbar-track {
+    background: rgb(112, 111, 111);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: rgb(56, 55, 58);
+    border-radius: 10px;
+    border: 1px solid rgb(59, 56, 56);
+}

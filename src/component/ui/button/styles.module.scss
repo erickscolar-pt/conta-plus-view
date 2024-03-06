@@ -1,0 +1,61 @@
+.btn {
+  height: 32px;
+  width: 100%;
+  border: none;
+  font-family: "Arial";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: -0.015em;
+  color: #FFFFFF;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-content: center;
+  transition: all 0.3s;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.25));
+  cursor: pointer;
+
+  border-radius: 4px;
+  background: #599E52;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    animation: moveInBottom 2s ease-out;
+    animation-fill-mode: backwards;
+    background: linear-gradient(90.61deg, #1a3426 2.18%, #1a3422 7.06%, #1a3427 90.99%, #248A7E 99.88%);
+  }
+
+  &[disabled] {
+    cursor: not-allowed;
+
+    svg {
+      animation: animate 2s infinite;
+    }
+  }
+}
+
+@keyframes animate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes moveInBottom {
+  0% {
+    background: linear-gradient(90.61deg, #1a3427 2.18%, #1a3427 48.43%, #1a3425 99.83%);
+    opacity: 0.4;
+  }
+
+  100% {
+    background: linear-gradient(90.61deg, #1a341b 2.18%, #1a341e 7.06%, #1a341e 90.99%, #1a3420 99.88%);
+    opacity: 1;
+  }
+}
