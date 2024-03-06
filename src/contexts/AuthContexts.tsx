@@ -108,7 +108,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       toast.success("Bem vindo!")
 
       //Redirecionar para pagina atendimento
-      Router.push('/geradordelink')
+      Router.push('/ganhos')
 
 
     } catch (err) {

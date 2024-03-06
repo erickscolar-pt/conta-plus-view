@@ -4,13 +4,13 @@ import Head from "next/head"
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify'
 import { AuthProvider } from "../contexts/AuthContexts";
-import GeradorDeLink from "./geradordelink";
+import ganhos from "./ganhos";
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
         <>
             <Head>
-                <title>Redireciona Link</title>
+                <title>Conta+</title>
 
 
             </Head>

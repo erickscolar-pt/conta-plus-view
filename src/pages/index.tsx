@@ -11,6 +11,7 @@ import { AuthContexts } from '../contexts/AuthContexts';
 import { toast } from "react-toastify";
 import { canSSRGuest } from "../utils/canSSRGuest";
 import Link from "next/link";
+import Router from 'next/router'
 
 export default function Home() {
   const { signIn } = useContext(AuthContexts)
@@ -38,7 +39,6 @@ export default function Home() {
     await signIn(data)
     setLoading(false)
   }
-
 
 
 
@@ -73,11 +73,12 @@ export default function Home() {
             >
               Entrar
             </ButtonEntrar>
-            <button
+            <div
               className={styles.cadastro}
+              onClick={()=>{Router.push('/signup')}}
             >
               Cadastrar
-            </button>
+            </div>
             <div className={styles.container_image}>
               <Image width={50} src={imgLogo} alt="" />
             </div>

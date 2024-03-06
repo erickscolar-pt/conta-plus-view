@@ -1,0 +1,68 @@
+.content {
+    display: flex;
+    padding: 1em ;
+    max-width: 20%;
+    .menuLateral {
+        border-radius: 20px;
+        background: #599E52;
+        padding: 1em ;
+        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+        .listbutton {
+            display: flex;
+            flex-direction: column;
+
+            button {
+                width: 50px;
+                height: 50px;
+                flex-shrink: 0;
+                border-radius: 10px;
+                margin: 1em 0;
+                border: none;
+                cursor: pointer;
+                filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+                transition: width 1s, height 1s;
+                img {
+                    width: 2em; 
+                    height: 2em; 
+                }
+                &:hover{
+                    width: 51px;
+                    height: 51px;
+                }
+            }
+
+            .ganhos{
+                background: #5ABB8C;
+                &:hover{
+                    background: #82cca8;
+                }
+            }
+            
+            .gastos{
+                background: #BF5252;
+                &:hover{
+                    background: #e47b7b;
+                }
+            }
+
+            .metas{
+                background: #138DB4;
+                &:hover{
+                    background: #5cb0cc;
+                }
+            }
+
+            .dashboard{
+                background: #A663B1;
+                &:hover{
+                    background: #d39adb;
+                }
+            }
+
+            .exit{
+                background: #FFF;
+                margin-top: 6em;
+            }
+        }
+    }
+}
