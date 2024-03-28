@@ -5,7 +5,7 @@ import Image from 'next/image';
 import imgLogo from '../../public/logo_login.png';
 import imgfundo from '../../public/img_login.png'
 
-import { ButtonEntrar } from "@/component/ui/button";
+import { Button } from "@/component/ui/button";
 
 import { AuthContexts } from '../contexts/AuthContexts';
 import { toast } from "react-toastify";
@@ -67,12 +67,12 @@ export default function Home() {
               value={password}
               onChange={(e) => setPassword(e.target.value)} />
 
-            <ButtonEntrar
+            <Button
               type="submit"
               loading={loading}
             >
               Entrar
-            </ButtonEntrar>
+            </Button>
             <div
               className={styles.cadastro}
               onClick={()=>{Router.push('/signup')}}

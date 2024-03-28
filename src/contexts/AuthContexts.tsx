@@ -81,7 +81,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       console.log(response.data);
 
-      const { id,email, token } = response.data[0];
+      const { id,email, token } = response.data;
 
 
 
@@ -112,6 +112,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
 
     } catch (err) {
+      console.log(err)
       toast.error("Erro ao acessar.")
     }
   }

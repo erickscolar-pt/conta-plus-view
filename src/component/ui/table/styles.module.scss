@@ -1,0 +1,49 @@
+.table {
+    width: 100%;
+    border-radius: 16px;
+    border-spacing: 0.4em 0.6em;
+}
+
+.headerCell {
+    background-color: #f0f0f000;
+    border: none;
+    border-radius: 5px;
+
+    padding: 8px;
+    font-family: "Arial";
+
+    color: #000;
+    text-align: center;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.3px;
+}
+
+.dataCell {
+    border: none;
+    padding: 8px;
+    margin: 8px;
+    font-family: "Arial";
+    gap: 16px;
+    color: #FFF;
+    text-align: center;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.3px;
+
+    border-radius: 5px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+}
+
+.evenRow {
+    background-color: #f9f9f9;
+}
+
+.oddRow {
+    background-color: #fff;
+}

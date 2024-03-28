@@ -10,7 +10,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{
  children: ReactNode,
 }
 
-export function Button({loading, children, bg ,color ,...rest}: ButtonProps){
+export function ButtonPages({loading, children, bg ,color ,...rest}: ButtonProps){
     return(
         <button
         style={{ backgroundColor: bg ? bg : '#599E52', color: color ? color : '#FFF' }}
