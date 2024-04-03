@@ -5,7 +5,7 @@
     align-items: center;
     width: 100%;
 
-    .ganhosComponent{
+    .ganhosComponent {
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
@@ -14,12 +14,197 @@
         justify-content: center;
         width: 100%;
         margin: 0 1em 0 0;
-        .ganhos{
+
+        .ganhos {
             width: 100%;
             border-radius: 10px;
             background: #F0F1E8;
             box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
             padding: 2em;
+
+            .componentInputs {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                .componentEdit {
+                    width: 65%;
+                    padding: 1em;
+
+                    .edit {
+                        display: flex;
+                        width: 100%;
+                        align-items: center;
+                        justify-content: space-between;
+                        flex-wrap: wrap;
+
+                        label {
+                            color: #000;
+                            text-align: center;
+                            font-family: "Arial";
+                            font-size: 20px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: normal;
+                            letter-spacing: -0.48px;
+                        }
+
+                        input {
+                            margin-left: 1em;
+                            margin-bottom: 0.5em;
+                            border: none;
+                            font-family: "Arial";
+                            font-size: 15px;
+                            text-align: center;
+                            border-radius: 10px;
+                            background: #FFF;
+                            padding: 1em;
+                            flex-shrink: 0;
+                            width: 75%;
+                        }
+                    }
+                }
+
+
+                .componentLinkAccept {
+                    width: 25%;
+
+                    h1 {
+                        color: #000;
+                        text-align: center;
+                        font-family: Arial, Helvetica, sans-serif;
+                        font-size: 20px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: normal;
+                        letter-spacing: -0.3px;
+                    }
+
+                    .containerPeaples {
+                        max-width: 100%;
+                        .peaples {
+                            border-radius: 10px;
+                            background: #599E52;
+                            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+
+                            .remove {
+                                display: flex;
+                                flex-direction: row;
+                                padding: 1em;
+                                flex-wrap: wrap;
+                                align-items: center;
+                                justify-content: center;
+                                align-content: center;
+
+                                p {
+                                    cursor: context-menu;
+                                    color: #000;
+                                    text-align: center;
+                                    font-family: Arial, Helvetica, sans-serif;
+                                    font-size: 20px;
+                                    font-style: normal;
+                                    font-weight: 400;
+                                    line-height: normal;
+                                    letter-spacing: -0.3px;
+                                    text-align: center;
+                                    border-radius: 5px 0px 0px 5px;
+                                    background: #FFF;
+                                    box-shadow: 0px 4px 4px 0px rgba(255, 255, 255, 0.25);
+                                    padding: .5em 1em;
+                                }
+
+                                button {
+                                    border: 1px solid #570E0E;
+                                    cursor: pointer;
+                                    border-radius: 0px 5px 5px 0px;
+                                    background: #570E0E;
+                                    box-shadow: 0px 4px 4px 0px rgba(255, 255, 255, 0.25);
+                                    padding: .5em 1em;
+                                    transition: all 1s;
+                                    &:hover{
+                                        background: #570e0ec4;
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+
+
+            .componentButtons {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                align-items: flex-end;
+                align-content: center;
+
+                .link {
+                    display: flex;
+                    flex-direction: column;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    width: 50%;
+
+                    p {
+                        color: #000;
+                        text-align: center;
+                        font-family: "Arial";
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: normal;
+                        letter-spacing: -0.225px;
+                        padding: 1em;
+                    }
+
+                    button {
+                        border: none;
+                        border-radius: 10px;
+                        background: #0E1557;
+                        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                        color: white;
+                        cursor: pointer;
+                        text-align: center;
+                        font-family: "Arial";
+                        font-size: 15px;
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: normal;
+                        letter-spacing: -0.225px;
+                        padding: 1em;
+                        transition: all 1s;
+
+                        &:hover {
+                            background: #0e1557b9;
+                        }
+                    }
+                }
+
+                button {
+                    border: none;
+                    color: white;
+                    cursor: pointer;
+                    border-radius: 10px;
+                    background: #0E5734;
+                    text-align: center;
+                    font-family: "Arial";
+                    font-size: 15px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                    letter-spacing: -0.225px;
+                    padding: 1em;
+                    transition: all 1s;
+
+                    &:hover {
+                        background: #0e5734c5;
+                    }
+
+                }
+            }
         }
     }
 }

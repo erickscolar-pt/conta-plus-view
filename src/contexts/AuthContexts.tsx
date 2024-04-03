@@ -1,13 +1,13 @@
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useEffect, useState } from 'react';
 import { api } from '../services/apiCliente';
 import { toast } from 'react-toastify'
-import { destroyCookie, setCookie } from 'nookies';
+import { destroyCookie, parseCookies, setCookie } from 'nookies';
 import Router from 'next/router'
+import { isTokenExpired } from '@/utils/isTokenExpired';
 
 type AuthContextData = {
   usuario: UsuarioProps;
   isAuthenticated: boolean;
-  handleLink: (credentials: ReqLinkProps) => Promise<void>;
   signIn: (credentials: SignInProps) => Promise<void>;
   signOut: () => void;
   signUp: (credentials: SignUpProps) => Promise<void>
@@ -27,6 +27,7 @@ type SignInProps = {
 type SignUpProps = {
   nome: string,
   email: string,
+  username: string,
   senha: string,
   codigoRecomendacao: string
 }
@@ -60,15 +61,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const isAuthenticated = !!usuario;
 
-
-  async function handleLink({ userId, urlReferencia }: ReqLinkProps) {
-    try {
-      const response = await api.post('user/generate-link', { userId, urlReferencia })
-      console.log(response)
-    } catch (e) {
-      console.log(e)
+  useEffect(() => {
+    // Verifica se o token expirou ao renderizar o componente de layout
+    if (isTokenExpired()) {
+      // Redireciona o usuário para a página de login se o token expirou
+      signOut()
     }
-  }
+  }, []);
 
   async function signIn({ username, password }: SignInProps) {
 
@@ -79,7 +78,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         password
       })
 
-      console.log(response.data);
 
       const { id,email, token } = response.data;
 
@@ -117,30 +115,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  async function signUp({ nome,email, senha, codigoRecomendacao }: SignUpProps) {
-    ////console.log('login => ' + username)
-    ////console.log('senha => ' + password)
+  async function signUp({ nome,email, username, senha, codigoRecomendacao }: SignUpProps) {
 
     try {
       const response = await api.post('/user/signup', {
         nome,
         email,
+        username,
         senha,
         codigoRecomendacao
       })
-      console.log(response)
       toast.success("Conta criada com sucesso.")
 
       Router.push('/')
 
 
     } catch (err) {
+      console.log(err)
       toast.error("Erro ao cadastrar usuario.")
     }
   }
 
   return (
-    <AuthContexts.Provider value={{ usuario, isAuthenticated, signIn, signOut, signUp, handleLink  }}>
+    <AuthContexts.Provider value={{ usuario, isAuthenticated, signIn, signOut, signUp  }}>
       {children}
     </AuthContexts.Provider>
   )

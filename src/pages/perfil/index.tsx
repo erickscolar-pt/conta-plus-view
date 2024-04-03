@@ -1,12 +1,70 @@
-import MenuLateral from "@/component/menulateral";
-import Header from "@/component/header";
-import { canSSRAuth } from "@/utils/canSSRAuth";
-import styles from './styles.module.scss'
-import iconGanhos from '../../../public/icons/icon_ganhos_green.png'
-import Image from "next/image";
-import { Title } from "@/component/ui/title";
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { FaCopy } from 'react-icons/fa';
+import { TiUserDeleteOutline } from "react-icons/ti";
+import Header from '@/component/header';
+import MenuLateral from '@/component/menulateral';
+import { canSSRAuth } from '@/utils/canSSRAuth';
+import styles from './styles.module.scss';
+import { setupAPIClient } from '@/services/api';
+import { Usuario } from '@/type';
+import { Title } from '@/component/ui/title';
 
-export default function Perfil() {
+interface Usuarios {
+    usuario: Usuario;
+}
+
+export default function Perfil({ usuario }: Usuarios) {
+    const [nome, setNome] = useState(usuario.nome);
+    const [username, setUsername] = useState(usuario.username);
+    const [copied, setCopied] = useState(false);
+
+    const handleCopyLink = () => {
+        navigator.clipboard.writeText(`localhost:3001/codigo/${usuario.codigoReferencia}`);
+        setCopied(true);
+        toast.success('Link do convite copiado!', {
+            position: toast.POSITION.TOP_CENTER,
+        });
+    };
+
+    const handleNomeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNome(event.target.value);
+    };
+
+    const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setUsername(event.target.value);
+    };
+
+    const handleSaveChanges = async () => {
+        try {
+            const apiClient = setupAPIClient();
+            await apiClient.put('/user/att', { nome, username });
+            toast.success('Alterações salvas com sucesso!', {
+                position: toast.POSITION.TOP_CENTER,
+            });
+        } catch (error) {
+            console.error('Erro ao salvar alterações:', error.message);
+            toast.error('Erro ao salvar as alterações. Tente novamente mais tarde.', {
+                position: toast.POSITION.TOP_CENTER,
+            });
+        }
+    };
+
+    async function handleDeleteVinculo(id:number){
+        try {
+            const apiClient = setupAPIClient();
+            await apiClient.delete(`/vinculo/${id}`);
+            toast.warning('Conta desvinculada!', {
+                position: toast.POSITION.TOP_CENTER,
+            });
+        } catch (error) {
+            console.error('Erro ao salvar alterações:', error.message);
+            toast.error('Erro ao salvar as alterações. Tente novamente mais tarde.', {
+                position: toast.POSITION.TOP_CENTER,
+            });
+        } 
+    }
+
     return (
         <>
             <Header />
@@ -15,7 +73,60 @@ export default function Perfil() {
                 <div className={styles.ganhosComponent}>
                     <Title textColor="#000000" color="#F0F1E8" icon="" text="PERFIL" />
                     <div className={styles.ganhos}>
-                        <h1>teste</h1>
+                        <div className={styles.componentInputs}>
+                            <div className={styles.componentEdit}>
+                                <div className={styles.edit}>
+                                    <label>Nome:</label>
+                                    <input type="text" value={nome} onChange={handleNomeChange} />
+                                </div>
+                                <div className={styles.edit}>
+                                    <label>Nome de Usuário:</label>
+                                    <input type="text" value={username} onChange={handleUsernameChange} />
+                                </div>
+                                <div className={styles.edit}>
+                                    <label>Email:</label>
+                                    <input style={{ cursor: 'no-drop' }} type="text" value={usuario.email} readOnly />
+                                </div>
+                            </div>
+                            <div className={styles.componentLinkAccept}>
+                                {usuario.contavinculo.length > 0 &&
+                                    <>
+                                        <div className={styles.containerPeaples}>
+                                            <h1>Pessoas que compartilho contas</h1>
+                                            <div className={styles.peaples}>
+                                                {
+                                                    usuario.contavinculo.map((usuario) => {
+                                                        return (
+                                                            <div className={styles.remove}>
+                                                                <p>{usuario.username}</p>
+                                                                <button onClick={() => {handleDeleteVinculo(usuario.id)}} type="button"><TiUserDeleteOutline color='#fff' size={25} /></button>
+                                                            </div>
+                                                        )
+                                                    })
+                                                }
+                                            </div>
+                                        </div>
+
+                                    </>
+
+                                }
+                            </div>
+                        </div>
+
+                        <div className={styles.componentButtons}>
+                            <div className={styles.link}>
+                                <p>
+                                    Deseja compartilhar contas com alguém ? Selecione um usuário já cadastrado e compartilhe sua conta ou mande um convite
+                                    Atenção, você pode convidar até 2 pessoas para compartilhar contas com você!
+                                </p>
+                                <button onClick={handleCopyLink}>
+                                    {copied ? 'Link Copiado, click para copiar novamente!' : <><FaCopy /> Copiar Link do Convite</>}
+                                </button>
+                            </div>
+
+                            <button className={styles.save} onClick={handleSaveChanges}>Salvar Alterações</button>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -24,8 +135,21 @@ export default function Perfil() {
 }
 
 export const getServerSideProps = canSSRAuth(async (ctx) => {
+    const apiClient = setupAPIClient(ctx);
 
-    return {
-        props: {}
+    try {
+        const response = await apiClient.get('/user/get');
+        return {
+            props: {
+                usuario: response.data
+            }
+        };
+    } catch (error) {
+        console.error('Erro ao buscar usuario:', error.message);
+        return {
+            props: {
+                usuario: []
+            }
+        };
     }
 })

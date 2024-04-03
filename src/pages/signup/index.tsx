@@ -11,7 +11,9 @@ export default function Cadastro() {
   const { signUp } = useContext(AuthContexts)
   const [step, setStep] = useState(1);
   const [userData, setUserData] = useState({
+    nome: '',
     email: '',
+    username: '',
     password: '',
     confirmPassword: '',
     referralCode: '',
@@ -29,11 +31,11 @@ export default function Cadastro() {
     // Envie os dados do usuário para o servidor ou realize outra ação
     await signUp({
       email: userData.email,
+      username: userData.username,
       senha: userData.password,
       codigoRecomendacao: userData.referralCode,
-      nome: ""
+      nome: userData.nome
     })
-    console.log('Dados do usuário:', userData);
   };
 
   return (

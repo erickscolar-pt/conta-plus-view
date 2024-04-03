@@ -20,7 +20,9 @@
             border-radius: 10px;
             background: #B5E1A0;
             box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-            padding: 2em;
+            padding: 2rem;
+            margin-bottom: 1rem;
+            height: 100%;
 
             .filters {
                 display: flex;
@@ -30,14 +32,50 @@
                 gap: 10px;
             }
 
-            .footercreate{
+            .footercreate {
                 display: flex;
                 width: 100%;
                 flex-wrap: wrap;
-                justify-content: flex-end;
-                button{
+                justify-content: space-between;
+                align-items: center;
+                align-content: center;
+                flex-direction: row;
+                text-align: center;
+                font-family: Arial, Helvetica, sans-serif;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+                letter-spacing: -0.3px;
+
+                button {
                     width: max-content;
                     padding: 1.5em 3em;
+                }
+
+                .total {
+                    display: flex;
+                    border-radius: 5px;
+                    background: #0E5734;
+                    gap: 10px;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    align-content: center;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0.5rem;
+                    width: 60%;
+
+                    p {
+                        color: #FFF;
+                        font-size: 20px;
+
+                    }
+
+                    span {
+                        border-radius: 5px;
+                        background: #FFF;
+                        padding: .5em;
+                    }
                 }
             }
         }
@@ -81,6 +119,37 @@
     font-size: 15px;
     color: white;
     gap: 6px;
+
+    select {
+        margin: 5px;
+        border: none;
+        padding: 5px;
+        border-radius: 5px;
+        font-family: "Arial";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        text-align: center;
+
+        option {
+            margin: 5px;
+            border: none;
+            padding: 5px;
+            border-radius: 5px;
+            font-family: "Arial";
+            font-style: normal;
+            font-weight: 400;
+            font-size: 12px;
+            text-align: center;
+            transition: all 1s;
+
+            &:hover {
+                background-color: #f0f0f0;
+
+            }
+        }
+
+    }
 
     label {
         display: flex;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './styles.module.scss'; // Importe o arquivo de estilos CSS
 import { ButtonPages } from '../buttonPages';
 
@@ -10,13 +10,7 @@ export default function Calendar({onDateSelect}:CalendarProps) {
     const [isVisible, setIsVisible] = useState(false);
     const [selectedMonth, setSelectedMonth] = useState(0);
     const [selectedYear, setSelectedYear] = useState(0);
-    const [daysOfWeek, setDaysOfWeek] = useState('')
     const [selectedDay, setSelectedDay] = useState<number | null>(null);
-
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = date.getMonth()
-    const days = new Date(year, month, 0).getDate()
 
     const toggleCalendar = () => {
         setIsVisible(!isVisible);
@@ -33,6 +27,8 @@ export default function Calendar({onDateSelect}:CalendarProps) {
         setSelectedDate(`${day < 10 ? '0'+day : day}/${selectedMonth < 10 ? '0'+selectedMonth : selectedMonth}/${selectedYear}`);
         onDateSelect(date)
     };
+
+
 
     const handlePrevMonth = () => {
         let newMonth = selectedMonth - 1;
@@ -96,7 +92,7 @@ export default function Calendar({onDateSelect}:CalendarProps) {
         const currentYear = new Date().getFullYear();
 
         for (let i = currentYear - 10; i <= currentYear + 50; i++) {
-            years.push(<option key={i} defaultValue={2024} value={i}>{i}</option>);
+            years.push(<option key={i} value={i}>{i}</option>);
         }
 
         return years;
@@ -104,7 +100,7 @@ export default function Calendar({onDateSelect}:CalendarProps) {
 
     return (
         <div className={styles.calendar}>
-            <input type="text" onFocus={toggleCalendar} placeholder="Selecione a data" value={selectedDate || ''} />
+            <input type="text" onFocus={toggleCalendar} placeholder="Selecione a data" defaultValue={selectedDate || ''} />
             {isVisible && (
                 <div className={styles.container}>
                     <div className={styles.header}>
@@ -127,7 +123,7 @@ export default function Calendar({onDateSelect}:CalendarProps) {
                     <div className={styles.days}>
                         {renderDays()}
                     </div>
-                    <ButtonPages style={{marginTop: '2em'}} onClick={() => toggleCalendar()}>Selecionar</ButtonPages>
+                    <ButtonPages style={{marginTop: '1em'}} onClick={() => toggleCalendar()}>Selecionar</ButtonPages>
                 </div>
             )}
         </div>
