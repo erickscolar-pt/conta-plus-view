@@ -1,12 +1,30 @@
+import React from 'react';
+
 import { useContext, useState } from 'react';
 import styles from './styles.module.scss'
 import { FaArrowLeft, FaCheck } from 'react-icons/fa';
 
+interface Step3Props {
+  userData: {
+    referralCode: string;
+  };
+  setUserData: (referralCode: string) => void;
+  handleFormSubmit: () => void;
+  prevStep: () => void;
+}
 
-export default function Step3({ userData, setUserData, handleFormSubmit, prevStep }) {
+export default function Step3({ userData={referralCode:""}, setUserData, handleFormSubmit, prevStep }: Step3Props) {
+  const [referralCode, setReferralCode] = useState( userData.referralCode || "")
+
   const handlePrevious = () => {
+
     prevStep();
   };
+
+  function handleSub() {
+    setUserData(referralCode)
+    handleFormSubmit()
+  }
 
   return (
     <div className={styles.container}>
@@ -22,8 +40,8 @@ export default function Step3({ userData, setUserData, handleFormSubmit, prevSte
             <input
               type="text"
               placeholder="Código de Indicação"
-              value={userData.referralCode}
-              onChange={(e) => setUserData({ ...userData, referralCode: e.target.value })}
+              value={referralCode}
+              onChange={(e) => setReferralCode(e.target.value)}
             />
             <span className={styles.info}>Esta etapa não é obrigatória</span>
           </div>
@@ -34,8 +52,8 @@ export default function Step3({ userData, setUserData, handleFormSubmit, prevSte
 
 
       <div className={styles.buttonContainer}>
-        <button onClick={handlePrevious}><FaArrowLeft/> Voltar</button>
-        <button onClick={handleFormSubmit}>Finalizar <FaCheck/></button>
+        <button onClick={handlePrevious}><FaArrowLeft /> Voltar</button>
+        <button onClick={handleSub}>Finalizar <FaCheck /></button>
       </div>
 
     </div>

@@ -1,32 +1,52 @@
+import React, { useState } from 'react';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import styles from './styles.module.scss';
 import { toast } from 'react-toastify';
 
-export default function Step2({ userData, setUserData, nextStep, prevStep }) {
+interface Step2Props {
+  userData: {
+    password: string;
+    confirmPassword: string;
+  };
+  setUserData: (
+    password: string,
+    confirmPassword: string
+  ) => void;
+  nextStep: () => void;
+  prevStep: () => void;
+}
 
-  const isPasswordValid = (password) => {
+export default function Step2({ userData={password:"",confirmPassword:""}, setUserData, nextStep, prevStep }: Step2Props)  {
+  const [password, setPassword] = useState(userData.password ||"")
+  const [confirmPassword, setConfirmPassword] = useState(userData.confirmPassword || "")
+
+  const isPasswordValid = (password: string): boolean => {
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     return passwordRegex.test(password);
   };
 
   const handleNext = () => {
-    if (!isPasswordValid(userData.password)) {
-
-      toast.warning('A senha deve ter no mínimo 8 caracteres, incluindo pelo menos 1 letra maiúscula, 1 número e 1 caractere especial.', {
-        position: toast.POSITION.TOP_CENTER
-      });
-    } else if (userData.password !== userData.confirmPassword) {
-      toast.warning('As senhas não coincidem.', {
-        position: toast.POSITION.TOP_CENTER
-      });
+    if (!isPasswordValid(password)) {
+      showToast('A senha deve ter no mínimo 8 caracteres, incluindo pelo menos 1 letra maiúscula, 1 número e 1 caractere especial.');
+    } else if (password !== confirmPassword) {
+      showToast('As senhas não coincidem.');
     } else {
+      setUserData(password, confirmPassword)
       nextStep();
+      
     }
   };
 
   const handlePrevious = () => {
     prevStep();
   };
+
+  const showToast = (message: string) => {
+    toast.warning(message, {
+      position: toast.POSITION.TOP_CENTER
+    });
+  };
+  
 
   return (
     <div className={styles.container}>
@@ -42,8 +62,8 @@ export default function Step2({ userData, setUserData, nextStep, prevStep }) {
             <input
               type="password"
               placeholder="Senha"
-              value={userData.password}
-              onChange={(e) => setUserData({ ...userData, password: e.target.value })}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
@@ -52,8 +72,8 @@ export default function Step2({ userData, setUserData, nextStep, prevStep }) {
             <input
               type="password"
               placeholder="Confirme a senha"
-              value={userData.confirmPassword}
-              onChange={(e) => setUserData({ ...userData, confirmPassword: e.target.value })}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
           <div className={styles.dica}>
@@ -67,4 +87,4 @@ export default function Step2({ userData, setUserData, nextStep, prevStep }) {
       </div>
     </div>
   );
-}
+};
