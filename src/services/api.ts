@@ -7,7 +7,7 @@ export function setupAPIClient(ctx = undefined){
   let cookies = parseCookies(ctx);
 
   const api = axios.create({
-    baseURL: 'http://localhost:3000',
+    baseURL: 'https://backend-conta-plus-eeb2635e01ad.herokuapp.com',
     headers: {
       Authorization: `Bearer ${cookies['@nextauth.token']}`
     }

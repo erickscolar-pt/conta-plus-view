@@ -21,7 +21,7 @@ export default function Perfil({ usuario }: Usuarios) {
     const [copied, setCopied] = useState(false);
 
     const handleCopyLink = () => {
-        navigator.clipboard.writeText(`localhost:3001/codigo/${usuario.codigoReferencia}`);
+        navigator.clipboard.writeText(`https://backend-conta-plus-eeb2635e01ad.herokuapp.com/codigo/${usuario.codigoReferencia}`);
         setCopied(true);
         toast.success('Link do convite copiado!', {
             position: toast.POSITION.TOP_RIGHT,
