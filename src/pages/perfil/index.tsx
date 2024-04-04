@@ -9,6 +9,7 @@ import styles from './styles.module.scss';
 import { setupAPIClient } from '@/services/api';
 import { Usuario } from '@/type';
 import { Title } from '@/component/ui/title';
+import { isValidUsername } from '@/helper';
 
 interface Usuarios {
     usuario: Usuario;
@@ -23,7 +24,7 @@ export default function Perfil({ usuario }: Usuarios) {
         navigator.clipboard.writeText(`localhost:3001/codigo/${usuario.codigoReferencia}`);
         setCopied(true);
         toast.success('Link do convite copiado!', {
-            position: toast.POSITION.TOP_CENTER,
+            position: toast.POSITION.TOP_RIGHT,
         });
     };
 
@@ -37,15 +38,24 @@ export default function Perfil({ usuario }: Usuarios) {
 
     const handleSaveChanges = async () => {
         try {
+            if (!isValidUsername(username)) {
+                toast.error('O nome de usuário deve conter apenas letras, números e caracteres especiais permitidos.', {
+                  position: toast.POSITION.BOTTOM_RIGHT
+                });
+                toast.warning('Exemplo: nome_de_usuario', {
+                    position: toast.POSITION.BOTTOM_CENTER
+                  });
+                return;
+              }
             const apiClient = setupAPIClient();
             await apiClient.put('/user/att', { nome, username });
             toast.success('Alterações salvas com sucesso!', {
-                position: toast.POSITION.TOP_CENTER,
+                position: toast.POSITION.BOTTOM_RIGHT,
             });
         } catch (error) {
             console.error('Erro ao salvar alterações:', error.message);
             toast.error('Erro ao salvar as alterações. Tente novamente mais tarde.', {
-                position: toast.POSITION.TOP_CENTER,
+                position: toast.POSITION.BOTTOM_RIGHT,
             });
         }
     };
@@ -55,7 +65,7 @@ export default function Perfil({ usuario }: Usuarios) {
             const apiClient = setupAPIClient();
             await apiClient.delete(`/vinculo/${id}`);
             toast.warning('Conta desvinculada!', {
-                position: toast.POSITION.TOP_CENTER,
+                position: toast.POSITION.TOP_RIGHT,
             });
         } catch (error) {
             console.error('Erro ao salvar alterações:', error.message);
@@ -71,7 +81,7 @@ export default function Perfil({ usuario }: Usuarios) {
             <div className={styles.component}>
                 <MenuLateral />
                 <div className={styles.ganhosComponent}>
-                    <Title textColor="#000000" color="#F0F1E8" icon="" text="PERFIL" />
+                    <Title textColor="#000000" color="#F0F1E8" text="PERFIL" />
                     <div className={styles.ganhos}>
                         <div className={styles.componentInputs}>
                             <div className={styles.componentEdit}>
@@ -116,8 +126,7 @@ export default function Perfil({ usuario }: Usuarios) {
                         <div className={styles.componentButtons}>
                             <div className={styles.link}>
                                 <p>
-                                    Deseja compartilhar contas com alguém ? Selecione um usuário já cadastrado e compartilhe sua conta ou mande um convite
-                                    Atenção, você pode convidar até 2 pessoas para compartilhar contas com você!
+                                    Deseja compartilhar contas com alguém ? Click e compartilhe seu link com um amigo já cadastrado, assim que ele acessar o link vocês estaram vinculados e você poderá compartilhar contas, sonhos e rendas!
                                 </p>
                                 <button onClick={handleCopyLink}>
                                     {copied ? 'Link Copiado, click para copiar novamente!' : <><FaCopy /> Copiar Link do Convite</>}

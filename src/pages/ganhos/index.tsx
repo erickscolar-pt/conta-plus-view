@@ -15,6 +15,7 @@ import { Button } from "@/component/ui/button";
 import { ButtonPages } from "@/component/ui/buttonPages";
 import Calendar from "@/component/ui/calendar";
 import { toast } from "react-toastify";
+import InputMoney from "@/component/ui/inputMoney";
 
 interface Ganhos {
     rendas: Rendas[];
@@ -26,6 +27,7 @@ interface RequestData {
     data_inclusao?: Date;
     vinculo_id?: number; // O campo vinculo_id é opcional
 }
+
 export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
     const [isModalEdit, setIsModalEdit] = useState(false);
     const [isModalCreate, setIsModalCreate] = useState(false);
@@ -48,9 +50,9 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
 
     const columns = [
         { title: 'Valor', key: 'valor', formatter: formatCurrency },
-        { title: 'Recebido de:', key: 'nome_renda' },
-        { title: 'Vinculado á:', key: 'vinculo.username' },
-        { title: 'Data de Inclusão', key: 'data_inclusao', formatter: formatDate },
+        { title: 'Recebido de :', key: 'nome_renda' },
+        { title: 'Vinculado á :', key: 'vinculo.username' },
+        { title: 'Pago dia :', key: 'data_inclusao', formatter: formatDate },
         {
             title: '',
             key: 'edit',
@@ -135,23 +137,22 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
         }
     };
 
-    async function createRenda() {
+    async function createRenda(date: Date) {
         setLoading(true)
-        if (!createNomeRenda || !createValor || !createSelectedDate) {
+        if (!createNomeRenda || !createValor || !date) {
             toast.warning("Preencha todos os campos!")
             setLoading(false)
             return;
         }
         const apiClient = setupAPIClient();
 
-        const selectedDateWithoutTime = new Date(createSelectedDate);
-        selectedDateWithoutTime.setHours(0, 0, 0, 0);
-        selectedDateWithoutTime.setMonth(selectedDateWithoutTime.getMonth() - 1);
+        date.setDate(date.getDate()+1)
+        date.setHours(0, 0, 0, 0);
 
         const requestData: RequestData = {
             nome_renda: createNomeRenda,
             valor: createValor,
-            data_inclusao: selectedDateWithoutTime,
+            data_inclusao: date,
         };
 
         if (selectedValue !== null && selectedValue !== "") {
@@ -191,16 +192,15 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
         }
     };
 
-    const filterRendasByDate = async () => {
+    const filterRendasByDate = async (date: Date, type: 'day' | 'month') => {
         const apiClient = setupAPIClient();
 
         try {
-            if (selectedDate) {
-                const previousMonthDate = new Date(selectedDate);
-                previousMonthDate.setMonth(previousMonthDate.getMonth() - 1);
-                const formattedDate = previousMonthDate.toISOString().split('T')[0] + 'T03:00:00Z';
+            if (date && type ) {
+                const formattedDate = date.toISOString().split('T')[0] + 'T03:00:00Z';
 
-                const response = await apiClient.get(`/rendas/${formattedDate}`);
+
+                const response = await apiClient.get(`/rendas/${formattedDate}/${type}`);
 
                 setRendas(response.data);
 
@@ -236,14 +236,13 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
                     <Title textColor="#0E5734" color="#B5E1A0" icon="ganhos" text="MEUS GANHOS" />
                     <div className={styles.ganhos}>
                         <div className={styles.filters}>
-                            <Calendar onDateSelect={(date) => setSelectedDate(date)} />
-                            <ButtonPages onClick={() => filterRendasByDate()}>Filtrar</ButtonPages>
+                            <Calendar type="day" textButton="Filtrar" onDateSelect={(date, type) => filterRendasByDate(date,type)} />
                         </div>
                         <Table columns={columns} data={rendas} color="#599E52" />
 
                         <div className={styles.footercreate}>
                             <div className={styles.total}>
-                                <p>Total da renda: </p>
+                                <p>Sua renda : </p>
                                 <span>{formatCurrency(total)}</span>
                             </div>
                             <ButtonPages onClick={() => setIsModalCreate(true)}>Criar Renda</ButtonPages>
@@ -265,11 +264,7 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
                     </label>
                     <label>
                         <span>Valor:</span>
-                        <input
-                            type="text"
-                            value={valor}
-                            onChange={(e) => setValor(parseFloat(e.target.value))}
-                        />
+                        <InputMoney value={valor} onChange={(valor) => setValor(valor)}/>
                     </label>
                     <select value={selectedValueEdit} onChange={handleChangeEdit}>
                         <option value="">Nenhum</option>
@@ -298,7 +293,7 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
                     </label>
                     <label>
                         <span>Valor:</span>
-                        <input onChange={(e) => { setCreateValor(+e.target.value) }} type="text" value={createValor} />
+                        <InputMoney value={createValor} onChange={(valor) => setCreateValor(valor)}/>
                     </label>
                     <select value={selectedValue} onChange={handleChange}>
                         <option value="">Nenhum</option>
@@ -310,9 +305,8 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
                             ))
                         }
                     </select>
-                    <Calendar onDateSelect={(date) => setCreateSelectedDate(date)} />
+                    <Calendar textButton="Salvar" hideType={true} type={'day'} onDateSelect={(date) => createRenda(date)} />
 
-                    <ButtonPages loading={loading} onClick={() => createRenda()}>Salvar</ButtonPages>
                 </div>
             </Modal>
         </>

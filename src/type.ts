@@ -8,15 +8,19 @@ export interface Rendas {
 }
 export interface Dividas {
     id: number;
-    nome_renda: string;
+    nome_divida: string;
     valor: number;
     data_inclusao: string;
+    vinculo_id?: number;
+    vinculo?: ContaVinculo
 }
 export interface Objetivos {
     id: number;
-    nome_renda: string;
+    nome_objetivo: string;
     valor: number;
     data_inclusao: string;
+    vinculo_id?: number;
+    vinculo?: ContaVinculo
 }
 
 export interface ContaVinculo {

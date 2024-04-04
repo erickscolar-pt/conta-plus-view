@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './styles.module.scss'; // Importe o arquivo de estilos CSS
-import { Rendas } from '@/type';
+import { Dividas, Objetivos, Rendas } from '@/type';
 
 interface Column {
     title: string;
@@ -12,7 +12,7 @@ interface Column {
 interface TableProps {
     columns: Column[];
     color?: string;
-    data: [] | Rendas[];
+    data: [] | Rendas[] | Dividas[] | Objetivos[];
 }
 
 export function Table({ columns, data, color }: TableProps) {

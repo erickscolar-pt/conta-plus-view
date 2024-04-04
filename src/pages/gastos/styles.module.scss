@@ -5,7 +5,7 @@
     align-items: center;
     width: 100%;
 
-    .ganhosComponent{
+    .gastosComponent {
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
@@ -14,12 +14,187 @@
         justify-content: center;
         width: 100%;
         margin: 0 1em 0 0;
-        .ganhos{
+
+        .gastos {
             width: 100%;
             border-radius: 10px;
             background: #DAB7B7;
             box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-            padding: 2em;
+            padding: 2rem;
+            margin-bottom: 1rem;
+            height: 100%;
+
+            .filters {
+                display: flex;
+                flex-direction: column;
+                flex-wrap: wrap;
+                width: max-content;
+                gap: 10px;
+            }
+
+            .footercreate {
+                display: flex;
+                width: 100%;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+                align-content: center;
+                flex-direction: row;
+                text-align: center;
+                font-family: Arial, Helvetica, sans-serif;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+                letter-spacing: -0.3px;
+                margin-top: 1em;
+
+
+                button {
+                    width: max-content;
+                    padding: 1.5em 3em;
+                }
+
+                .total {
+                    display: flex;
+                    border-radius: 5px;
+                    background: #570E0E;
+                    gap: 10px;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    align-content: center;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0.5rem;
+                    width: 80%;
+
+                    p {
+                        color: #FFF;
+                        font-size: 20px;
+                    }
+
+                    span {
+                        border-radius: 5px;
+                        background: #FFF;
+                        padding: .5em;
+                        font-weight: bold;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.edit {
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    background: #0E5734;
+    cursor: pointer;
+    transition: 1s all;
+
+    &:hover {
+        background: rgba(33, 88, 61, 0.801);
+    }
+}
+
+.del {
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    background: #570E0E;
+    cursor: pointer;
+    transition: 1s all;
+
+    &:hover {
+        background: rgba(87, 14, 14, 0.801);
+    }
+}
+
+.containerModal {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 2em;
+    font-family: "Arial";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    color: white;
+    gap: 6px;
+
+    select {
+        margin: 5px;
+        border: none;
+        padding: 5px;
+        border-radius: 5px;
+        font-family: "Arial";
+        font-style: normal;
+        font-weight: 400;
+        font-size: 12px;
+        text-align: center;
+
+        option {
+            margin: 5px;
+            border: none;
+            padding: 5px;
+            border-radius: 5px;
+            font-family: "Arial";
+            font-style: normal;
+            font-weight: 400;
+            font-size: 12px;
+            text-align: center;
+            transition: all 1s;
+
+            &:hover {
+                background-color: #f0f0f0;
+
+            }
+        }
+
+    }
+
+    label {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+
+        input {
+            margin: 5px;
+            border: none;
+            padding: 5px;
+            border-radius: 5px;
+            font-family: "Arial";
+            font-style: normal;
+            font-weight: 400;
+            font-size: 12px;
+            text-align: center;
+            width: 60%;
+
+            background: #D9D9D9;
+        }
+
+        span {
+            width: 40%;
+        }
+    }
+
+    span {
+        margin: .5em;
+    }
+
+    button {
+        border: none;
+        border-radius: 5px;
+        background: #32437a;
+        color: white;
+        padding: 1em;
+        cursor: pointer;
+        transition: 1s all;
+
+        &:hover {
+            background: #32437ab2;
         }
     }
 }

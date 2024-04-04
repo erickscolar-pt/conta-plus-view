@@ -8,7 +8,7 @@ import Image from "next/image";
 
 
 interface TitleProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    icon: string,
+    icon?: 'ganhos' | 'gastos' | 'metas' | 'dashboard',
     color: string,
     text: string
     textColor: string

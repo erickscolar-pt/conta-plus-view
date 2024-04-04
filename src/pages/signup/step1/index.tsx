@@ -3,6 +3,7 @@ import styles from './styles.module.scss'
 import { FaArrowRight, FaUser } from "react-icons/fa";
 import { toast } from 'react-toastify';
 import Router from 'next/router'
+import { isValidUsername, validateEmail } from '@/helper';
 
 export default function Step1({ userData, setUserData, nextStep }) {
   const [isValidEmail, setIsValidEmail] = useState(true);
@@ -28,18 +29,7 @@ export default function Step1({ userData, setUserData, nextStep }) {
       nextStep();
     }
   };
-  
-
-  const validateEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
-
-  const isValidUsername = (username) => {
-    const regex = /^[a-zA-Z0-9_-]+$/;
-    return regex.test(username);
-  };
-  
+ 
 
   const handleChangeEmail = (e) => {
     const { value } = e.target;
