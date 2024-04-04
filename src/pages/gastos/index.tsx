@@ -324,7 +324,7 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
                                         <span>Quanto deve pagar :</span>
                                         <InputMoney value={editValorDebt} onChange={(valor) => setEditValorDebt(valor)} />
                                     </label>
-                                    <span className={styles.info}>Total: {formatCurrency(editValorDebt + valor)}</span>
+                                    <span className={styles.info}>Quanto vou pagar : {formatCurrency(valor - editValorDebt)}</span>
                                 </div>
                             }
                         </div>
@@ -365,7 +365,7 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
                                         <span>Quanto deve pagar :</span>
                                         <InputMoney value={createValorDebt} onChange={(valor) => setCreateValorDebt(valor)} />
                                     </label>
-                                    <span className={styles.info}>Total: {formatCurrency(createValorDebt + createValor)}</span>
+                                    <span className={styles.info}>Quanto vou pagar: {formatCurrency(createValor - createValorDebt)}</span>
                                 </div>
                             }
                         </div>
