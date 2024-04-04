@@ -35,7 +35,7 @@ export default function Calendar({ colorButton = '#0E5734' ,textButton ,onDateSe
         const formattedDate = date.toISOString().split('T')[0] + 'T03:00:00Z';
         setSelectedType(type)
         setSelectedDate(formattedDate)
-    }, []);
+    }, [type]);
 
     return (
         <div className={styles.calendar}>

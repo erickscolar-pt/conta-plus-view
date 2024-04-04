@@ -31,8 +31,8 @@ export default function CodigoPage() {
 
     useEffect(() => {
         vincularUsuario();
-    }, []) // Corrigido: adicionado o array vazio como segundo argumento para o useEffect
-
+    }, []) 
+    
     function handleBack() {
         Router.push('/perfil')
     }

@@ -10,7 +10,7 @@ import { useEffect, useState, useContext } from "react";
 import Router from 'next/router'
 import { AuthContexts } from "@/contexts/AuthContexts";
 
-export default function menuLateral() {
+export default function MenuLateral() {
     const [id, setId] = useState(0)
     const { signOut } = useContext(AuthContexts)
 

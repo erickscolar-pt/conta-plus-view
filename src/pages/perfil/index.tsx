@@ -105,9 +105,9 @@ export default function Perfil({ usuario }: Usuarios) {
                                             <h1>Pessoas que compartilho contas</h1>
                                             <div className={styles.peaples}>
                                                 {
-                                                    usuario.contavinculo.map((usuario) => {
+                                                    usuario.contavinculo.map((usuario, index) => {
                                                         return (
-                                                            <div className={styles.remove}>
+                                                            <div key={index} className={styles.remove}>
                                                                 <p>{usuario.username}</p>
                                                                 <button onClick={() => {handleDeleteVinculo(usuario.id)}} type="button"><TiUserDeleteOutline color='#fff' size={25} /></button>
                                                             </div>
