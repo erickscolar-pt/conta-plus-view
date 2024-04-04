@@ -40,10 +40,10 @@ export default function menuLateral() {
                         <Image alt="" src={iconMetas} />
                     </button>
 
-                    <button className={styles.dashboard}
+                    {/* <button className={styles.dashboard}
                         onClick={() => { Router.push('/dashboard') }}>
                         <Image alt="" src={iconDashboard} />
-                    </button>
+                    </button> */}
 
 
                     <button className={styles.exit}

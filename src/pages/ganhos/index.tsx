@@ -16,6 +16,7 @@ import { ButtonPages } from "@/component/ui/buttonPages";
 import Calendar from "@/component/ui/calendar";
 import { toast } from "react-toastify";
 import InputMoney from "@/component/ui/inputMoney";
+import NotFound from "@/component/notfound";
 
 interface Ganhos {
     rendas: Rendas[];
@@ -24,6 +25,7 @@ interface Ganhos {
 interface RequestData {
     nome_renda: string;
     valor: number;
+    valor_pagamento_vinculo?: number;
     data_inclusao?: Date;
     vinculo_id?: number; // O campo vinculo_id é opcional
 }
@@ -33,25 +35,22 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
     const [isModalCreate, setIsModalCreate] = useState(false);
     const [valor, setValor] = useState(0)
     const [nomeRenda, setNomeRenda] = useState("")
-    const [selectedValueEdit, setSelectedValueEdit] = useState('');
 
     const [createValor, setCreateValor] = useState(0)
+    const [createValorDebt, setCreateValorDebt] = useState(0)
+    const [editValorDebt, setEditValorDebt] = useState(0)
     const [createNomeRenda, setCreateNomeRenda] = useState("")
-    const [createVinculo, setCreateVinculo] = useState("")
-    const [createSelectedDate, setCreateSelectedDate] = useState<Date | null>(null);
-    const [selectedValue, setSelectedValue] = useState('');
     const [modalRendas, setModalRendas] = useState<Rendas>()
     const [loading, setLoading] = useState(false)
     const [rendas, setRendas] = useState<Rendas[]>(initialRendas);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
     const total = rendas.reduce((acc: number, renda: Rendas) => acc + (renda.valor || 0), 0);
+    const totalvinculo = rendas.reduce((acc: number, renda: Rendas) => acc + (renda.valor_pagamento_vinculo || 0), 0);
 
 
     const columns = [
         { title: 'Valor', key: 'valor', formatter: formatCurrency },
         { title: 'Recebido de :', key: 'nome_renda' },
-        { title: 'Vinculado á :', key: 'vinculo.username' },
         { title: 'Pago dia :', key: 'data_inclusao', formatter: formatDate },
         {
             title: '',
@@ -86,11 +85,10 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
     ];
 
     const handleEdit = (renda: Rendas) => {
-        if (renda.vinculo) {
-            setSelectedValueEdit(JSON.stringify(renda.vinculo.id));
-        }
+
         setModalRendas(renda)
         setNomeRenda(renda.nome_renda)
+        setEditValorDebt(renda.valor_pagamento_vinculo)
         setValor(renda.valor)
         setIsModalEdit(true);
     };
@@ -121,12 +119,6 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
             valor: valor,
         };
 
-        if (selectedValueEdit !== null && selectedValueEdit !== "" && +selectedValueEdit !== 1) {
-            requestData.vinculo_id = +selectedValueEdit - 1;
-        } else {
-            requestData.vinculo_id = null;
-        }
-
         const response = await apiClient.patch(`/rendas/${id}`, requestData)
         if (response) {
             setLoading(false)
@@ -146,7 +138,7 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
         }
         const apiClient = setupAPIClient();
 
-        date.setDate(date.getDate()+1)
+        date.setDate(date.getDate() + 1)
         date.setHours(0, 0, 0, 0);
 
         const requestData: RequestData = {
@@ -155,16 +147,11 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
             data_inclusao: date,
         };
 
-        if (selectedValue !== null && selectedValue !== "") {
-            requestData.vinculo_id = +selectedValue;
-        }
-
         const response = await apiClient.post(`/rendas`, requestData)
         if (response) {
-            setSelectedValue("")
             setCreateNomeRenda("")
             setCreateValor(0)
-            setCreateVinculo("")
+            setCreateValorDebt(0)
             setLoading(false)
             toast.success("Renda criada com sucesso!")
             fetchRendas();
@@ -196,7 +183,7 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
         const apiClient = setupAPIClient();
 
         try {
-            if (date && type ) {
+            if (date && type) {
                 const formattedDate = date.toISOString().split('T')[0] + 'T03:00:00Z';
 
 
@@ -215,14 +202,6 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
         }
     };
 
-    const handleChange = (event) => {
-        setSelectedValue(event.target.value);
-    };
-
-    const handleChangeEdit = (event) => {
-        setSelectedValueEdit(event.target.value);
-    };
-
     useEffect(() => {
         fetchRendas();
     }, []);
@@ -236,14 +215,29 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
                     <Title textColor="#0E5734" color="#B5E1A0" icon="ganhos" text="MEUS GANHOS" />
                     <div className={styles.ganhos}>
                         <div className={styles.filters}>
-                            <Calendar type="day" textButton="Filtrar" onDateSelect={(date, type) => filterRendasByDate(date,type)} />
+                            <Calendar type="day" textButton="Filtrar" onDateSelect={(date, type) => filterRendasByDate(date, type)} />
                         </div>
-                        <Table columns={columns} data={rendas} color="#599E52" />
+                        {rendas.length > 0 ?
+                            <Table columns={columns} data={rendas} color="#599E52" />
+                            :
+                            <NotFound/>
+                        }
 
                         <div className={styles.footercreate}>
                             <div className={styles.total}>
                                 <p>Sua renda : </p>
                                 <span>{formatCurrency(total)}</span>
+
+                                {totalvinculo > 0 &&
+                                    <>
+                                        <p>Renda recebida do vinculo : </p>
+                                        <span>{formatCurrency(totalvinculo)}</span>
+
+                                        <p>Total : </p>
+                                        <span>{formatCurrency(totalvinculo + total)}</span>
+                                    </>
+                                }
+
                             </div>
                             <ButtonPages onClick={() => setIsModalCreate(true)}>Criar Renda</ButtonPages>
                         </div>
@@ -264,19 +258,8 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
                     </label>
                     <label>
                         <span>Valor:</span>
-                        <InputMoney value={valor} onChange={(valor) => setValor(valor)}/>
+                        <InputMoney value={valor} onChange={(valor) => setValor(valor)} />
                     </label>
-                    <select value={selectedValueEdit} onChange={handleChangeEdit}>
-                        <option value="">Nenhum</option>
-                        {usuario.contavinculo &&
-                            usuario.contavinculo.map((vinculo) => (
-                                <option key={vinculo.id} value={vinculo.id_usuario_vinculado}>
-                                    {vinculo.username}
-                                </option>
-                            ))
-
-                        }
-                    </select>
                     <span>
                         Data de Inclusão: {formatDate(modalRendas?.data_inclusao)}
                     </span>
@@ -293,18 +276,8 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
                     </label>
                     <label>
                         <span>Valor:</span>
-                        <InputMoney value={createValor} onChange={(valor) => setCreateValor(valor)}/>
+                        <InputMoney value={createValor} onChange={(valor) => setCreateValor(valor)} />
                     </label>
-                    <select value={selectedValue} onChange={handleChange}>
-                        <option value="">Nenhum</option>
-                        {usuario.contavinculo &&
-                            usuario.contavinculo.map((vinculo) => (
-                                <option key={vinculo.id} value={vinculo.id}>
-                                    {vinculo.username}
-                                </option>
-                            ))
-                        }
-                    </select>
                     <Calendar textButton="Salvar" hideType={true} type={'day'} onDateSelect={(date) => createRenda(date)} />
 
                 </div>

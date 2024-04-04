@@ -13,6 +13,7 @@ import { ButtonPages } from "@/component/ui/buttonPages";
 import Calendar from "@/component/ui/calendar";
 import { toast } from "react-toastify";
 import InputMoney from "@/component/ui/inputMoney";
+import NotFound from "@/component/notfound";
 
 interface Metas {
     objetivos: Objetivos[];
@@ -22,7 +23,7 @@ interface RequestData {
     nome_objetivo: string;
     valor: number;
     data_inclusao?: Date;
-    vinculo_id?: number; 
+    vinculo_id?: number;
 }
 
 export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
@@ -45,9 +46,8 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
     const total = objetivos.reduce((acc: number, Objetivo: Objetivos) => acc + (Objetivo.valor || 0), 0);
 
     const columns = [
-        { title: 'Valor', key: 'valor', formatter: formatCurrency },
         { title: 'Minha meta :', key: 'nome_objetivo' },
-        { title: 'Vinculado á :', key: 'vinculo.username' },
+        { title: 'Valor', key: 'valor', formatter: formatCurrency },
         { title: 'Guardei dia :', key: 'data_inclusao', formatter: formatDate },
         {
             title: '',
@@ -142,7 +142,7 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
         }
         const apiClient = setupAPIClient();
 
-        date.setDate(date.getDate()+1)
+        date.setDate(date.getDate() + 1)
         date.setHours(0, 0, 0, 0);
 
         const requestData: RequestData = {
@@ -192,7 +192,7 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
         const apiClient = setupAPIClient();
 
         try {
-            if (date && type ) {
+            if (date && type) {
                 const formattedDate = date.toISOString().split('T')[0] + 'T03:00:00Z';
 
 
@@ -233,7 +233,11 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
                         <div className={styles.filters}>
                             <Calendar textButton="Filtrar" type="day" colorButton="#0E1557" onDateSelect={(date, type) => filterObjetivosByDate(date, type)} />
                         </div>
-                        <Table columns={columns} data={objetivos} color="#686D9F" />
+                        {objetivos.length > 0 ?
+                            <Table columns={columns} data={objetivos} color="#686D9F" />
+                            :
+                            <NotFound/>
+                        }
 
                         <div className={styles.footercreate}>
                             <div className={styles.total}>
@@ -264,20 +268,9 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
                             value={valor}
                             onChange={(e) => setValor(parseFloat(e.target.value))}
                         />
-                        <InputMoney value={valor} onChange={(valor) => setValor(valor)}/>
+                        <InputMoney value={valor} onChange={(valor) => setValor(valor)} />
 
                     </label>
-                    <select value={selectedValueEdit} onChange={handleChangeEdit}>
-                        <option value="">Nenhum</option>
-                        {usuario.contavinculo &&
-                            usuario.contavinculo.map((vinculo) => (
-                                <option key={vinculo.id} value={vinculo.id_usuario_vinculado}>
-                                    {vinculo.username}
-                                </option>
-                            ))
-
-                        }
-                    </select>
                     <span>
                         Data de Inclusão: {formatDate(modalObjetivos?.data_inclusao)}
                     </span>
@@ -294,18 +287,8 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
                     </label>
                     <label>
                         <span>Valor:</span>
-                        <InputMoney value={createValor} onChange={(valor) => setCreateValor(valor)}/>
+                        <InputMoney value={createValor} onChange={(valor) => setCreateValor(valor)} />
                     </label>
-                    <select value={selectedValue} onChange={handleChange}>
-                        <option value="">Nenhum</option>
-                        {usuario.contavinculo &&
-                            usuario.contavinculo.map((vinculo) => (
-                                <option key={vinculo.id} value={vinculo.id}>
-                                    {vinculo.username}
-                                </option>
-                            ))
-                        }
-                    </select>
                     <Calendar colorButton="#0E1557" textButton="Salvar" hideType={true} type={'day'} onDateSelect={(date) => createObjetivo(date)} />
 
                 </div>

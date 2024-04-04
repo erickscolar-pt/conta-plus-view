@@ -120,21 +120,17 @@
     font-weight: 400;
     font-size: 15px;
     color: white;
+    justify-content: space-between;
     gap: 6px;
 
-    select {
-        margin: 5px;
-        border: none;
-        padding: 5px;
+    .selected {
+        border: 1px solid #FFf;
         border-radius: 5px;
-        font-family: "Arial";
-        font-style: normal;
-        font-weight: 400;
-        font-size: 12px;
-        text-align: center;
+        width: 100%;
+        padding: 5px;
+        margin-bottom: .5em;
 
-        option {
-            margin: 5px;
+        select {
             border: none;
             padding: 5px;
             border-radius: 5px;
@@ -143,16 +139,67 @@
             font-weight: 400;
             font-size: 12px;
             text-align: center;
-            transition: all 1s;
+            width: 100%;
 
-            &:hover {
-                background-color: #f0f0f0;
 
+            option {
+                margin: 5px;
+                border: none;
+                padding: 5px;
+                border-radius: 5px;
+                font-family: "Arial";
+                font-style: normal;
+                font-weight: 400;
+                font-size: 12px;
+                text-align: center;
+                transition: all 1s;
+
+                &:hover {
+                    background-color: #f0f0f0;
+
+                }
+            }
+
+        }
+
+        .contentselected {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+
+            label {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+
+                input {
+                    border: none;
+                    border-radius: 5px;
+                    font-family: "Arial";
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 12px;
+                    text-align: center;
+                    background: #D9D9D9;
+                }
+
+            }
+
+            .info {
+                border: none;
+                border-radius: 5px;
+                padding: .5em;
+                background-color: white;
+                font-weight: bold;
+                color: #0E5734;
+                text-align: center;
             }
         }
 
     }
-
+    
     label {
         display: flex;
         flex-direction: row;
