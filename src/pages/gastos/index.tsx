@@ -265,7 +265,7 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
                     <Title textColor="#570E0E" color="#DAB7B7" icon="gastos" text="MEUS GASTOS" />
                     <div className={styles.gastos}>
                         <div className={styles.filters}>
-                            <Calendar type="day" colorButton="#570E0E" onDateSelect={(date, type) => filterDividasByDate(date, type)} />
+                            <Calendar textButton="Filtrar" type="day" colorButton="#570E0E" onDateSelect={(date, type) => filterDividasByDate(date, type)} />
 
                         </div>
                         {dividas.length > 0 ?
