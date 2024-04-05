@@ -14,6 +14,7 @@ import Calendar from "@/component/ui/calendar";
 import { toast } from "react-toastify";
 import InputMoney from "@/component/ui/inputMoney";
 import NotFound from "@/component/notfound";
+import { Toggle } from "@/component/ui/toggle";
 
 interface Gastos {
     dividas: Dividas[];
@@ -46,6 +47,7 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
     const [loading, setLoading] = useState(false)
     const [dividas, setDividas] = useState<Dividas[]>(initialDividas);
     const [rendas, setRendas] = useState<Rendas[]>(initialRendas);
+    const [payment, setPayment] = useState()
 
     const total = dividas.reduce((acc: number, divida: Dividas) => acc + (divida.quantoVouPagar || 0), 0);
     const totalRendas = rendas.reduce((acc: number, renda: Rendas) => acc + (renda.valor || 0), 0);
@@ -58,6 +60,16 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
         { title: 'Quanto meu parceiro(a) paga', key: 'valor_debito_vinculo', formatter: formatCurrency },
         { title: 'Quanto vou pagar', key: 'quantoVouPagar', formatter: formatCurrency },
         { title: 'Vence dia', key: 'data_inclusao', formatter: formatDate },
+        {
+            title: 'Pago', 
+            key: '',
+            render: (divida: Dividas) =>
+                <Toggle
+                    key={divida.id}
+                    checked={divida.payment}
+                    onChange={(e) => handleTogglePaid(divida.id, e.target.checked)}
+                />
+        },
         {
             title: '',
             key: 'edit',
@@ -94,6 +106,25 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
         },
     ];
 
+    async function handleTogglePaid(id: number, check: boolean) {
+        const apiClient = setupAPIClient();
+
+        try {
+            const response = await apiClient.patch(`/dividas/payment/${id}/${check}`);
+            if (response.status === 200) {
+                setDividas(prevDividas => prevDividas.map(divida => {
+                    if (divida.id === id) {
+                        return { ...divida, payment: check };
+                    } else {
+                        return divida;
+                    }
+                }));
+            }
+        } catch (error) {
+            console.error('Erro ao atualizar pagamento:', error);
+        }
+    }
+
     const handleEdit = (divida: Dividas) => {
         if (divida.vinculo) {
             setSelectedValueEdit(JSON.stringify(divida.vinculo.id));
@@ -111,7 +142,7 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
         const apiClient = setupAPIClient();
 
         setIsModalEdit(false);
-        const response = await apiClient.delete(`/Dividas/${Divida.id}`)
+        const response = await apiClient.delete(`/dividas/${Divida.id}`)
         if (response) {
             setLoading(false)
             toast.warning("Divida excluida!")
@@ -271,7 +302,7 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
                         {dividas.length > 0 ?
                             <Table columns={columns} data={dividas} color="#C07C7C" />
                             :
-                            <NotFound/>
+                            <NotFound />
                         }
 
                         <div className={styles.footercreate}>
