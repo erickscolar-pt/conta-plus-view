@@ -50,6 +50,7 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
     const [payment, setPayment] = useState()
 
     const total = dividas.reduce((acc: number, divida: Dividas) => acc + (divida.quantoVouPagar || 0), 0);
+    const totalPago = dividas.reduce((acc: number, divida: Dividas) => acc + (divida.payment === true && divida.quantoVouPagar  || 0), 0);
     const totalRendas = rendas.reduce((acc: number, renda: Rendas) => acc + (renda.valor || 0), 0);
 
 
@@ -309,9 +310,13 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
                             <div className={styles.total}>
                                 <p>Total de divida: </p>
                                 <span>{formatCurrency(total)}</span>
+                                
+                                <p>Pago :</p>
+                                <span style={{ color: '#0E5734' }}>{formatCurrency(totalPago)}</span>
 
                                 <p>Sua renda neste mês:</p>
                                 <span style={{ color: '#0E5734' }}>{formatCurrency(totalRendas)}</span>
+
 
                                 <p>Sobra:</p>
                                 <span style={{ backgroundColor: totalRendas - total < 0 ? '#C07C7C' : '#0E5734', color: totalRendas - total < 0 ? '#570E0E' : '#B5E1A0' }}>{formatCurrency(totalRendas - total)}</span>
