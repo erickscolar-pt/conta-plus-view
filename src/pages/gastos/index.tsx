@@ -194,7 +194,7 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
 
     async function createDivida(date: Date) {
         setLoading(true)
-        if (!createNomeDivida || !createValor || !date || !isInstallments) {
+        if (!createNomeDivida || !createValor || !date || (!isInstallments && installments < 1)) {
             toast.warning("Preencha todos os campos!")
             setLoading(false)
             return;
