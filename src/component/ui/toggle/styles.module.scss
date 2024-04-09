@@ -1,51 +1,53 @@
 /* styles.module.css */
 
 .toggleSwitch {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 20px;
+    position: relative !important;
+    display: inline-block !important;
+    width: 40px !important;
+    height: 20px !important;
   }
   
   .toggleSwitch input[type="checkbox"] {
-    opacity: 0;
-    width: 0;
-    height: 0;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
   }
   
   .toggleSlider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 20px;
+    width: auto !important;
+    margin: 0 !important;
+    position: absolute !important;
+    cursor: pointer !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background-color: #ccc !important;
+    transition: 0.4s !important;
+    border-radius: 20px !important;
   }
   
   .toggleSlider:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 2px;
-    bottom: 2px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
+    position: absolute !important;
+    content: "" !important;
+    height: 16px !important;
+    width: 16px !important;
+    left: 2px !important;
+    bottom: 2px !important;
+    background-color: white !important;
+    transition: 0.4s !important;
+    border-radius: 50% !important;
   }
   
   input:checked + .toggleSlider {
-    background-color: #029e31;
+    background-color: #029e31 !important;
   }
   
   input:focus + .toggleSlider {
-    box-shadow: 0 0 1px #029e31;
+    box-shadow: 0 0 1px #029e31 !important;
   }
   
   input:checked + .toggleSlider:before {
-    transform: translateX(20px);
+    transform: translateX(20px) !important;
   }
   

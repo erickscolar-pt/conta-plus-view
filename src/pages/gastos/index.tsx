@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import InputMoney from "@/component/ui/inputMoney";
 import NotFound from "@/component/notfound";
 import { Toggle } from "@/component/ui/toggle";
+import { Input } from "@/component/ui/input";
 
 interface Gastos {
     dividas: Dividas[];
@@ -28,6 +29,7 @@ interface RequestData {
     data_inclusao?: Date;
     vinculo_id?: number;
     ref_debt?: number;
+    installments?: number;
 }
 export default function Gastos({ dividas: initialDividas, rendas: initialRendas, usuario }: Gastos) {
     const [isModalEdit, setIsModalEdit] = useState(false);
@@ -47,10 +49,11 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
     const [loading, setLoading] = useState(false)
     const [dividas, setDividas] = useState<Dividas[]>(initialDividas);
     const [rendas, setRendas] = useState<Rendas[]>(initialRendas);
-    const [payment, setPayment] = useState()
+    const [isInstallments, setIsInstallments] = useState(false)
+    const [installments, setInstallments] = useState(1)
 
     const total = dividas.reduce((acc: number, divida: Dividas) => acc + (divida.quantoVouPagar || 0), 0);
-    const totalPago = dividas.reduce((acc: number, divida: Dividas) => acc + (divida.payment === true && divida.quantoVouPagar  || 0), 0);
+    const totalPago = dividas.reduce((acc: number, divida: Dividas) => acc + (divida.payment === true && divida.quantoVouPagar || 0), 0);
     const totalRendas = rendas.reduce((acc: number, renda: Rendas) => acc + (renda.valor || 0), 0);
 
 
@@ -60,9 +63,10 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
         { title: 'Vou dividir com', key: 'username' },
         { title: 'Quanto meu parceiro(a) paga', key: 'valor_debito_vinculo', formatter: formatCurrency },
         { title: 'Quanto vou pagar', key: 'quantoVouPagar', formatter: formatCurrency },
+        { title: 'N° Parcela', key: 'installments' },
         { title: 'Vence dia', key: 'data_inclusao', formatter: formatDate },
         {
-            title: 'Pago', 
+            title: 'Pago',
             key: '',
             render: (divida: Dividas) =>
                 <Toggle
@@ -190,11 +194,12 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
 
     async function createDivida(date: Date) {
         setLoading(true)
-        if (!createNomeDivida || !createValor || !date) {
+        if (!createNomeDivida || !createValor || !date || !isInstallments) {
             toast.warning("Preencha todos os campos!")
             setLoading(false)
             return;
         }
+
         const apiClient = setupAPIClient();
         date.setDate(date.getDate() + 1)
         date.setHours(0, 0, 0, 0);
@@ -210,6 +215,12 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
             requestData.valor_debito_vinculo = createValorDebt
         }
 
+        if (isInstallments && installments > 1) {
+            requestData.installments = installments;
+        } else {
+            requestData.installments = 1;
+        }
+
         const response = await apiClient.post(`/dividas`, requestData)
         if (response) {
             setSelectedValue("")
@@ -217,6 +228,7 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
             setCreateValor(0)
             setCreateVinculo("")
             setCreateValorDebt(0)
+            setInstallments(1)
             setLoading(false)
             toast.success("Divida criada com sucesso!")
             fetchDividas();
@@ -281,7 +293,6 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
 
     function handleCreateValor(novoValor) {
         setCreateValor(novoValor);
-
     }
 
     useEffect(() => {
@@ -310,7 +321,7 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
                             <div className={styles.total}>
                                 <p>Total de divida: </p>
                                 <span>{formatCurrency(total)}</span>
-                                
+
                                 <p>Pago :</p>
                                 <span style={{ color: '#0E5734' }}>{formatCurrency(totalPago)}</span>
 
@@ -383,6 +394,27 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
                         <span>Valor do boleto:</span>
                         <InputMoney onChange={handleCreateValor} />
                     </label>
+
+                    <div className={styles.selected}>
+                        <span style={{ display: 'flex', justifyContent: 'space-between' }}>Adicionar parcelas
+                            <Toggle
+                                checked={isInstallments}
+                                onChange={(e) => setIsInstallments(e.target.checked)}
+                            />
+                        </span>
+
+                        {isInstallments &&
+                            <label>
+                                <span>Numero de parcelas:</span>
+                                <input
+                                    type="number"
+                                    value={installments}
+                                    onChange={(e) => setInstallments(+e.target.value)}
+                                />
+                            </label>
+                        }
+
+                    </div>
                     {usuario.contavinculo.length > 0 &&
                         <div className={styles.selected}>
                             <select value={selectedValue} onChange={handleChange}>

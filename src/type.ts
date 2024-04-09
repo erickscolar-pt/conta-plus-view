@@ -20,6 +20,7 @@ export interface Dividas {
     vinculo?: ContaVinculo
     ref_debt?: number;
     payment?:boolean;
+    installments?: number;
 }
 export interface Objetivos {
     id: number;
