@@ -63,7 +63,7 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
         { title: 'Vou dividir com', key: 'username' },
         { title: 'Quanto meu parceiro(a) paga', key: 'valor_debito_vinculo', formatter: formatCurrency },
         { title: 'Quanto vou pagar', key: 'quantoVouPagar', formatter: formatCurrency },
-        { title: 'N° Parcela', key: 'installments' },
+        { title: 'N° Parcela', key: 'plot' },
         { title: 'Vence dia', key: 'data_inclusao', formatter: formatDate },
         {
             title: 'Pago',

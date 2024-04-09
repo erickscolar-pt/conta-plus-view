@@ -21,6 +21,8 @@ export interface Dividas {
     ref_debt?: number;
     payment?:boolean;
     installments?: number;
+    n_installments?: number;
+    plot?: string;
 }
 export interface Objetivos {
     id: number;
