@@ -319,18 +319,25 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
 
                         <div className={styles.footercreate}>
                             <div className={styles.total}>
-                                <p>Total de divida: </p>
-                                <span>{formatCurrency(total)}</span>
+                                <div className={styles.desc}>
+                                    <p>Total de divida: </p>
+                                    <span>{formatCurrency(total)}</span>
+                                </div>
 
-                                <p>Pago :</p>
-                                <span style={{ color: '#0E5734' }}>{formatCurrency(totalPago)}</span>
+                                <div className={styles.desc}>
+                                    <p>Pago :</p>
+                                    <span style={{ color: '#0E5734' }}>{formatCurrency(totalPago)}</span>
+                                </div>
 
-                                <p>Sua renda neste mês:</p>
-                                <span style={{ color: '#0E5734' }}>{formatCurrency(totalRendas)}</span>
+                                <div className={styles.desc}>
+                                    <p>Sua renda neste mês:</p>
+                                    <span style={{ color: '#0E5734' }}>{formatCurrency(totalRendas)}</span>
+                                </div>
 
-
-                                <p>Sobra:</p>
-                                <span style={{ backgroundColor: totalRendas - total < 0 ? '#C07C7C' : '#0E5734', color: totalRendas - total < 0 ? '#570E0E' : '#B5E1A0' }}>{formatCurrency(totalRendas - total)}</span>
+                                <div className={styles.desc}>
+                                    <p>Sobra:</p>
+                                    <span style={{ backgroundColor: totalRendas - total < 0 ? '#C07C7C' : '#0E5734', color: totalRendas - total < 0 ? '#570E0E' : '#B5E1A0' }}>{formatCurrency(totalRendas - total)}</span>
+                                </div>
                             </div>
                             <ButtonPages bg="#570E0E" onClick={() => setIsModalCreate(true)}>Criar Divida</ButtonPages>
                         </div>

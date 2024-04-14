@@ -62,3 +62,27 @@
         }
     }
 }
+
+@media screen and (max-width: 768px) {
+    .content{
+        max-width: 100% !important;
+        .menuLateral{
+            padding: 1em 2em;
+            .listbutton{
+                padding: 0 !important;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                flex-wrap: wrap;
+                align-content: center;
+                button{
+                    margin: 1em;
+                }
+
+                .exit{
+                    margin: 1em;
+                }
+            }
+        }
+    }
+}

@@ -29,32 +29,35 @@ export function Table({ columns, data, color }: TableProps) {
         return value === undefined ? '-' : value;
     };
     return (
-        <table className={styles.table}>
-            <thead>
-                <tr>
-                    {columns.map(column => (
-                        <th key={String(column.key)} className={styles.headerCell}>{column.title}</th>
+        <div className={styles.tableContainer}>
+            <table className={styles.table}>
+                <thead>
+                    <tr>
+                        {columns.map(column => (
+                            <th key={String(column.key)} className={styles.headerCell}>{column.title}</th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.map((item, index) => (
+                            <tr key={index}  >
+                                {columns.map((column, columnIndex) => (
+                                    <td key={String(column.key)} className={styles.dataCell} style={{ background: column.render ? 'none' : color || '#FFF', boxShadow: column.render ? 'none' : '0px 4px 4px 0px rgba(0, 0, 0, 0.25)' }}>
+                                        {column.render ? (
+                                            column.render ? column.render(item) : String(item[column.key])
+                                        ) : column.formatter ? (
+                                            column.formatter(item[column.key])
+                                        ) : (
+                                            //item[column.key] === undefined ? '-' : String(item[column.key]) 
+                                            getValue(item, column.key)
+                                        )}
+                                    </td>
+                                ))}
+                            </tr>
                     ))}
-                </tr>
-            </thead>
-            <tbody>
-                {data.map((item, index) => (
-                        <tr key={index}  >
-                            {columns.map((column, columnIndex) => (
-                                <td key={String(column.key)} className={styles.dataCell} style={{ background: column.render ? 'none' : color || '#FFF', boxShadow: column.render ? 'none' : '0px 4px 4px 0px rgba(0, 0, 0, 0.25)' }}>
-                                    {column.render ? (
-                                        column.render ? column.render(item) : String(item[column.key])
-                                    ) : column.formatter ? (
-                                        column.formatter(item[column.key])
-                                    ) : (
-                                        //item[column.key] === undefined ? '-' : String(item[column.key]) 
-                                        getValue(item, column.key)
-                                    )}
-                                </td>
-                            ))}
-                        </tr>
-                ))}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     );
 };
+

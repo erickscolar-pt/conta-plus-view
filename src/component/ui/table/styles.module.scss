@@ -44,3 +44,22 @@
 .oddRow {
     background-color: #fff;
 }
+
+@media screen and (max-width: 768px) {
+    .tableContainer {
+        overflow-x: auto;
+
+        .table {
+            white-space: nowrap; // Impede a quebra de linha dentro das células
+        }
+    }
+
+    .headerCell {
+        padding: 8px; // Aumentei o padding para melhorar a visualização em dispositivos móveis
+    }
+
+    .dataCell {
+        padding: 8px; // Aumentei o padding para melhorar a visualização em dispositivos móveis
+    }
+
+}

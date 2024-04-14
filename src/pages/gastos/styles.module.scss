@@ -66,6 +66,15 @@
                     justify-content: center;
                     padding: 0.5rem;
                     width: 86%;
+                    .desc{
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: center;
+                        flex-wrap: wrap;
+                        gap: 12px;
+                        padding: 0 0.5em;
+                    }
 
                     p {
                         color: #FFF;
@@ -242,6 +251,57 @@
 
         &:hover {
             background: #32437ab2;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .component {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        align-content: center;
+        .gastosComponent {
+            padding: 0 1.5em;
+            margin: 0 !important;
+            .gastos {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+
+                .filters {
+                    width: 100%;
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
+
+            .footercreate {
+                flex-direction: column !important;
+                gap: 12px;
+
+                .total {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    flex-wrap: wrap !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    width: 100% !important;
+                    .desc{
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: space-between;
+                        flex-wrap: wrap;
+                        width: 100%;
+                        margin-bottom: 1em;
+                        /* gap: 12px; */
+                        padding: 0 0.5em;
+                    }
+                }
+            }
         }
     }
 }
