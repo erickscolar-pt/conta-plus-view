@@ -48,7 +48,7 @@ export default function Home() {
         <title>Login</title>
       </Head>
       <div className={styles.container}>
-        <Image width={500} src={imgfundo} alt="" />
+        <Image className={styles.img} width={500} src={imgfundo} alt="" />
 
         <div className={styles.login}>
           <form className={styles.form} onSubmit={handleLogin}>
