@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { FaCopy } from 'react-icons/fa';
 import { TiUserDeleteOutline } from "react-icons/ti";
@@ -10,6 +10,8 @@ import { setupAPIClient } from '@/services/api';
 import { Usuario } from '@/type';
 import { Title } from '@/component/ui/title';
 import { isValidUsername } from '@/helper';
+import { Router, useRouter } from 'next/router';
+import { usePathname } from 'next/navigation'
 
 interface Usuarios {
     usuario: Usuario;
@@ -19,9 +21,14 @@ export default function Perfil({ usuario }: Usuarios) {
     const [nome, setNome] = useState(usuario.nome);
     const [username, setUsername] = useState(usuario.username);
     const [copied, setCopied] = useState(false);
+    const [baseUrl, setBaseUrl] = useState('');
 
     const handleCopyLink = () => {
-        navigator.clipboard.writeText(`https://view-conta-plus-76f002898a47.herokuapp.com/codigo/${usuario.codigoReferencia}`);
+
+        console.log('URL atual:', baseUrl);
+
+        //navigator.clipboard.writeText(`https://view-conta-plus-76f002898a47.herokuapp.com/codigo/${usuario.codigoReferencia}`);
+        navigator.clipboard.writeText(`${baseUrl}/codigo/${usuario.codigoReferencia}`);
         setCopied(true);
         toast.success('Link do convite copiado!', {
             position: toast.POSITION.TOP_RIGHT,
@@ -74,6 +81,15 @@ export default function Perfil({ usuario }: Usuarios) {
             });
         } 
     }
+
+    useEffect(() => {
+        // Verifica se o código está sendo executado no navegador
+        if (typeof window !== 'undefined') {
+          // Obtém a URL base do navegador
+          const baseUrl = window.location.origin;
+          setBaseUrl(baseUrl);
+        }
+      }, []);
 
     return (
         <>
