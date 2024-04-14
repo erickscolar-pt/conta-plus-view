@@ -24,6 +24,7 @@
         justify-content: center;
         align-items: center;
         padding: 0;
+
         .form {
             display: flex;
             flex-direction: column;
@@ -96,6 +97,7 @@
         border-radius: 20px;
         background: #ECE1A7;
         justify-content: space-between;
+
         button {
             display: flex;
             height: 56px;
@@ -117,5 +119,14 @@
             }
         }
     }
+}
 
+@media screen and (max-width: 768px) {
+    .container {
+        .formContainer{
+            .form{
+                max-width: 100% !important;
+            }
+        }
+    }
 }

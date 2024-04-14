@@ -156,3 +156,25 @@
     }
 
 }
+
+@media screen and (max-width: 768px) {
+    .container {
+        .formContainer{
+            .form{
+                max-width: 100% !important;
+                padding: 2em !important;
+                .senha{
+                    
+                    input{
+                        width: 23em !important;
+                    }
+                }
+
+                .dica{
+                    width: 26em !important;
+                    margin: 3em 0 0 0!important;
+                }
+            }
+        }
+    }
+}
