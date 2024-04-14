@@ -96,9 +96,9 @@ export default function Perfil({ usuario }: Usuarios) {
             <Header />
             <div className={styles.component}>
                 <MenuLateral />
-                <div className={styles.ganhosComponent}>
+                <div className={styles.perfilComponent}>
                     <Title textColor="#000000" color="#F0F1E8" text="PERFIL" />
-                    <div className={styles.ganhos}>
+                    <div className={styles.perfil}>
                         <div className={styles.componentInputs}>
                             <div className={styles.componentEdit}>
                                 <div className={styles.edit}>
@@ -142,7 +142,7 @@ export default function Perfil({ usuario }: Usuarios) {
                         <div className={styles.componentButtons}>
                             <div className={styles.link}>
                                 <p>
-                                    Deseja compartilhar contas com alguém ? Click e compartilhe seu link com um amigo já cadastrado, assim que ele acessar o link vocês estaram vinculados e você poderá compartilhar contas, sonhos e rendas!
+                                    Deseja compartilhar contas com alguém ? Click e compartilhe seu link com um amigo já cadastrado, assim que ele acessar o link vocês estaram vinculados e você poderá compartilhar contas, aproveite!
                                 </p>
                                 <button onClick={handleCopyLink}>
                                     {copied ? 'Link Copiado, click para copiar novamente!' : <><FaCopy /> Copiar Link do Convite</>}
