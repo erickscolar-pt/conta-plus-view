@@ -4,6 +4,7 @@ import styles from './styles.module.scss'
 import { useEffect, useState } from 'react';
 import { setupAPIClient } from "@/services/api";
 import Router, { useRouter } from "next/router";
+import { FaSpinner } from 'react-icons/fa'
 
 export default function CodigoPage() {
     const [loading, setLoading] = useState(true);
@@ -31,8 +32,8 @@ export default function CodigoPage() {
 
     useEffect(() => {
         vincularUsuario();
-    }, []) 
-    
+    }, [])
+
     function handleBack() {
         Router.push('/perfil')
     }
@@ -40,7 +41,11 @@ export default function CodigoPage() {
         <div className={styles.container} style={{ background: vinculado ? 'linear-gradient(108deg, #F4FAF3 0%, #D8D8D8 100%)' : 'linear-gradient(108deg, #FFD8D8 0%, #D8D8D8 100%) ' }}>
 
             {loading ? (
-                <p className={styles.loading}>Carregando...</p>
+                <>
+                    <div className={styles.contentLoading}>
+                        <FaSpinner className={styles.loading} color='#fff' size={40} />
+                    </div>
+                </>
             ) : vinculado ? (
                 <>
                     <h1 className={styles.sucessTitle}>Uhuu, Vinculo aceito!</h1>

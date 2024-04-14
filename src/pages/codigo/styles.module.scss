@@ -4,6 +4,23 @@
     height: 100vh;
     align-items: center;
 
+    .contentLoading {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        background-color: #6cabb5;
+        .loading {
+            animation: animate 2s infinite;
+        }
+    }
+
     .sucessTitle {
         color: #0E5734;
         text-align: center;
@@ -142,5 +159,44 @@
         font-weight: 400;
         line-height: normal;
         letter-spacing: -0.3px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        height: auto !important;
+        padding: 1em;
+
+        .content {
+            flex-direction: column !important;
+        }
+
+        .contentSuccess {
+            .successMessage {
+                width: auto;
+            }
+        }
+    }
+}
+
+@keyframes animate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes moveInBottom {
+    0% {
+        background: linear-gradient(90.61deg, #1a3427 2.18%, #1a3427 48.43%, #1a3425 99.83%);
+        opacity: 0.4;
+    }
+
+    100% {
+        background: linear-gradient(90.61deg, #1a341b 2.18%, #1a341e 7.06%, #1a341e 90.99%, #1a3420 99.88%);
+        opacity: 1;
     }
 }
