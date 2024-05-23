@@ -76,7 +76,13 @@
                 flex-wrap: wrap;
                 align-content: center;
                 button{
-                    margin: .8em !important;
+                    margin: .5em !important;
+                    width: 3em;
+                    height: 3em;
+                    img {
+                        width: 1.5em; 
+                        height: 1.5em; 
+                    }
                 }
 
                 .exit{

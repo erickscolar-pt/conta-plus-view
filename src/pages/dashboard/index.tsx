@@ -2,20 +2,118 @@ import MenuLateral from "@/component/menulateral";
 import Header from "@/component/header";
 import { canSSRAuth } from "@/utils/canSSRAuth";
 import styles from './styles.module.scss'
-import iconGanhos from '../../../public/icons/icon_ganhos_green.png'
-import Image from "next/image";
 import { Title } from "@/component/ui/title";
+import { setupAPIClient } from "@/services/api";
+import { useEffect, useState } from "react";
+import ChartGrafic from "@/component/chartgrafic";
+import NotFound from "@/component/notfound";
 
-export default function Dashboard() {
+interface DashboardChartProps {
+    dashboarddata: DashboardData;
+}
+
+export interface DashboardData {
+    rendas: DataItem[];
+    dividas: DataItem[];
+    metas: DataItem[];
+}
+
+export interface DataItem {
+    mes: string;
+    valortotal: number;
+}
+
+const months = [
+  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+];
+
+export default function Dashboard({ dashboarddata }: DashboardChartProps) {
+    const [graficoBarra, setGraficoBarra] = useState<DashboardData | null>(null);
+    const [monthRange, setMonthRange] = useState([0, 11]);
+    const [yearRange, setYearRange] = useState([]);
+    const [anosText, setAnosText] = useState(0)
+    const [mesesText, setMesesText] = useState(0)
+
+    console.log({anos:anosText, meses: mesesText})
+    useEffect(() => {
+        const fetchData = async () => {
+            setGraficoBarra(dashboarddata);
+        };
+
+        fetchData();
+    }, [dashboarddata]);
+
+    const handleRangeChange = async () => {
+        const apiClient = setupAPIClient();
+
+        const initialDate = new Date(yearRange[0], monthRange[0], 1).toISOString().split('T')[0];
+        const finalDate = new Date(yearRange[1], monthRange[1] + 1, 0).toISOString().split('T')[0];
+        setAnosText(yearRange[1]-yearRange[0])
+        setMesesText(monthRange[1]-monthRange[0])
+        const response = await apiClient.post(`/dashboard?initial=${initialDate}&final=${finalDate}`);
+        setGraficoBarra(response.data);
+    };
+
     return (
         <>
             <Header />
             <div className={styles.component}>
                 <MenuLateral />
-                <div className={styles.ganhosComponent}>
+                <div className={styles.dashboardComponent}>
                     <Title textColor="#400E57" color="#DAB7D8" icon="dashboard" text="GRÀFICO GERAL" />
                     <div className={styles.ganhos}>
-                        <h1>teste</h1>
+                        <div className={styles.filter}>
+                            <label htmlFor="monthRangeStart">Meses:</label>
+                            <input
+                                type="range"
+                                id="monthRangeStart"
+                                min="0"
+                                max="11"
+                                value={monthRange[0]}
+                                onChange={(e) => setMonthRange([Number(e.target.value), monthRange[1]])}
+                            />
+                            <input
+                                type="range"
+                                id="monthRangeEnd"
+                                min="0"
+                                max="11"
+                                value={monthRange[1]}
+                                onChange={(e) => setMonthRange([monthRange[0], Number(e.target.value)])}
+                            />
+                            <div>{months[monthRange[0]]} - {months[monthRange[1]]}</div>
+
+                            <label htmlFor="yearRangeStart">Anos:</label>
+                            <input
+                                type="range"
+                                id="yearRangeStart"
+                                min={1990}
+                                max={2060}
+                                value={yearRange[0]}
+                                onChange={(e) => setYearRange([Number(e.target.value), yearRange[1]])}
+                            />
+                            <input
+                                type="range"
+                                id="yearRangeEnd"
+                                min={1990}
+                                max={2060}
+                                value={yearRange[1]}
+                                onChange={(e) => setYearRange([yearRange[0], Number(e.target.value)])}
+                            />
+                            <div>{yearRange[0]} - {yearRange[1]}</div>
+
+                            <button onClick={handleRangeChange}>Filtrar</button>
+                        </div>
+                        {
+                            graficoBarra && graficoBarra.dividas &&
+                                graficoBarra.metas &&
+                                graficoBarra.rendas ?
+                                (
+                                    <ChartGrafic data={graficoBarra} anos={anosText} meses={mesesText} />
+                                ) : (
+                                    <NotFound />
+                                )
+                        }
                     </div>
                 </div>
             </div>
@@ -24,8 +122,28 @@ export default function Dashboard() {
 }
 
 export const getServerSideProps = canSSRAuth(async (ctx) => {
+    const apiClient = setupAPIClient(ctx);
+    const dateInitial = new Date();
+    const dateFinal = new Date();
+    dateInitial.setMonth(dateFinal.getMonth() - 3);
+    dateInitial.setDate(dateInitial.getDate() - dateInitial.getDate() + 1);
 
-    return {
-        props: {}
+    const formattedInitial = dateInitial.toISOString().split('T')[0];
+    const formattedFinal = dateFinal.toISOString().split('T')[0];
+
+    try {
+        const dashboarddata = await apiClient.post(`/dashboard?initial=${formattedInitial}&final=${formattedFinal}`);
+        return {
+            props: {
+                dashboarddata: dashboarddata.data
+            }
+        };
+    } catch (error) {
+        console.error('Erro ao buscar as rendas:', error.message);
+        return {
+            props: {
+                dashboarddata: []
+            }
+        };
     }
-})
+});
