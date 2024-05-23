@@ -22,3 +22,11 @@
         letter-spacing: -0.48px;
     }
 }
+
+@media screen and (max-width: 768px) {
+    .title {
+        h1 {
+            font-size: 21px;
+        }
+    }
+}

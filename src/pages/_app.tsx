@@ -4,7 +4,6 @@ import Head from "next/head"
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify'
 import { AuthProvider } from "../contexts/AuthContexts";
-import ganhos from "./ganhos";
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
