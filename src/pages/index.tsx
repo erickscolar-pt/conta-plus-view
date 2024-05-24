@@ -37,14 +37,20 @@ export default function Home() {
     await signIn(data);
     setLoading(false);
   }
-
+  const colors = ['#0E5734', '#570E0E', '#0E1557'];
   return (
     <>
       <Head>
         <title>Login</title>
       </Head>
       <div className={styles.container}>
-        <Image className={styles.img} width={500} src={imgfundo} alt="" />
+        {/* <Image className={styles.img} width={500} src={imgfundo} alt="" /> */}
+        
+        <ul className={styles.shapes}>
+          {[...Array(20)].map((_, i) => (
+            <li key={i} style={{'--i': i + 4, backgroundColor: colors[i % 3]}}></li>
+          ))}
+        </ul>
 
         <div className={styles.login}>
           <form className={styles.form} onSubmit={handleLogin}>

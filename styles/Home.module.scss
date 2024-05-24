@@ -1,6 +1,6 @@
 .container {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   background: linear-gradient(108deg, #60ADF3 0%, #97C1E8 100%);
   bottom: 0;
@@ -71,7 +71,7 @@
           padding-right: 3em;
         }
 
-        .inputPassword{
+        .inputPassword {
           margin: 0;
         }
 
@@ -160,6 +160,65 @@
       background: #599E52;
     }
   }
+
+  .shapes {
+  }
+
+  .container ul {
+    list-style: none;
+  }
+
+  .shapes li {
+    height: 20px;
+    width: 20px;
+    background-color: #B5E1A0;
+    border-radius: 20%;
+    position: absolute;
+    display: block;
+    bottom: -120px;
+    z-index: -1;
+    animation: animate 8s linear infinite;
+  }
+
+  .shapes li:nth-child(even) {
+    background-color: #DAB7B7;
+    left: calc(70px*var(--i));
+    width: calc(4px*(21 - var(--i)));
+    height: calc(4px*(21 - var(--i)));
+    animation-delay: calc(3s*var(--i));
+    animation-duration: calc(1.1s*var(--i) + 9s);
+  }
+
+  .shapes li:nth-child(odd) {
+    left: calc(75px*var(--i));
+    animation-delay: calc(1.2s*var(--i));
+    animation-duration: calc(2s*var(--i) + 6s);
+  }
+
+  .shapes li:nth-child(3n) {
+    width: calc(5px*var(--i) + 20px);
+    height: calc(5px*var(--i) + 20px);
+    animation-delay: calc(1.2s*(21 - var(--i)));
+    animation-duration: calc(1.6s*(21-var(--i)) + 4s);
+  }
+
+  .shapes li:not(:nth-child(3n)) {
+    height: calc(6px*(21 - var(--i)));
+    width: calc(6px*(21 - var(--i)));
+    animation-duration: calc(1.2s*var(-i) + 8s);
+  }
+
+  @keyframes animate {
+    0% {
+      transform: translateY(0px) rotate(0deg);
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateY(-1000px) rotate(360deg);
+      opacity: 0;
+    }
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -175,18 +234,19 @@
       right: 0;
       border-radius: 0 !important;
 
-      .form{
-        .passwordInputContainer{
-          .inputPassword{
+      .form {
+        .passwordInputContainer {
+          .inputPassword {
             margin: 0;
           }
         }
       }
     }
 
-    .img {
+    .shapes {
       display: none !important;
     }
+
     .buttonLogin {
       margin-top: 3em;
       height: 32px;
