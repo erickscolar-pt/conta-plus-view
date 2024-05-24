@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
+import { FaArrowRight, FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
 import styles from './styles.module.scss';
 import { toast } from 'react-toastify';
 
@@ -16,9 +16,11 @@ interface Step2Props {
   prevStep: () => void;
 }
 
-export default function Step2({ userData={password:"",confirmPassword:""}, setUserData, nextStep, prevStep }: Step2Props)  {
-  const [password, setPassword] = useState(userData.password ||"")
-  const [confirmPassword, setConfirmPassword] = useState(userData.confirmPassword || "")
+export default function Step2({ userData = { password: "", confirmPassword: "" }, setUserData, nextStep, prevStep }: Step2Props) {
+  const [password, setPassword] = useState(userData.password || "");
+  const [confirmPassword, setConfirmPassword] = useState(userData.confirmPassword || "");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const isPasswordValid = (password: string): boolean => {
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -33,7 +35,6 @@ export default function Step2({ userData={password:"",confirmPassword:""}, setUs
     } else {
       setUserData(password, confirmPassword)
       nextStep();
-      
     }
   };
 
@@ -46,7 +47,6 @@ export default function Step2({ userData={password:"",confirmPassword:""}, setUs
       position: toast.POSITION.TOP_CENTER
     });
   };
-  
 
   return (
     <div className={styles.container}>
@@ -59,30 +59,49 @@ export default function Step2({ userData={password:"",confirmPassword:""}, setUs
 
           <div className={styles.senha}>
             <span>Digite a senha</span>
-            <input
-              type="password"
-              placeholder="Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className={styles.passwordInputContainer}>
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Senha"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className={styles.showPasswordButton}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </div>
 
           <div className={styles.senha}>
             <span>Repita a senha</span>
-            <input
-              type="password"
-              placeholder="Confirme a senha"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
+            <div className={styles.passwordInputContainer}>
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Confirme a senha"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className={styles.showPasswordButton}
+              >
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </div>
+
           <div className={styles.dica}>
             <span>Dica para a sua senha:</span> ela deve conter no mínimo 8 caracteres, sendo ao menos 1 letra maiúscula, 1 número e 1 caractere especial.
           </div>
         </div>
       </div>
       <div className={styles.buttonContainer}>
-        <button onClick={handlePrevious}><FaArrowLeft/> Voltar</button>
+        <button onClick={handlePrevious}><FaArrowLeft /> Voltar</button>
         <button onClick={handleNext}>Avançar <FaArrowRight /></button>
       </div>
     </div>

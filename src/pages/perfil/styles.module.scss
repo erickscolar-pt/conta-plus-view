@@ -250,15 +250,69 @@
                             flex-wrap: wrap !important;
                             flex-direction: column !important;
                             margin-bottom: 1em !important;
-                            input{
+
+                            input {
                                 margin: 0 !important;
                                 width: 100% !important;
                             }
                         }
                     }
+
+                    .componentLinkAccept {
+                        width: 100%;
+                        margin-bottom: 1em;
+
+                        h1 {
+                            color: #000;
+                            text-align: center;
+                            font-family: Arial, Helvetica, sans-serif;
+                            font-size: 20px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: normal;
+                            letter-spacing: -0.3px;
+                            margin-bottom: 1em;
+                            margin-top: 1em;
+
+                        }
+
+                        .containerPeaples {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+
+                            .peaples {
+                                width: 14em;
+
+                                .remove {
+                                    padding: 0.5em;
+
+                                    p {
+                                        font-size: 15px;
+                                    }
+
+                                    button {
+                                        border: 1px solid #570E0E;
+                                        cursor: pointer;
+                                        border-radius: 0px 5px 5px 0px;
+                                        background: #570E0E;
+                                        box-shadow: 0px 4px 4px 0px rgba(255, 255, 255, 0.25);
+                                        padding: .5em 1em;
+
+                                        svg {
+                                            height: 15px !important;
+                                            width: 15px !important;
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+
+                    }
                 }
 
-                .componentButtons{
+                .componentButtons {
                     display: flex !important;
                     flex-direction: column !important;
                     justify-content: space-between !important;
@@ -266,7 +320,8 @@
                     align-items: center !important;
                     align-content: center !important;
                     gap: 10px;
-                    .link{
+
+                    .link {
                         width: 100% !important;
                         gap: 10px;
                     }

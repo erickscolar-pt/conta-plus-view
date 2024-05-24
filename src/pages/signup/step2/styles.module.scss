@@ -12,7 +12,7 @@
     width: 100%;
     gap: 40px;
     padding: 20px;
-    
+
     .formContainer {
         display: flex;
         border-radius: 20px;
@@ -34,10 +34,8 @@
                 flex-direction: column;
 
                 .title {
-
                     color: var(--color-link-default, #5D3D9A);
                     font-family: Arial, Helvetica, sans-serif;
-
                     font-size: 14px;
                     font-style: normal;
                     font-weight: 500;
@@ -47,9 +45,7 @@
                 h1 {
                     color: var(--color-text-neutral-default, #1E1A34);
                     font-family: Arial, Helvetica, sans-serif;
-
                     margin: .3em;
-
                     font-size: 24px;
                     font-style: normal;
                     font-weight: 500;
@@ -62,10 +58,8 @@
 
                 .lable {
                     margin: .5em;
-
                     color: var(--color-text-neutral-subtle, #474359);
                     font-family: Arial, Helvetica, sans-serif;
-
                     font-size: 16px;
                     font-style: normal;
                     font-weight: 400;
@@ -75,7 +69,8 @@
 
             .senha {
                 margin: .5em;
-
+                width: 100%;
+                
                 span {
                     display: flex;
                     align-items: flex-start;
@@ -83,21 +78,42 @@
                     margin: .5em;
                 }
 
-                input {
+                .passwordInputContainer {
                     display: flex;
-
-                    height: 56px;
-                    padding: 0px 20px 0px 24px;
                     align-items: center;
-                    gap: 12px;
-                    align-self: stretch;
-                    width: 28em;
-                    border-radius: 8px;
-                    border: 1px solid var(--color-border-input, #C0BFC6);
-                    background: var(--color-backgrounds-input-subtle-default, #FFF);
+                    position: relative;
+                    width: 100%;
+
+                    input {
+                        display: flex;
+                        height: 56px;
+                        padding: 0px 20px 0px 24px;
+                        align-items: center;
+                        gap: 12px;
+                        flex: 1;
+                        border-radius: 8px;
+                        border: 1px solid var(--color-border-input, #C0BFC6);
+                        background: var(--color-backgrounds-input-subtle-default, #FFF);
+                    }
+
+                    .showPasswordButton {
+                        background: none;
+                        border: none;
+                        cursor: pointer;
+                        position: absolute;
+                        right: 1rem;
+                        padding: 0;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        svg {
+                            font-size: 1.2rem;
+                            color: #6c757d;
+                        }
+                    }
                 }
             }
-
 
             .dica {
                 width: 31em;
@@ -106,10 +122,8 @@
                 align-self: stretch;
                 border-radius: 8px;
                 background: var(--color-backgrounds-discovery-subtle-default, #CEBFE8);
-
                 color: var(--color-text-neutral-subtle, #474359);
                 font-family: Arial, Helvetica, sans-serif;
-
                 font-size: 12px;
                 font-style: normal;
                 font-weight: 400;
@@ -117,10 +131,7 @@
                 letter-spacing: -0.06px;
             }
         }
-
-
     }
-
 
     .buttonContainer {
         display: flex;
@@ -128,7 +139,6 @@
         width: 100%;
         justify-content: space-between;
         padding: 0.8em 2em;
-
         margin: 0.5em;
         border-radius: 20px;
         background: #ECE1A7;
@@ -150,29 +160,27 @@
             &:hover {
                 background: #315f2c;
                 color: #FFFFFF;
-
             }
         }
     }
-
 }
 
 @media screen and (max-width: 768px) {
     .container {
-        .formContainer{
-            .form{
+        .formContainer {
+            .form {
                 max-width: 100% !important;
                 padding: 2em !important;
-                .senha{
-                    
-                    input{
+
+                .senha {
+                    input {
                         width: 23em !important;
                     }
                 }
 
-                .dica{
+                .dica {
                     width: 26em !important;
-                    margin: 3em 0 0 0!important;
+                    margin: 3em 0 0 0 !important;
                 }
             }
         }
