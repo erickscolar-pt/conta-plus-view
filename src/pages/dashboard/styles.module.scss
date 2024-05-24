@@ -27,22 +27,56 @@
         .filter {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 1em;
             padding: 1em;
             background: #f3e6f5;
             border-radius: 8px;
             box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
             
+            .infomeses{
+                width: 100%;
+                text-align: center;
+            }
+            
+            .infoanos{
+                width: 100%;
+                text-align: center;
+            }
+
             label {
                 font-size: 1em;
                 margin: 0.5em 0;
+                font-weight: bold;
+                color: #400E57;
             }
 
             input[type="range"] {
+                border-radius: 25px;
+                background-color: #400e5771;
                 width: 100%;
                 margin: 0.5em 0;
                 cursor: pointer;
+                -webkit-appearance: none; /* Remove a aparência padrão do controle deslizante do Webkit */
+                appearance: none; /* Remove a aparência padrão do controle deslizante */
+            }
+
+            input[type="range"]::-webkit-slider-thumb {
+                -webkit-appearance: none; /* Remove a aparência padrão do polegar do controle deslizante do Webkit */
+                appearance: none; /* Remove a aparência padrão do polegar do controle deslizante */
+                width: 16px; /* Largura do polegar */
+                height: 16px; /* Altura do polegar */
+                background-color: #400E57; /* Cor do polegar */
+                border-radius: 50%; /* Forma circular do polegar */
+                cursor: pointer; /* Cursor ao pairar sobre o polegar */
+            }
+        
+            input[type="range"]::-moz-range-thumb {
+                width: 16px; /* Largura do polegar */
+                height: 16px; /* Altura do polegar */
+                background-color: #400E57; /* Cor do polegar */
+                border-radius: 50%; /* Forma circular do polegar */
+                cursor: pointer; /* Cursor ao pairar sobre o polegar */
             }
 
             div {
@@ -50,18 +84,22 @@
                 margin: 0.5em 0;
                 color: #333;
             }
-
-            button {
-                background: #400E57;
-                color: white;
-                padding: 0.5em 1em;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-
-                &:hover {
-                    background: #5f176e;
+            .buttonFilter{
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+                button {
+                    background: #400E57;
+                    color: white;
+                    padding: 0.5em 1em;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+    
+                    &:hover {
+                        background: #5f176e;
+                    }
                 }
             }
         }

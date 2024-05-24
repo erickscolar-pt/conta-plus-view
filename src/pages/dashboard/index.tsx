@@ -7,6 +7,7 @@ import { setupAPIClient } from "@/services/api";
 import { useEffect, useState } from "react";
 import ChartGrafic from "@/component/chartgrafic";
 import NotFound from "@/component/notfound";
+import { toast } from "react-toastify";
 
 interface DashboardChartProps {
     dashboarddata: DashboardData;
@@ -24,18 +25,19 @@ export interface DataItem {
 }
 
 const months = [
-  'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
 ];
 
 export default function Dashboard({ dashboarddata }: DashboardChartProps) {
+    const date = new Date();
     const [graficoBarra, setGraficoBarra] = useState<DashboardData | null>(null);
     const [monthRange, setMonthRange] = useState([0, 11]);
-    const [yearRange, setYearRange] = useState([]);
+    const [yearRange, setYearRange] = useState([date.getFullYear() - 1, date.getFullYear()]);
     const [anosText, setAnosText] = useState(0)
     const [mesesText, setMesesText] = useState(0)
 
-    console.log({anos:anosText, meses: mesesText})
+    console.log({ anos: anosText, meses: mesesText })
     useEffect(() => {
         const fetchData = async () => {
             setGraficoBarra(dashboarddata);
@@ -49,8 +51,8 @@ export default function Dashboard({ dashboarddata }: DashboardChartProps) {
 
         const initialDate = new Date(yearRange[0], monthRange[0], 1).toISOString().split('T')[0];
         const finalDate = new Date(yearRange[1], monthRange[1] + 1, 0).toISOString().split('T')[0];
-        setAnosText(yearRange[1]-yearRange[0])
-        setMesesText(monthRange[1]-monthRange[0])
+        setAnosText(yearRange[1] - yearRange[0])
+        setMesesText(monthRange[1] - monthRange[0])
         const response = await apiClient.post(`/dashboard?initial=${initialDate}&final=${finalDate}`);
         setGraficoBarra(response.data);
     };
@@ -81,7 +83,7 @@ export default function Dashboard({ dashboarddata }: DashboardChartProps) {
                                 value={monthRange[1]}
                                 onChange={(e) => setMonthRange([monthRange[0], Number(e.target.value)])}
                             />
-                            <div>{months[monthRange[0]]} - {months[monthRange[1]]}</div>
+                            <div className={styles.infomeses}>{months[monthRange[0]]} - {months[monthRange[1]]}</div>
 
                             <label htmlFor="yearRangeStart">Anos:</label>
                             <input
@@ -100,9 +102,11 @@ export default function Dashboard({ dashboarddata }: DashboardChartProps) {
                                 value={yearRange[1]}
                                 onChange={(e) => setYearRange([yearRange[0], Number(e.target.value)])}
                             />
-                            <div>{yearRange[0]} - {yearRange[1]}</div>
+                            <div className={styles.infoanos}>{yearRange[0]} - {yearRange[1]}</div>
 
-                            <button onClick={handleRangeChange}>Filtrar</button>
+                            <div className={styles.buttonFilter}>
+                                <button onClick={handleRangeChange}>Filtrar</button>
+                            </div>
                         </div>
                         {
                             graficoBarra && graficoBarra.dividas &&
