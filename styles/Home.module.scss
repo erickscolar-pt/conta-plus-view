@@ -71,6 +71,10 @@
           padding-right: 3em;
         }
 
+        .inputPassword{
+          margin: 0;
+        }
+
         .showPasswordButton {
           position: absolute;
           top: 50%;
@@ -110,6 +114,30 @@
 
     .cadastro {
       margin-top: 1em;
+      height: 32px;
+      width: 100%;
+      border: none;
+      font-family: "Arial";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      letter-spacing: -0.015em;
+      color: #FFFFFF;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-content: center;
+      transition: all 0.3s;
+      filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.25));
+      cursor: pointer;
+      border-radius: 4px;
+      background: #599E52;
+    }
+
+    .buttonLogin {
+      margin-top: 3em;
       height: 32px;
       width: 100%;
       border: none;
