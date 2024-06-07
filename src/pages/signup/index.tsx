@@ -3,6 +3,7 @@ import Step1 from './step1';
 import Step2 from './step2';
 import Step3 from './step3';
 import { AuthContexts } from '@/contexts/AuthContexts';
+import Head from 'next/head';
 
 export default function Cadastro() {
   const { signUp } = useContext(AuthContexts)
@@ -15,7 +16,7 @@ export default function Cadastro() {
     confirmPassword: '',
     referralCode: '',
   });
-  
+
   const nextStep = () => {
     setStep(step + 1);
   };
@@ -35,22 +36,25 @@ export default function Cadastro() {
     })
   };
 
-  function handleStep1(nome, email, username){
-    setUserData({...userData, nome, email, username})
+  function handleStep1(nome, email, username) {
+    setUserData({ ...userData, nome, email, username })
   }
 
-  function handleStep2(password, confirmPassword){
+  function handleStep2(password, confirmPassword) {
     setUserData({ ...userData, password, confirmPassword });
 
   }
 
-  function handleStep3(referralCode){
+  function handleStep3(referralCode) {
     setUserData({ ...userData, referralCode });
 
   }
 
   return (
     <div>
+      <Head>
+        <title>Conta Plus - Cadastro</title>
+      </Head>
       {step === 1 && (
         <Step1 userData={userData} setUserData={handleStep1} nextStep={nextStep} />
       )}
