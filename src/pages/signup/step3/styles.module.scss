@@ -155,16 +155,24 @@
 @media screen and (max-width: 768px) {
     .container {
         .formContainer{
+            background: none;
             .form{
+                border-radius: 20px;
+                background: rgba(255, 255, 255, 0.38) ;
                 max-width: 100% !important;
                 padding: 2em !important;
                 .senha{
                     
                     input{
-                        width: 23em !important;
+                        width: 19em !important;
                     }
                 }
             }
+        }
+
+        .buttonContainer{
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.38) ;
         }
     }
 }

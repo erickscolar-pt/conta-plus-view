@@ -123,10 +123,19 @@
 
 @media screen and (max-width: 768px) {
     .container {
-        .formContainer{
-            .form{
+
+
+        .formContainer {
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.38);
+            .form {
                 max-width: 100% !important;
             }
+        }
+
+        .buttonContainer{
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.38);
         }
     }
 }
