@@ -223,7 +223,8 @@
 
 @media screen and (max-width: 768px) {
   .container {
-    position: inherit !important;
+    //position: inherit !important;
+    background: url(../public/bg-mobile-login.png) rgba(211, 211, 211, 0) 100% / cover no-repeat;
 
     .login {
       margin: 0 !important;
@@ -233,8 +234,10 @@
       left: 0;
       right: 0;
       border-radius: 0 !important;
-
+      //background: none;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.17) 0%, rgba(96, 173, 243, 0.79) 47.57%, #197986 100%);
       .form {
+        position: fixed;
         .passwordInputContainer {
           .inputPassword {
             margin: 0;
