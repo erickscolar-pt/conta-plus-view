@@ -43,7 +43,8 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
     const [modalRendas, setModalRendas] = useState<Rendas>()
     const [loading, setLoading] = useState(false)
     const [rendas, setRendas] = useState<Rendas[]>(initialRendas);
-
+    const [filterDate, setFilterDate] = useState('')
+    const [filterType, setFilterType] = useState<'day' | 'month'>('day')
     const total = rendas.reduce((acc: number, renda: Rendas) => acc + (renda.valor || 0), 0);
     const totalvinculo = rendas.reduce((acc: number, renda: Rendas) => acc + (renda.valor_pagamento_vinculo || 0), 0);
 
@@ -171,8 +172,13 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
     const fetchRendas = async () => {
         const apiClient = setupAPIClient();
         try {
-            const response = await apiClient.get('/rendas');
-            setRendas(response.data);
+            if(filterDate !== ''){
+                const response = await apiClient.get(`/rendas/${filterDate}/${filterType}`);
+                setRendas(response.data);
+            }else{
+                const response = await apiClient.get('/rendas');
+                setRendas(response.data);
+            }
         } catch (error) {
             console.error('Erro ao buscar as rendas:', error.message);
             setRendas([]);
@@ -185,8 +191,8 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
         try {
             if (date && type) {
                 const formattedDate = date.toISOString().split('T')[0] + 'T03:00:00Z';
-
-
+                setFilterDate(formattedDate)
+                setFilterType(type)
                 const response = await apiClient.get(`/rendas/${formattedDate}/${type}`);
 
                 setRendas(response.data);

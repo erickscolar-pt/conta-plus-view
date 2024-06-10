@@ -42,6 +42,8 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
     const [loading, setLoading] = useState(false)
     const [objetivos, setObjetivos] = useState<Objetivos[]>(initialObjetivos);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [filterDate, setFilterDate] = useState('')
+    const [filterType, setFilterType] = useState<'day' | 'month'>('day')
 
     const total = objetivos.reduce((acc: number, Objetivo: Objetivos) => acc + (Objetivo.valor || 0), 0);
 
@@ -180,8 +182,15 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
     const fetchObjetivos = async () => {
         const apiClient = setupAPIClient();
         try {
-            const response = await apiClient.get('/Objetivos');
-            setObjetivos(response.data);
+            if(filterDate !== ''){
+                const response = await apiClient.get(`/Objetivos/${filterDate}/${filterType}`);
+
+                setObjetivos(response.data);
+            }else{
+                const response = await apiClient.get('/Objetivos');
+                setObjetivos(response.data);
+            }
+
         } catch (error) {
             console.error('Erro ao buscar as Objetivos:', error.message);
             setObjetivos([]);
@@ -195,6 +204,8 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
             if (date && type) {
                 const formattedDate = date.toISOString().split('T')[0] + 'T03:00:00Z';
 
+                setFilterDate(formattedDate)
+                setFilterType(type)
 
                 const response = await apiClient.get(`/Objetivos/${formattedDate}/${type}`);
 

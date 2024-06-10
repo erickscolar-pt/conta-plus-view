@@ -51,6 +51,8 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
     const [rendas, setRendas] = useState<Rendas[]>(initialRendas);
     const [isInstallments, setIsInstallments] = useState(false)
     const [installments, setInstallments] = useState(1)
+    const [filterDate, setFilterDate] = useState('')
+    const [filterType, setFilterType] = useState<'day' | 'month'>('day')
 
     const total = dividas.reduce((acc: number, divida: Dividas) => acc + (divida.quantoVouPagar || 0), 0);
     const totalPago = dividas.reduce((acc: number, divida: Dividas) => acc + (divida.payment === true && divida.quantoVouPagar || 0), 0);
@@ -248,10 +250,19 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
     const fetchDividas = async () => {
         const apiClient = setupAPIClient();
         try {
-            const response = await apiClient.get('/dividas');
-            const responserendas = await apiClient.get('/rendas');
-            setRendas(responserendas.data)
-            setDividas(response.data);
+            if(filterDate !== ''){
+                const response = await apiClient.get(`/dividas/${filterDate}/${filterType}`);
+                const responseRendas = await apiClient.get(`/rendas/${filterDate}/month`);
+
+                setDividas(response.data);
+                setRendas(responseRendas.data)
+            } else {
+                const response = await apiClient.get('/dividas');
+                const responserendas = await apiClient.get('/rendas');
+                setRendas(responserendas.data)
+                setDividas(response.data);
+            }
+
         } catch (error) {
             console.error('Erro ao buscar as Dividas:', error.message);
             setDividas([]);
@@ -264,6 +275,9 @@ export default function Gastos({ dividas: initialDividas, rendas: initialRendas,
         try {
             if (date && type) {
                 const formattedDate = date.toISOString().split('T')[0] + 'T03:00:00Z';
+
+                setFilterDate(formattedDate)
+                setFilterType(type)
 
                 const response = await apiClient.get(`/dividas/${formattedDate}/${type}`);
                 const responseRendas = await apiClient.get(`/rendas/${formattedDate}/month`);
