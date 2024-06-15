@@ -1,0 +1,319 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  bottom: 0;
+  top: 0;
+  position: fixed !important;
+  left: 0;
+  right: 0;
+  background: linear-gradient(108deg, #60ADF3 0%, #97C1E8 100%);
+  width: 100%;
+  gap: 40px;
+  padding: 20px;
+
+  form {
+    display: flex;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.58);
+    filter: drop-shadow(10px 0px 100px rgba(31, 0, 71, 0.71));
+    width: 100%;
+    height: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 20px;
+      max-width: 100%;
+
+      .information {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        width: 100%;
+        margin: 1em;
+
+        h1 {
+          color: #1E1A34;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 44px;
+          font-weight: 500;
+          line-height: 32px;
+          margin: 1em;
+          text-align: center;
+          }
+          
+          h2 {
+            color: #1E1A34;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 28px;
+            text-align: center;
+            margin: 1em;
+
+        }
+
+        .plans {
+          display: flex;
+          gap: 20px;
+          flex-wrap: wrap;
+          justify-content: center;
+
+          .planCard {
+            background: #212426;
+            border: 0 solid transparent;
+            border-radius: 30px;
+            width: 300px;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+            font-family: Arial, Helvetica, sans-serif;
+            transition: all .9s;
+
+            .typePlan {
+              margin: 0;
+              background: linear-gradient(133deg, rgba(132, 255, 159, 0.86) 12.15%, rgba(0, 147, 209, 0.74) 93.58%);
+              box-shadow: 5.815px 5.815px 11.63px 0px #1481A3 inset, -5.815px -5.815px 11.63px 0px #0A7295 inset;
+              border-radius: 30px 30px 0 0;
+              clip-path: polygon(0 0, 100% 0, 100% 100%, 0 87%);
+
+              padding: 2em;
+
+              h2 {
+                color: #FFF;
+                text-align: center;
+                font-size: 29.076px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: 125%;
+                /* 36.344px */
+              }
+
+            }
+
+            .planInfo {
+              padding: 4em;
+              border-radius: 0 0 30px 30px;
+              background: #212426;
+
+              p {
+                color: #218DA1;
+                font-size: 20.934px;
+                font-style: normal;
+                font-weight: 700;
+                line-height: 125%;
+              }
+            }
+
+            &.selected {
+              border: none;
+              color: white;
+              background: #406076;
+
+              .planInfo {
+                background: #406076;
+              }
+
+              .typePlan {
+                background: linear-gradient(133deg, rgb(132, 255, 159) 12.15%, rgb(0, 146, 209) 93.58%);
+              }
+
+              p {
+                color: white;
+              }
+            }
+
+            h2 {
+              font-size: 20px;
+              margin-bottom: 10px;
+            }
+
+            .price {
+              font-size: 18px;
+              color: #5D3D9A;
+              margin-bottom: 10px;
+            }
+
+            ul {
+              list-style: none;
+              padding: 0;
+
+              li {
+                font-size: 16px;
+                line-height: 24px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .buttonContainer {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      justify-content: flex-end;
+      padding: 0.8em 2em;
+      margin: 0.5em;
+      border-radius: 20px;
+
+      button {
+        display: flex;
+        height: 56px;
+        padding: 16px 20px;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid #eeeeed00;
+        border-radius: 4px;
+        background: #52889E;
+
+        color: white;
+        cursor: pointer;
+        transition: all .9s;
+
+        &:hover {
+          background: #133846;
+
+          color: #FFFFFF;
+        }
+      }
+    }
+  }
+
+  .loading {
+    font-size: 1.2rem;
+    color: #333;
+  }
+
+  .contentLoading {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: #6cabb5;
+
+    .loading {
+      animation: animate 2s infinite;
+    }
+  }
+
+
+}
+
+.qrCodeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  button {
+    margin-top: 1em;
+    display: flex;
+    height: 56px;
+    padding: 16px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid #eeeeed00;
+    border-radius: 4px;
+    background: #52889E;
+    width: 100%;
+
+    color: white;
+    cursor: pointer;
+    transition: all .9s;
+
+    &:hover {
+      background: #133846;
+
+      color: #FFFFFF;
+    }
+  }
+
+  p {
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+
+    .approved {
+      padding: .5em 1em;
+      border-radius: 10px;
+      background: #339537;
+      color: #eee6e6;
+
+    }
+
+    .fail {
+      padding: .5em 1em;
+      border-radius: 10px;
+      background: #B91D1D;
+      color: #eee6e6;
+    }
+
+    .pending {
+      padding: .5em 1em;
+      border-radius: 10px;
+      background: #A8A8A8;
+      color: #eee6e6;
+    }
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  .container {
+    .formContainer {
+      background: none;
+
+      .form {
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.38);
+        max-width: 100% !important;
+        padding: 2em !important;
+      }
+    }
+
+    .buttonContainer {
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.38);
+    }
+  }
+}
+
+@keyframes animate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes moveInBottom {
+  0% {
+    background: linear-gradient(90.61deg, #1a3427 2.18%, #1a3427 48.43%, #1a3425 99.83%);
+    opacity: 0.4;
+  }
+
+  100% {
+    background: linear-gradient(90.61deg, #1a341b 2.18%, #1a341e 7.06%, #1a341e 90.99%, #1a3420 99.88%);
+    opacity: 1;
+  }
+}

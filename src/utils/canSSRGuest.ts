@@ -1,23 +1,29 @@
-import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next'
-import { parseCookies } from 'nookies'
+import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
+import { parseCookies, destroyCookie } from 'nookies';
+import { AuthTokenError } from '../services/errors/AuthTokenError';
+import { api } from '@/services/apiCliente';
 
-//funcao para paginas que só pode ser acessadas por visitantes
 export function canSSRGuest<P>(fn: GetServerSideProps<P>) {
-  return async (ctx: GetServerSidePropsContext): Promise<GetServerSidePropsResult<P>> => {
+    return async (ctx: GetServerSidePropsContext): Promise<GetServerSidePropsResult<P>> => {
+        const cookies = parseCookies(ctx);
+        const token = cookies['@nextauth.token'];
 
-    const cookies = parseCookies(ctx);
-
-    // Se o cara tentar acessar a pagina porem tendo já um login salvo redirecionamos
-    if(cookies['@nextauth.token']){
-      return {
-        redirect:{
-          destination: '/ganhos',
-          permanent: false,
+        if (token) {
+            try {
+                return {
+                    redirect: {
+                        destination: '/',
+                        permanent: false,
+                    }
+                };
+            } catch (err) {
+                if (err instanceof AuthTokenError) {
+                    destroyCookie(ctx, '@nextauth.token');
+                    return await fn(ctx);
+                }
+            }
         }
-      }
-    }
 
-    return await fn(ctx);
-  }
-
+        return await fn(ctx);
+    };
 }

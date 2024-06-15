@@ -109,9 +109,9 @@ export default function Dashboard({ dashboarddata }: DashboardChartProps) {
                             </div>
                         </div>
                         {
-                            graficoBarra && graficoBarra.dividas &&
-                                graficoBarra.metas &&
-                                graficoBarra.rendas ?
+                            graficoBarra && graficoBarra.dividas.length > 0 &&
+                                graficoBarra.metas.length > 0 &&
+                                graficoBarra.rendas.length > 0 ?
                                 (
                                     <ChartGrafic data={graficoBarra} anos={anosText} meses={mesesText} />
                                 ) : (

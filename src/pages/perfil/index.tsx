@@ -12,17 +12,31 @@ import { Title } from '@/component/ui/title';
 import { isValidUsername } from '@/helper';
 import { Router, useRouter } from 'next/router';
 import { usePathname } from 'next/navigation'
+import { Button } from '@/component/ui/button';
 
 interface Usuarios {
     usuario: Usuario;
+    plano: Plano;
 }
 
-export default function Perfil({ usuario }: Usuarios) {
+export interface Plano {
+    id: number;
+    usuario_id: number;
+    plano_id: number;
+    payment_id: string;
+    status: string;
+    expiry_date: Date;
+    plan_duration: string;
+    created_at: Date;
+    updated_at: Date;
+}
+
+export default function Perfil({ usuario, plano }: Usuarios) {
     const [nome, setNome] = useState(usuario.nome);
     const [username, setUsername] = useState(usuario.username);
     const [copied, setCopied] = useState(false);
     const [baseUrl, setBaseUrl] = useState('');
-
+    console.log(plano)
     const handleCopyLink = () => {
 
         console.log('URL atual:', baseUrl);
@@ -47,13 +61,13 @@ export default function Perfil({ usuario }: Usuarios) {
         try {
             if (!isValidUsername(username)) {
                 toast.error('O nome de usuário deve conter apenas letras, números e caracteres especiais permitidos.', {
-                  position: toast.POSITION.BOTTOM_RIGHT
+                    position: toast.POSITION.BOTTOM_RIGHT
                 });
                 toast.warning('Exemplo: nome_de_usuario', {
                     position: toast.POSITION.BOTTOM_CENTER
-                  });
+                });
                 return;
-              }
+            }
             const apiClient = setupAPIClient();
             await apiClient.put('/user/att', { nome, username });
             toast.success('Alterações salvas com sucesso!', {
@@ -67,7 +81,7 @@ export default function Perfil({ usuario }: Usuarios) {
         }
     };
 
-    async function handleDeleteVinculo(id:number){
+    async function handleDeleteVinculo(id: number) {
         try {
             const apiClient = setupAPIClient();
             await apiClient.delete(`/vinculo/${id}`);
@@ -79,17 +93,30 @@ export default function Perfil({ usuario }: Usuarios) {
             toast.error('Erro ao salvar as alterações. Tente novamente mais tarde.', {
                 position: toast.POSITION.TOP_CENTER,
             });
-        } 
+        }
     }
 
     useEffect(() => {
         // Verifica se o código está sendo executado no navegador
         if (typeof window !== 'undefined') {
-          // Obtém a URL base do navegador
-          const baseUrl = window.location.origin;
-          setBaseUrl(baseUrl);
+            // Obtém a URL base do navegador
+            const baseUrl = window.location.origin;
+            setBaseUrl(baseUrl);
         }
-      }, []);
+    }, []);
+
+    function planoDuration(numberPlun: number) {
+        switch (numberPlun) {
+            case 30:
+                return 'Mensal'
+            case 180:
+                return 'Semestral'
+            case 365:
+                return 'Anual'
+            default:
+                return ''
+        }
+    }
 
     return (
         <>
@@ -115,6 +142,14 @@ export default function Perfil({ usuario }: Usuarios) {
                                 </div>
                             </div>
                             <div className={styles.componentLinkAccept}>
+                                {plano && (
+                                    <>
+                                        <div className={styles.planContainer}>
+                                            <p>Plano atual: {planoDuration(+plano.plan_duration)}</p>
+                                            <button type="button">Mudar plano</button>
+                                        </div>
+                                    </>
+                                )}
                                 {usuario.contavinculo.length > 0 &&
                                     <>
                                         <div className={styles.containerPeaples}>
@@ -125,7 +160,7 @@ export default function Perfil({ usuario }: Usuarios) {
                                                         return (
                                                             <div key={index} className={styles.remove}>
                                                                 <p>{usuario.username}</p>
-                                                                <button onClick={() => {handleDeleteVinculo(usuario.id)}} type="button"><TiUserDeleteOutline color='#fff' size={25} /></button>
+                                                                <button onClick={() => { handleDeleteVinculo(usuario.id) }} type="button"><TiUserDeleteOutline color='#fff' size={25} /></button>
                                                             </div>
                                                         )
                                                     })
@@ -163,17 +198,20 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
     const apiClient = setupAPIClient(ctx);
 
     try {
-        const response = await apiClient.get('/user/get');
+        const user = await apiClient.get('/user/get');
+        const plano = await apiClient.get('/payments/plano-user');
         return {
             props: {
-                usuario: response.data
+                usuario: user.data,
+                plano: plano.data
             }
         };
     } catch (error) {
         console.error('Erro ao buscar usuario:', error.message);
         return {
             props: {
-                usuario: []
+                usuario: [],
+                plano: []
             }
         };
     }

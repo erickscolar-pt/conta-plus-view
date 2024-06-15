@@ -16,7 +16,8 @@
     .formContainer {
         display: flex;
         border-radius: 20px;
-        background: #ECE1A7;
+        background: rgba(255, 255, 255, 0.58);
+        filter: drop-shadow(10px 0px 100px rgba(31, 0, 71, 0.71));
         width: 100%;
         flex-wrap: wrap;
         justify-content: center;
@@ -27,7 +28,8 @@
             flex-direction: column;
             align-items: center;
             border-radius: 20px;
-            background: #ECE1A7;
+            background: rgba(255, 255, 255, 0);
+
 
             .information {
                 display: flex;
@@ -121,10 +123,10 @@
                 padding: 1em;
                 align-self: stretch;
                 border-radius: 8px;
-                background: var(--color-backgrounds-discovery-subtle-default, #CEBFE8);
-                color: var(--color-text-neutral-subtle, #474359);
+                background: var(--color-backgrounds-discovery-subtle-default, #444444);
+                color: var(--color-text-neutral-subtle, #e4eeef);
                 font-family: Arial, Helvetica, sans-serif;
-                font-size: 12px;
+                font-size: 15px;
                 font-style: normal;
                 font-weight: 400;
                 line-height: 16px;
@@ -141,8 +143,8 @@
         padding: 0.8em 2em;
         margin: 0.5em;
         border-radius: 20px;
-        background: #ECE1A7;
-
+        background: rgba(255, 255, 255, 0.58);
+        filter: drop-shadow(10px 0px 100px rgba(31, 0, 71, 0.71));
         button {
             display: flex;
             height: 56px;
@@ -150,15 +152,15 @@
             justify-content: center;
             align-items: center;
             gap: 12px;
-            border: 1px solid #EEEEED;
+            border: 1px solid #eeeeed00;
             border-radius: 4px;
-            background: #599E52;
+            background: #52889E;
             color: white;
             cursor: pointer;
             transition: all .9s;
 
             &:hover {
-                background: #315f2c;
+                background: #133846;
                 color: #FFFFFF;
             }
         }
