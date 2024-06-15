@@ -84,51 +84,65 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   async function signIn({ username, password }: SignInProps) {
-
-
     try {
       const response = await api.post('/auth/signin', {
         username,
         password
-      })
-
-      const { id, email, token, isPaymentDone } = response.data;
+      });
+      console.log(response.status);
+      const { id, email, token, isPaymentDone, requirePayment } = response.data;
 
       if (window) {
         // set props data to session storage or local storage 
-        sessionStorage.setItem('id', id)
+        sessionStorage.setItem('id', id);
       }
 
       setUsuario({
         id,
         username,
-      })
+      });
 
       // Passar para as proximas requisições o token
-      api.defaults.headers['Authorization'] = `Bearer ${token}`
+      api.defaults.headers['Authorization'] = `Bearer ${token}`;
+
+      if (requirePayment) {
+        const res = await api(`${process.env.NEXT_PUBLIC_API_URL}/payments/planos`);
+        if (!res.data) {
+          throw new Error('Failed to fetch');
+        }
+
+        toast.warning("Sem plano definido, escolha um plano.");
+        Router.push({
+          pathname: '/paymentuser',
+          query: {
+            userData: JSON.stringify({ id, email }), // Passe o usuário corretamente
+            planosData: JSON.stringify(res.data) // Certifique-se de passar o data aqui
+          }
+        });
+      }
 
       if (isPaymentDone) {
         setCookie(undefined, '@nextauth.token', token, {
           maxAge: 60 * 60 * 24 * 30,
           path: "/" // Quais caminhos terao acesso ao cookie
-        })
-        toast.success("Bem vindo!")
+        });
+        toast.success("Bem vindo!");
         Router.push('/ganhos');
       } else {
         const payment = await api.get('/payments/user');
-        toast.warning("Pagamento pendente.")
+        toast.warning("Pagamento pendente.");
         Router.push({
           pathname: '/payment',
           query: { paymentData: JSON.stringify(payment.data) }
         });
       }
 
-
     } catch (err) {
-      console.log(err)
-      toast.error("Erro ao acessar.")
+      console.log(err);
+      toast.error("Erro ao acessar.");
     }
   }
+
 
   async function signUp({ nome, email, username, senha, codigoRecomendacao }: SignUpProps) {
 

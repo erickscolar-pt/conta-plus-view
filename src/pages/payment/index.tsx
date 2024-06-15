@@ -23,10 +23,8 @@ interface Payment {
 }
 
 export default function Payment() {
-    const { usuario } = useContext(AuthContexts);
     const router = useRouter();
     const { paymentData } = router.query;
-    const [loading, setLoading] = useState(false);
     const [payment, setPayment] = useState<Payment | null>(null);
     const [paymentStatus, setPaymentStatus] = useState('pending');
     const { Image } = useQRCode();
@@ -78,42 +76,45 @@ export default function Payment() {
             <Head>
                 <title>Conta Plus - Pagamento</title>
             </Head>
-            <div className={styles.qrCodeContainer}>
-                {payment ? (
-                    <>
-                        <Image
-                            text={payment.qr_code}
-                            options={{
-                                type: 'image/jpeg',
-                                quality: 0.3, // Ajuste a qualidade para reduzir o tamanho do QR Code
-                                errorCorrectionLevel: 'M',
-                                margin: 3,
-                                scale: 4,
-                                width: 200,
-                                color: {
-                                    dark: '#000',
-                                    light: '#FFF',
-                                },
-                            }}
-                        />
-                        <h1>Plano escolhido</h1>
-                        <p>{payment.plano}</p>
-                        <p>{formatCurrency(+payment.valor)}</p>
-                        <button onClick={handleCopyLink}>
-                            <FaCopy /> Copiar Link
-                        </button>
-                        <p>Status do Pagamento: {paymentStatus === 'pending' ? <span className={styles.pending}>Aguardando pagamento...</span> : paymentStatus === 'approved' ? <span className={styles.approved}>Pagamento aprovado!</span> : <span className={styles.fail}>Pagamento falhou!</span>}</p>
-                    </>
-                ) : (
-                    <>
-                        <div className={styles.contentLoading}>
-                            <FaSpinner className={styles.loading} color='#fff' size={40} />
-                        </div>
-                    </>
-                )
+            <div className={styles.container}>
+                <div className={styles.qrCodeContainer}>
+                    {payment ? (
+                        <>
+                            <Image
+                                text={payment.qr_code}
+                                options={{
+                                    type: 'image/jpeg',
+                                    quality: 0.3, // Ajuste a qualidade para reduzir o tamanho do QR Code
+                                    errorCorrectionLevel: 'M',
+                                    margin: 3,
+                                    scale: 4,
+                                    width: 200,
+                                    color: {
+                                        dark: '#000',
+                                        light: '#FFF',
+                                    },
+                                }}
+                            />
+                            <h1>Plano escolhido</h1>
+                            <p>{payment.plano}</p>
+                            <p>{formatCurrency(+payment.valor)}</p>
+                            <button onClick={handleCopyLink}>
+                                <FaCopy /> Copiar Link
+                            </button>
+                            <p>Status do Pagamento: {paymentStatus === 'pending' ? <span className={styles.pending}>Aguardando pagamento...</span> : paymentStatus === 'approved' ? <span className={styles.approved}>Pagamento aprovado!</span> : <span className={styles.fail}>Pagamento falhou!</span>}</p>
+                        </>
+                    ) : (
+                        <>
+                            <div className={styles.contentLoading}>
+                                <FaSpinner className={styles.loading} color='#fff' size={40} />
+                            </div>
+                        </>
+                    )
 
-                }
+                    }
+                </div>
             </div>
+
         </>
     );
 }

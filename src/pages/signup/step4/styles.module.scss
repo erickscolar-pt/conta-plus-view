@@ -10,7 +10,6 @@
   right: 0;
   background: linear-gradient(108deg, #60ADF3 0%, #97C1E8 100%);
   width: 100%;
-  gap: 40px;
   padding: 20px;
 
   form {
@@ -24,7 +23,6 @@
     justify-content: space-between;
     align-items: center;
     flex-direction: column;
-
     .form {
       display: flex;
       flex-direction: column;
@@ -37,7 +35,7 @@
         flex-direction: column;
         flex-wrap: wrap;
         width: 100%;
-        margin: 1em;
+        gap: 2em;
 
         h1 {
           color: #1E1A34;
@@ -45,17 +43,15 @@
           font-size: 44px;
           font-weight: 500;
           line-height: 32px;
-          margin: 1em;
           text-align: center;
-          }
-          
-          h2 {
-            color: #1E1A34;
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 28px;
-            text-align: center;
-            margin: 1em;
+          padding: .5em;
+        }
 
+        h2 {
+          color: #1E1A34;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 28px;
+          text-align: center;
         }
 
         .plans {
@@ -96,7 +92,7 @@
             }
 
             .planInfo {
-              padding: 4em;
+              padding: 2em;
               border-radius: 0 0 30px 30px;
               background: #212426;
 
@@ -278,12 +274,15 @@
 
 @media screen and (max-width: 768px) {
   .container {
+    height: 100%;
+    position: relative !important;
+
     .formContainer {
       background: none;
-
+      display: flex;
       .form {
         border-radius: 20px;
-        background: rgba(255, 255, 255, 0.38);
+        //background: rgba(255, 255, 255, 0.38);
         max-width: 100% !important;
         padding: 2em !important;
       }
@@ -291,7 +290,7 @@
 
     .buttonContainer {
       border-radius: 20px;
-      background: rgba(255, 255, 255, 0.38);
+      //background: rgba(255, 255, 255, 0.38);
     }
   }
 }

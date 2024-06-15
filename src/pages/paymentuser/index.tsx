@@ -3,15 +3,17 @@ import { FaArrowLeft, FaCheck, FaCopy, FaSpinner } from 'react-icons/fa';
 import styles from './styles.module.scss';
 import { AuthContexts, ResponsePayments } from '@/contexts/AuthContexts';
 import { useQRCode } from 'next-qrcode';
-import Router from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { toast } from 'react-toastify';
 import { formatCurrency } from '@/helper';
 
 interface PaymentsProps {
-    planos: Planos[];
+    planos: Data;
     userData: Usuario;
 }
-
+interface Data {
+    data: Planos[]
+}
 interface Planos {
     id: number,
     plano: string,
@@ -21,24 +23,32 @@ interface Planos {
 
 type Usuario = {
     id: number,
-    nome: string,
-    username: string,
     email: string,
-    senha: string,
-    codigoReferencia: string,
-    codigoRecomendacao: string,
-    created_at: string,
-    updated_at: string
 }
 
-export default function PaymentPage({ planos, userData }: PaymentsProps) {
+export default function PaymentUser() {
+    const router = useRouter();
+    const { userData, planosData } = router.query;
     const [selectedPlan, setSelectedPlan] = useState<Planos | null>(null);
     const { checkPlan } = useContext(AuthContexts);
     const [loading, setLoading] = useState(false);
     const [payment, setPayment] = useState(false);
     const [paymentData, setPaymentData] = useState<ResponsePayments>();
+    const [user, setUserData] = useState<Usuario | null>(null);
+    const [planos, setPlanos] = useState<Planos[]>([]);
+
     const [paymentStatus, setPaymentStatus] = useState('pending');
     const { Image } = useQRCode();
+    
+    useEffect(() => {
+        if (userData && planosData) {
+            const parsedUserData = Array.isArray(userData) ? userData[0] : userData;
+            const parsedPlanosData = Array.isArray(planosData) ? planosData[0] : planosData;
+            setUserData(JSON.parse(parsedUserData));
+            setPlanos(JSON.parse(parsedPlanosData).data); // Acesse a propriedade data
+        }
+    }, [userData, planosData]);
+
 
     const handleSub = async (event: FormEvent) => {
         event.preventDefault();
@@ -48,11 +58,11 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
             return;
         }
         setLoading(true);
-        if (selectedPlan) {
+        if (selectedPlan && user) {
             const res: any = await checkPlan({
-                email: userData.email,
+                email: user.email,
                 plano_id: selectedPlan.id,
-                usuario_id: userData.id,
+                usuario_id: user.id,
                 description: 'Pagamento do Plano ' + selectedPlan.plano
             });
 
@@ -72,17 +82,17 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
 
     const checkPaymentStatus = (paymentId: number) => {
         const interval = setInterval(async () => {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/${paymentId}/${userData.id}/status`);
-            console.log(response)
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/${paymentId}/${user.id}/status`);
+            console.log(response);
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/${paymentId}/${userData.id}/status`);
-                console.log(response)
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/${paymentId}/${user.id}/status`);
+                console.log(response);
                 const data = await response.json();
 
                 if (data.status === 'approved') {
                     setPaymentStatus('approved');
                     clearInterval(interval);
-                    Router.push('/')
+                    Router.push('/');
                 } else if (data.status !== 'pending') {
                     setPaymentStatus('failed');
                     clearInterval(interval);
@@ -105,6 +115,7 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
             position: toast.POSITION.TOP_RIGHT,
         });
     };
+
     return (
         <div className={styles.container}>
             {loading ? (
@@ -161,7 +172,7 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
                     />
                     <h1>Plano escolhido</h1>
                     <p>{selectedPlan.plano}</p>
-                    <p>{formatCurrency(selectedPlan.valor)}</p>
+                    <p>Valor do plano: {formatCurrency(selectedPlan.valor)}</p>
                     <button onClick={handleCopyLink}>
                         <FaCopy /> Copiar Link
                     </button>
@@ -170,5 +181,4 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
             )}
         </div>
     );
-    
 }
