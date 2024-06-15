@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { canSSRGuest } from "../utils/canSSRGuest";
 import Router from 'next/router';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { setupAPIClient } from "@/services/api";
 
 export default function Home() {
   const { signIn } = useContext(AuthContexts);
@@ -44,7 +45,6 @@ export default function Home() {
         <title>Login</title>
       </Head>
       <div className={styles.container}>
-        {/* <Image className={styles.img} width={500} src={imgfundo} alt="" /> */}
         
         <ul className={styles.shapes}>
           {[...Array(20)].map((_, i) => (
@@ -105,6 +105,8 @@ export default function Home() {
 }
 
 export const getServerSideProps = canSSRGuest(async (ctx) => {
+  const apiClient = setupAPIClient(ctx);
+  
   return {
     props: {}
   };

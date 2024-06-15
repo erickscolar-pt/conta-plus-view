@@ -18,7 +18,8 @@
     .formContainer {
         display: flex;
         border-radius: 20px;
-        background: #ECE1A7;
+        background: rgba(255, 255, 255, 0.58);
+        filter: drop-shadow(10px 0px 100px rgba(31, 0, 71, 0.71));
         width: 100%;
         flex-wrap: wrap;
         justify-content: center;
@@ -34,7 +35,7 @@
             align-self: stretch;
             margin: 10px;
             max-width: 60%;
-            color: black;
+            color: rgb(56, 56, 56);
 
             .title {
 
@@ -95,7 +96,8 @@
         padding: 0.8em 2em;
         margin: 0.5em;
         border-radius: 20px;
-        background: #ECE1A7;
+        background: rgba(255, 255, 255, 0.58);
+        filter: drop-shadow(10px 0px 100px rgba(31, 0, 71, 0.71));
         justify-content: space-between;
 
         button {
@@ -105,15 +107,15 @@
             justify-content: center;
             align-items: center;
             gap: 12px;
-            border: 1px solid #EEEEED;
+            border: 1px solid #eeeeed00;
             border-radius: 4px;
-            background: #599E52;
+            background: #52889E;
             color: white;
             cursor: pointer;
             transition: all .9s;
 
             &:hover {
-                background: #315f2c;
+                background: #133846;
                 color: #FFFFFF;
 
             }
@@ -128,12 +130,13 @@
         .formContainer {
             border-radius: 20px;
             background: rgba(255, 255, 255, 0.38);
+
             .form {
                 max-width: 100% !important;
             }
         }
 
-        .buttonContainer{
+        .buttonContainer {
             border-radius: 20px;
             background: rgba(255, 255, 255, 0.38);
         }

@@ -16,7 +16,8 @@
     .formContainer {
         display: flex;
         border-radius: 20px;
-        background: #ECE1A7;
+        background: rgba(255, 255, 255, 0.58);
+        filter: drop-shadow(10px 0px 100px rgba(31, 0, 71, 0.71));
         width: 100%;
         flex-wrap: wrap;
         justify-content: center;
@@ -27,7 +28,6 @@
             flex-direction: column;
             align-items: center;
             border-radius: 20px;
-            background: #ECE1A7;
             max-width: 100%;
             .information {
                 display: flex;
@@ -126,7 +126,8 @@
 
         margin: 0.5em;
         border-radius: 20px;
-        background: #ECE1A7;
+        background: rgba(255, 255, 255, 0.58);
+        filter: drop-shadow(10px 0px 100px rgba(31, 0, 71, 0.71));
 
         button {
             display: flex;
@@ -135,15 +136,15 @@
             justify-content: center;
             align-items: center;
             gap: 12px;
-            border: 1px solid #EEEEED;
+            border: 1px solid #eeeeed00;
             border-radius: 4px;
-            background: #599E52;
+            background: #52889E;
             color: white;
             cursor: pointer;
             transition: all .9s;
 
             &:hover {
-                background: #315f2c;
+                background: #133846;
                 color: #FFFFFF;
 
             }

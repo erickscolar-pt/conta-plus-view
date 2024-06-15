@@ -69,8 +69,55 @@
                 .componentLinkAccept {
                     width: 25%;
 
+                    .planContainer {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        gap: 2em;
+                        margin-bottom: .5em;
+                        border-radius: 10px;
+                        padding: .8em;
+                        border: 1px solid #363636;
+                        p {
+                            padding: 1em;
+                            border-radius: 10px;
+                            background: rgba(169, 209, 215, 0.27);
+
+                            color: #484848;
+                            text-align: center;
+                            font-size: 24px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: normal;
+                            letter-spacing: -0.36px;
+                        }
+
+                        button {
+                            border: none;
+                            color: white;
+                            cursor: pointer;
+                            border-radius: 10px;
+                            background: #0E5734;
+                            text-align: center;
+                            font-family: "Arial";
+                            font-size: 15px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: normal;
+                            letter-spacing: -0.225px;
+                            padding: 1em;
+                            transition: all 1s;
+
+                            &:hover {
+                                background: #0e5734c5;
+                            }
+
+                        }
+                    }
+
                     h1 {
                         color: #000;
+
                         text-align: center;
                         font-family: Arial, Helvetica, sans-serif;
                         font-size: 20px;
@@ -82,11 +129,13 @@
 
                     .containerPeaples {
                         max-width: 100%;
+                        border-radius: 10px;
+                        padding: .8em;
+                        border: 1px solid #363636;
 
                         .peaples {
-                            border-radius: 10px;
-                            background: #599E52;
-                            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                            //box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                            //background: #9affd78c;
 
                             .remove {
                                 display: flex;
@@ -99,7 +148,8 @@
 
                                 p {
                                     cursor: context-menu;
-                                    color: #000;
+                                    background: #ffffff;
+                                    color: #363636;
                                     text-align: center;
                                     font-family: Arial, Helvetica, sans-serif;
                                     font-size: 20px;
@@ -108,14 +158,16 @@
                                     line-height: normal;
                                     letter-spacing: -0.3px;
                                     text-align: center;
+                                    border: 1px solid #a8a8a8;
+                                    border-right: 0;
                                     border-radius: 5px 0px 0px 5px;
-                                    background: #FFF;
                                     box-shadow: 0px 4px 4px 0px rgba(255, 255, 255, 0.25);
-                                    padding: .5em 1em;
+                                    padding: .4em .9em;
                                 }
 
                                 button {
-                                    border: 1px solid #570E0E;
+                                    border: 1px solid #a8a8a8;
+                                    border-left: 0;
                                     cursor: pointer;
                                     border-radius: 0px 5px 5px 0px;
                                     background: #570E0E;

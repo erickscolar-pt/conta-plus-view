@@ -2,18 +2,19 @@ import React from 'react';
 
 import { useContext, useState } from 'react';
 import styles from './styles.module.scss'
-import { FaArrowLeft, FaCheck } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaCheck } from 'react-icons/fa';
 
 interface Step3Props {
   userData: {
     referralCode: string;
   };
   setUserData: (referralCode: string) => void;
-  handleFormSubmit: () => void;
   prevStep: () => void;
+  nextStep: () => void;
+  handleFormSubmit: () => void;
 }
 
-export default function Step3({ userData={referralCode:""}, setUserData, handleFormSubmit, prevStep }: Step3Props) {
+export default function Step3({ userData={referralCode:""}, setUserData, nextStep , prevStep, handleFormSubmit }: Step3Props) {
   const [referralCode, setReferralCode] = useState( userData.referralCode || "")
 
   const handlePrevious = () => {
@@ -21,9 +22,10 @@ export default function Step3({ userData={referralCode:""}, setUserData, handleF
     prevStep();
   };
 
-  function handleSub() {
+  function handleNext() {
     setUserData(referralCode)
     handleFormSubmit()
+    nextStep();
   }
 
   return (
@@ -53,7 +55,7 @@ export default function Step3({ userData={referralCode:""}, setUserData, handleF
 
       <div className={styles.buttonContainer}>
         <button onClick={handlePrevious}><FaArrowLeft /> Voltar</button>
-        <button onClick={handleSub}>Finalizar <FaCheck /></button>
+        <button onClick={handleNext}>Avançar <FaArrowRight /></button>
       </div>
 
     </div>

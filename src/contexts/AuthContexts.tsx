@@ -10,7 +10,8 @@ type AuthContextData = {
   isAuthenticated: boolean;
   signIn: (credentials: SignInProps) => Promise<void>;
   signOut: () => void;
-  signUp: (credentials: SignUpProps) => Promise<void>
+  checkPlan: (plan: selectedPlan) => void;
+  signUp: (credentials: SignUpProps) => Promise<Object>
 }
 
 type UsuarioProps = {
@@ -32,6 +33,13 @@ type SignUpProps = {
   codigoRecomendacao: string
 }
 
+type selectedPlan = {
+  description?: string,
+  email: string,
+  usuario_id: number,
+  plano_id: number
+}
+
 
 type ReqLinkProps = {
   userId: number,
@@ -40,6 +48,12 @@ type ReqLinkProps = {
 
 type AuthProviderProps = {
   children: ReactNode;
+}
+
+export type ResponsePayments = {
+  id: number,
+  qr_code: string,
+  qr_code_base64: string,
 }
 
 export const AuthContexts = createContext({} as AuthContextData)
@@ -78,22 +92,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
         password
       })
 
-
-      const { id,email, token } = response.data;
-
-
+      const { id, email, token, isPaymentDone } = response.data;
 
       if (window) {
         // set props data to session storage or local storage 
         sessionStorage.setItem('id', id)
       }
-
-
-
-      setCookie(undefined, '@nextauth.token', token, {
-        maxAge: 60 * 60 * 24 * 30,
-        path: "/" // Quais caminhos terao acesso ao cookie
-      })
 
       setUsuario({
         id,
@@ -103,10 +107,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Passar para as proximas requisições o token
       api.defaults.headers['Authorization'] = `Bearer ${token}`
 
-      toast.success("Bem vindo!")
-
-      //Redirecionar para pagina atendimento
-      Router.push('/ganhos')
+      if (isPaymentDone) {
+        setCookie(undefined, '@nextauth.token', token, {
+          maxAge: 60 * 60 * 24 * 30,
+          path: "/" // Quais caminhos terao acesso ao cookie
+        })
+        toast.success("Bem vindo!")
+        Router.push('/ganhos');
+      } else {
+        const payment = await api.get('/payments/user');
+        toast.warning("Pagamento pendente.")
+        Router.push({
+          pathname: '/payment',
+          query: { paymentData: JSON.stringify(payment.data) }
+        });
+      }
 
 
     } catch (err) {
@@ -115,7 +130,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  async function signUp({ nome,email, username, senha, codigoRecomendacao }: SignUpProps) {
+  async function signUp({ nome, email, username, senha, codigoRecomendacao }: SignUpProps) {
 
     try {
       const response = await api.post('/user/signup', {
@@ -126,18 +141,31 @@ export function AuthProvider({ children }: AuthProviderProps) {
         codigoRecomendacao
       })
       toast.success("Conta criada com sucesso.")
-
-      Router.push('/')
-
-
+      return response;
     } catch (err) {
       console.log(err)
       toast.error("Erro ao cadastrar usuario.")
     }
   }
 
+  async function checkPlan({ email, plano_id, usuario_id, description }: selectedPlan) {
+    try {
+      const response = await api.post('/payments', {
+        description,
+        email,
+        usuario_id,
+        plano_id
+      })
+      const res: ResponsePayments = await response.data;
+      return res
+    } catch (err) {
+      console.log(err)
+      toast.error("Erro consultar planos.")
+    }
+  }
+
   return (
-    <AuthContexts.Provider value={{ usuario, isAuthenticated, signIn, signOut, signUp  }}>
+    <AuthContexts.Provider value={{ usuario, isAuthenticated, signIn, signOut, signUp, checkPlan }}>
       {children}
     </AuthContexts.Provider>
   )
