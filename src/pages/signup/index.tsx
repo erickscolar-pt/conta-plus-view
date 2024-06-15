@@ -73,10 +73,6 @@ export default function Cadastro({planos}) {
     setUserData({ ...userData, referralCode });
   }
 
-  function handleStep4(referralCode) {
-    setUserData({ ...userData, referralCode });
-  }
-
   return (
     <div>
       <Head>
@@ -100,17 +96,25 @@ export default function Cadastro({planos}) {
 
 
 export async function getStaticProps() {
-  // Call an external API endpoint to get posts.
-  // You can use any data fetching library
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/planos`)
-
-  const planos = await res.json()
- 
-  // By returning { props: { posts } }, the Blog component
-  // will receive `posts` as a prop at build time
-  return {
-    props: {
-      planos,
-    },
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/planos`)
+    if (!res.ok) {
+      throw new Error('Failed to fetch');
+    }
+    const planos = await res.json()
+  
+    return {
+      props: {
+        planos,
+      },
+    }
+  } catch (error) {
+    console.error('Error fetching planos:', error);
+    return {
+      props: {
+        planos: [],
+      },
+      revalidate: 10, // Revalida após 10 segundos
+    }
   }
 }

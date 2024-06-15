@@ -114,13 +114,12 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
                                 <h1>Falta só essa etapa</h1>
                                 <h2>Selecione um plano para usar o sistema</h2>
                                 <div className={styles.plans}>
-                                    {planos.map((plan) => (
+                                    {planos?.map((plan) => (
                                         <div
                                             key={plan.id}
                                             className={`${styles.planCard} ${selectedPlan === plan ? styles.selected : ''}`}
                                             onClick={() => selectPlan(plan)}
                                         >
-
                                             <div className={styles.typePlan}>
                                                 <h2>{plan.plano}</h2>
                                             </div>
@@ -144,7 +143,7 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
                         text={paymentData.qr_code}
                         options={{
                             type: 'image/jpeg',
-                            quality: 0.3, // Ajuste a qualidade para reduzir o tamanho do QR Code
+                            quality: 0.3,
                             errorCorrectionLevel: 'M',
                             margin: 3,
                             scale: 4,
@@ -166,4 +165,5 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
             )}
         </div>
     );
+    
 }

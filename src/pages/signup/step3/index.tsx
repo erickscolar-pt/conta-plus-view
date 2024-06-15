@@ -50,9 +50,6 @@ export default function Step3({ userData={referralCode:""}, setUserData, nextSte
         </div>
       </div>
 
-
-
-
       <div className={styles.buttonContainer}>
         <button onClick={handlePrevious}><FaArrowLeft /> Voltar</button>
         <button onClick={handleNext}>Avançar <FaArrowRight /></button>
