@@ -264,6 +264,67 @@
                 }
             }
         }
+        .qrCodeContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            border-radius: 8px;
+          
+            button {
+              margin-top: 1em;
+              display: flex;
+              height: 56px;
+              padding: 16px 20px;
+              justify-content: center;
+              align-items: center;
+              gap: 12px;
+              border: 1px solid #eeeeed00;
+              border-radius: 4px;
+              background: #52889E;
+              width: 100%;
+          
+              color: white;
+              cursor: pointer;
+              transition: all .9s;
+          
+              &:hover {
+                background: #133846;
+          
+                color: #FFFFFF;
+              }
+            }
+          
+            p {
+              margin-top: 20px;
+              font-size: 1.2em;
+              font-weight: bold;
+              color: #333;
+          
+              .approved {
+                padding: .5em 1em;
+                border-radius: 10px;
+                background: #339537;
+                color: #eee6e6;
+          
+              }
+          
+              .fail {
+                padding: .5em 1em;
+                border-radius: 10px;
+                background: #B91D1D;
+                color: #eee6e6;
+              }
+          
+              .pending {
+                padding: .5em 1em;
+                border-radius: 10px;
+                background: #A8A8A8;
+                color: #eee6e6;
+              }
+            }
+          }
     }
 }
 

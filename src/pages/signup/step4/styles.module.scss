@@ -277,6 +277,7 @@
     height: 100%;
     position: relative !important;
 
+
     .formContainer {
       background: none;
       display: flex;
@@ -291,6 +292,79 @@
     .buttonContainer {
       border-radius: 20px;
       //background: rgba(255, 255, 255, 0.38);
+    }
+  }
+  .qrCodeContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6em 1em;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    button {
+      margin-top: 1em;
+      display: flex;
+      height: 56px;
+      padding: 16px 20px;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid #eeeeed00;
+      border-radius: 4px;
+      background: #52889E;
+      width: 100%;
+  
+      color: white;
+      cursor: pointer;
+      transition: all .9s;
+  
+      &:hover {
+        background: #133846;
+  
+        color: #FFFFFF;
+      }
+    }
+  
+    p {
+      margin: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .approved {
+        margin: 1em;
+        padding: .5em 1em;
+        border-radius: 10px;
+        background: #339537;
+        color: #eee6e6;
+  
+      }
+  
+      .fail {
+        padding: .5em 1em;
+        border-radius: 10px;
+        background: #B91D1D;
+        color: #eee6e6;
+      }
+  
+      .pending {
+        margin: 1em;
+
+        padding: .5em 1em;
+        border-radius: 10px;
+        background: #A8A8A8;
+        color: #eee6e6;
+      }
     }
   }
 }

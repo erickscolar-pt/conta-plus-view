@@ -10,9 +10,7 @@ import { setupAPIClient } from '@/services/api';
 import { Usuario } from '@/type';
 import { Title } from '@/component/ui/title';
 import { isValidUsername } from '@/helper';
-import { Router, useRouter } from 'next/router';
-import { usePathname } from 'next/navigation'
-import { Button } from '@/component/ui/button';
+import Router from 'next/router';
 
 interface Usuarios {
     usuario: Usuario;
@@ -118,6 +116,10 @@ export default function Perfil({ usuario, plano }: Usuarios) {
         }
     }
 
+    function handlePlan(){
+        Router.push('/paymentauth')
+    }
+
     return (
         <>
             <Header />
@@ -146,7 +148,7 @@ export default function Perfil({ usuario, plano }: Usuarios) {
                                     <>
                                         <div className={styles.planContainer}>
                                             <p>Plano atual: {planoDuration(+plano.plan_duration)}</p>
-                                            <button type="button">Mudar plano</button>
+                                            <button onClick={() => handlePlan()} type="button">Mudar plano</button>
                                         </div>
                                     </>
                                 )}
