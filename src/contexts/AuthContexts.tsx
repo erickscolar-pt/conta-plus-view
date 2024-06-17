@@ -10,7 +10,7 @@ type AuthContextData = {
   isAuthenticated: boolean;
   signIn: (credentials: SignInProps) => Promise<void>;
   signOut: () => void;
-  checkPlan: (plan: selectedPlan) => void;
+  checkPlan: (plan: SelectedPlanType) => void;
   signUp: (credentials: SignUpProps) => Promise<Object>
 }
 
@@ -33,7 +33,7 @@ type SignUpProps = {
   codigoRecomendacao: string
 }
 
-type selectedPlan = {
+export type SelectedPlanType = {
   description?: string,
   email: string,
   usuario_id: number,
@@ -162,7 +162,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  async function checkPlan({ email, plano_id, usuario_id, description }: selectedPlan) {
+  async function checkPlan({ email, plano_id, usuario_id, description }: SelectedPlanType) {
     try {
       const response = await api.post('/payments', {
         description,
