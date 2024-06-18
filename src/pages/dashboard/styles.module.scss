@@ -1,108 +1,136 @@
 .component {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: flex-start;
+    flex-direction: column;
+    flex-wrap: wrap;
     width: 100%;
-    margin-bottom: 1rem;
+    padding: .8em;
 
     .dashboardComponent {
         display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
-        align-items: center;
-        align-content: center;
-        justify-content: center;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: flex-start;
+        justify-content: space-between;
         width: 100%;
-        margin: 0 1em 0 0;
+        margin: 1em 1em 0 0;
+        gap: 0.8em;
 
-        .ganhos {
-            width: 100%;
-            border-radius: 10px;
-            background: #DAB7D8;
-            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-            padding: 2em;
-        }
-
-        .filter {
+        .dashboard {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            margin-bottom: 1em;
-            padding: 1em;
-            background: #f3e6f5;
-            border-radius: 8px;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-            
-            .infomeses{
-                width: 100%;
-                text-align: center;
-            }
-            
-            .infoanos{
-                width: 100%;
-                text-align: center;
-            }
+            gap: 1em;
+            width: 100%;
 
-            label {
-                font-size: 1em;
-                margin: 0.5em 0;
-                font-weight: bold;
-                color: #400E57;
-            }
-
-            input[type="range"] {
-                border-radius: 25px;
-                background-color: #400e5771;
-                width: 100%;
-                margin: 0.5em 0;
-                cursor: pointer;
-                -webkit-appearance: none; /* Remove a aparência padrão do controle deslizante do Webkit */
-                appearance: none; /* Remove a aparência padrão do controle deslizante */
-            }
-
-            input[type="range"]::-webkit-slider-thumb {
-                -webkit-appearance: none; /* Remove a aparência padrão do polegar do controle deslizante do Webkit */
-                appearance: none; /* Remove a aparência padrão do polegar do controle deslizante */
-                width: 16px; /* Largura do polegar */
-                height: 16px; /* Altura do polegar */
-                background-color: #400E57; /* Cor do polegar */
-                border-radius: 50%; /* Forma circular do polegar */
-                cursor: pointer; /* Cursor ao pairar sobre o polegar */
-            }
-        
-            input[type="range"]::-moz-range-thumb {
-                width: 16px; /* Largura do polegar */
-                height: 16px; /* Altura do polegar */
-                background-color: #400E57; /* Cor do polegar */
-                border-radius: 50%; /* Forma circular do polegar */
-                cursor: pointer; /* Cursor ao pairar sobre o polegar */
-            }
-
-            div {
-                font-size: 1em;
-                margin: 0.5em 0;
-                color: #333;
-            }
-            .buttonFilter{
-                width: 100%;
+            .content {
+                padding: 2rem;
+                margin-bottom: 1rem;
+                border-radius: 10px;
+                background: #DAB7D8;
+                box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
                 display: flex;
-                justify-content: flex-end;
-                button {
-                    background: #400E57;
-                    color: white;
-                    padding: 0.5em 1em;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-    
-                    &:hover {
-                        background: #5f176e;
+                flex-direction: column;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 1em;
+                .filter {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    margin-bottom: 1em;
+                    padding: 1em;
+                    background: #f3e6f5;
+                    border-radius: 8px;
+                    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+
+                    .infomeses {
+                        width: 100%;
+                        text-align: center;
+                    }
+
+                    .infoanos {
+                        width: 100%;
+                        text-align: center;
+                    }
+
+                    label {
+                        font-size: 1em;
+                        margin: 0.5em 0;
+                        font-weight: bold;
+                        color: #400E57;
+                    }
+
+                    input[type="range"] {
+                        border-radius: 25px;
+                        background-color: #400e5771;
+                        width: 100%;
+                        margin: 0.5em 0;
+                        cursor: pointer;
+                        -webkit-appearance: none;
+                        /* Remove a aparência padrão do controle deslizante do Webkit */
+                        appearance: none;
+                        /* Remove a aparência padrão do controle deslizante */
+                    }
+
+                    input[type="range"]::-webkit-slider-thumb {
+                        -webkit-appearance: none;
+                        /* Remove a aparência padrão do polegar do controle deslizante do Webkit */
+                        appearance: none;
+                        /* Remove a aparência padrão do polegar do controle deslizante */
+                        width: 16px;
+                        /* Largura do polegar */
+                        height: 16px;
+                        /* Altura do polegar */
+                        background-color: #400E57;
+                        /* Cor do polegar */
+                        border-radius: 50%;
+                        /* Forma circular do polegar */
+                        cursor: pointer;
+                        /* Cursor ao pairar sobre o polegar */
+                    }
+
+                    input[type="range"]::-moz-range-thumb {
+                        width: 16px;
+                        /* Largura do polegar */
+                        height: 16px;
+                        /* Altura do polegar */
+                        background-color: #400E57;
+                        /* Cor do polegar */
+                        border-radius: 50%;
+                        /* Forma circular do polegar */
+                        cursor: pointer;
+                        /* Cursor ao pairar sobre o polegar */
+                    }
+
+                    div {
+                        font-size: 1em;
+                        margin: 0.5em 0;
+                        color: #333;
+                    }
+
+                    .buttonFilter {
+                        width: 100%;
+                        display: flex;
+                        justify-content: flex-end;
+
+                        button {
+                            background: #400E57;
+                            color: white;
+                            padding: 0.5em 1em;
+                            border: none;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+
+                            &:hover {
+                                background: #5f176e;
+                            }
+                        }
                     }
                 }
             }
         }
+
+
     }
 }
 
@@ -111,24 +139,28 @@
     .component {
         display: flex;
         flex-direction: column;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        align-content: center;
+        gap: 1em;
 
         .dashboardComponent {
-            padding: 0 1.5em;
             margin: 0 !important;
+            flex-direction: column;
 
             .gastos {
                 width: 100%;
                 display: flex;
                 flex-direction: column;
 
-                .filters {
-                    width: 100%;
-                    justify-content: center;
-                    align-items: center;
+                .content{
+                    padding: 2rem;
+                    display: flex;
+                    flex-wrap: wrap;
+                    flex-direction: unset;
+                    gap: 1em;
+                    .filters {
+                        width: 100%;
+                        justify-content: center;
+                        align-items: center;
+                    }
                 }
             }
 
