@@ -1,6 +1,5 @@
 .content {
     display: flex;
-    padding: 1em ;
     max-width: 20%;
     .menuLateral {
         border-radius: 20px;
@@ -69,8 +68,12 @@
 @media screen and (max-width: 768px) {
     .content{
         max-width: 100% !important;
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
         .menuLateral{
-            padding: 1em 1em;
+            padding: .4em;
+            width: 100%;
             .listbutton{
                 padding: 0 !important;
                 display: flex;
