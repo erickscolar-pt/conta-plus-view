@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from './styles.module.scss'; // Importe o arquivo de estilos CSS
 import { Dividas, Objetivos, Rendas } from '@/type';
 
 interface Column {
@@ -28,36 +27,35 @@ export function Table({ columns, data, color }: TableProps) {
         }
         return value === undefined ? '-' : value;
     };
+
     return (
-        <div className={styles.tableContainer}>
-            <table className={styles.table}>
+        <div className="overflow-x-auto">
+            <table className="w-full border-separate border-spacing-2">
                 <thead>
                     <tr>
                         {columns.map(column => (
-                            <th key={String(column.key)} className={styles.headerCell}>{column.title}</th>
+                            <th key={String(column.key)} className="text-black text-center text-lg font-bold p-2 rounded-md">{column.title}</th>
                         ))}
                     </tr>
                 </thead>
                 <tbody>
                     {data.map((item, index) => (
-                            <tr key={index}  >
-                                {columns.map((column, columnIndex) => (
-                                    <td key={String(column.key)} className={styles.dataCell} style={{ background: column.render ? 'none' : color || '#FFF', boxShadow: column.render ? 'none' : '0px 4px 4px 0px rgba(0, 0, 0, 0.25)' }}>
-                                        {column.render ? (
-                                            column.render ? column.render(item) : String(item[column.key])
-                                        ) : column.formatter ? (
-                                            column.formatter(item[column.key])
-                                        ) : (
-                                            //item[column.key] === undefined ? '-' : String(item[column.key]) 
-                                            getValue(item, column.key)
-                                        )}
-                                    </td>
-                                ))}
-                            </tr>
+                        <tr key={index}>
+                            {columns.map((column, columnIndex) => (
+                                <td key={String(column.key)} className="p-2 text-center text-sm font-normal text-white rounded-md " style={{ background: column.render ? 'none' : color || '#FFF' }}>
+                                    {column.render ? (
+                                        column.render(item)
+                                    ) : column.formatter ? (
+                                        column.formatter(item[column.key])
+                                    ) : (
+                                        getValue(item, column.key)
+                                    )}
+                                </td>
+                            ))}
+                        </tr>
                     ))}
                 </tbody>
             </table>
         </div>
     );
 };
-
