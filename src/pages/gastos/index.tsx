@@ -410,7 +410,7 @@ export default function Gastos({
                   </div>
 
                   <div className={styles.desc}>
-                    <p>Sua renda neste mês:</p>
+                    <p>Renda neste mês:</p>
                     <span style={{ color: "#0E5734" }}>
                       {formatCurrency(totalRendas)}
                     </span>
