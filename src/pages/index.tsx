@@ -55,10 +55,10 @@ export default function Home() {
         <div className={styles.login}>
           <form className={styles.form} onSubmit={handleLogin}>
             <h1 className={styles.titulo}>Login</h1>
-            <span>E-mail</span>
+            <span>Nome de usuario ou E-mail</span>
             <input
               type="text"
-              placeholder='Digite seu nome de usuário'
+              placeholder='Nome de usuário ou e-mail'
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />

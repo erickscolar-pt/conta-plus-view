@@ -107,7 +107,7 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
     };
 
     return (
-        <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+        <div className="bg-blue-400 min-h-screen flex items-center justify-center">
           {loading ? (
             <div className="flex items-center justify-center">
               <FaSpinner className="animate-spin text-4xl text-gray-700" />
@@ -121,10 +121,10 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
                 {planos?.map((plan) => (
                   <div
                     key={plan.id}
-                    className={`p-4 border rounded-md cursor-pointer transition duration-300 ${
+                    className={`p-4  border rounded-md cursor-pointer transition duration-300 ${
                       selectedPlan === plan
-                        ? "border-blue-500 shadow-md"
-                        : "border-gray-300 hover:border-blue-500 hover:shadow-md"
+                        ? "bg-blue-200 border-blue-500 shadow-md"
+                        : "bg-slate-50 border-gray-300 hover:border-blue-500 hover:shadow-md"
                     }`}
                     onClick={() => selectPlan(plan)}
                   >
@@ -145,7 +145,7 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
                 <div className="mt-6">
                   <button
                     type="submit"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    className="bg-primary hover:bg-teal-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   >
                     Finalizar <FaCheck className="inline-block ml-1" />
                   </button>

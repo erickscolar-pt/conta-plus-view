@@ -154,7 +154,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         senha,
         codigoRecomendacao
       })
-      toast.success("Conta criada com sucesso.")
+      toast.success("Conta criada com sucesso!")
+      toast.success("Escolha um plano para seu perfil.")
       return response;
     } catch (err) {
       console.log(err)

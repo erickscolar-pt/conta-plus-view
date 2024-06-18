@@ -1,8 +1,6 @@
-import React from 'react';
-
-import { useContext, useState } from 'react';
-import styles from './styles.module.scss'
-import { FaArrowLeft, FaArrowRight, FaCheck } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 interface Step3Props {
   userData: {
@@ -14,47 +12,54 @@ interface Step3Props {
   handleFormSubmit: () => void;
 }
 
-export default function Step3({ userData={referralCode:""}, setUserData, nextStep , prevStep, handleFormSubmit }: Step3Props) {
-  const [referralCode, setReferralCode] = useState( userData.referralCode || "")
+export default function Step3({ userData = { referralCode: "" }, setUserData, nextStep, prevStep, handleFormSubmit }: Step3Props) {
+  const [referralCode, setReferralCode] = useState(userData.referralCode || "");
 
   const handlePrevious = () => {
-
     prevStep();
   };
 
-  function handleNext() {
-    setUserData(referralCode)
-    handleFormSubmit()
+  const handleNext = () => {
+    setUserData(referralCode);
+    handleFormSubmit();
     nextStep();
-  }
+  };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.formContainer}>
-        <div className={styles.form}>
-          <div className={styles.information}>
-            <h1>Chegou aqui por Indicação</h1>
-            <span>Insira o código de Indicação no campo abaixo</span>
-          </div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-blue-400 p-6">
+      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
+        <div className="mb-6 text-center">
+          <h1 className="text-2xl font-bold mb-2">Chegou aqui por Indicação</h1>
+          <p className="text-gray-600">Insira o código de Indicação no campo abaixo</p>
+        </div>
 
-          <div className={styles.senha}>
-            <span>Código de Indicação</span>
-            <input
-              type="text"
-              placeholder="Código de Indicação"
-              value={referralCode}
-              onChange={(e) => setReferralCode(e.target.value)}
-            />
-            <span className={styles.info}>Esta etapa não é obrigatória</span>
-          </div>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Código de Indicação</label>
+          <input
+            type="text"
+            placeholder="Código de Indicação"
+            value={referralCode}
+            onChange={(e) => setReferralCode(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
+          />
+          <span className="text-sm text-gray-500">Esta etapa não é obrigatória</span>
+        </div>
+
+        <div className="flex justify-between items-center mt-6">
+          <button
+            onClick={handlePrevious}
+            className="flex items-center text-primary hover:text-primary-dark"
+          >
+            <FaArrowLeft className="mr-2" /> Voltar
+          </button>
+          <button
+            onClick={handleNext}
+            className="flex items-center bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark"
+          >
+            Avançar <FaArrowRight className="ml-2" />
+          </button>
         </div>
       </div>
-
-      <div className={styles.buttonContainer}>
-        <button onClick={handlePrevious}><FaArrowLeft /> Voltar</button>
-        <button onClick={handleNext}>Avançar <FaArrowRight /></button>
-      </div>
-
     </div>
   );
 }
