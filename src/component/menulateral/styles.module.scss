@@ -72,17 +72,18 @@
         margin: 0 !important;
         padding: 0 !important;
         .menuLateral{
-            padding: .4em;
+            padding: .5em;
             width: 100%;
             .listbutton{
                 padding: 0 !important;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                flex-wrap: wrap;
-                align-content: center;
+                flex-wrap: nowrap;
+                /* align-content: center; */
+                justify-content: center;
                 button{
-                    margin: .5em !important;
+                    margin: 0.3em !important;
                     width: 3em;
                     height: 3em;
                     img {
@@ -92,7 +93,7 @@
                 }
 
                 .exit{
-                    margin: .8em !important;
+                    margin: .3em !important;
                 }
             }
         }

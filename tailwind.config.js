@@ -14,6 +14,7 @@ module.exports = {
         '2': '0.5rem',
       },
       colors: {
+        creme: '#F0F1E8',
         primary: '#599E52',
         ganhos: '#5ABB8C',
         'ganhos-hover': '#82cca8',
