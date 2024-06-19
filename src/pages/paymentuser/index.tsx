@@ -130,7 +130,7 @@ export default function PaymentUser() {
       ) : !payment ? (
         <div className="mt-24">
           <form
-            className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
+            className="grid gap-8 pb-4 md:grid-cols-2 lg:grid-cols-3"
             onSubmit={handleSub}
           >
             {planos?.map((plan) => (
