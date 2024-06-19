@@ -111,13 +111,13 @@ export default function PaymentAuth({ planos, usuario }: PaymentAuthProps) {
 
   return (
     <>
-      <Header />
       <div className={styles.component}>
-        <MenuLateral />
+        <Header />
         <div className={styles.perfilComponent}>
-          <Title textColor="#000000" color="#F0F1E8" text="Planos" />
+          <MenuLateral />
           <div className={styles.perfil}>
-            <div className="flex items-center justify-center">
+            <Title textColor="#000000" color="#F0F1E8" text="Planos" />
+            <div className="flex items-center justify-center bg-creme border rounded-xl pb-4">
               {loading ? (
                 <div className="flex items-center justify-center">
                   <FaSpinner className="animate-spin text-4xl text-gray-700" />
