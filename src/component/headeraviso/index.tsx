@@ -24,7 +24,7 @@ export default function HeaderAviso() {
           className="text-2xl font-bold flex items-center space-x-2"
         >
           <FaHome />
-          <span>Voltar para login</span>
+          <span>Voltar</span>
         </Link>
       </div>
 
@@ -50,6 +50,12 @@ export default function HeaderAviso() {
             className="flex items-center space-x-1"
           >
             <span>Tecnologias de Rastreamento</span>
+          </Link>
+          <Link
+            href="/manual"
+            className="flex items-center space-x-1"
+          >
+            <span>Sobre Conta Plus</span>
           </Link>
         </nav>
       </div>

@@ -10,7 +10,14 @@
     background: #599E52;
     justify-content: space-between;
     width: 100%;
-    .perfil{
-        cursor: pointer;
+    .direita{
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        gap: 1em;
+        .perfil{
+            cursor: pointer;
+        }
     }
+
 }
