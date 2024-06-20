@@ -18,9 +18,6 @@ interface TitleProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export function Title({ icon, textColor, color, text }: TitleProps) {
     return (
         <div style={{ backgroundColor: color }} className={styles.title}>
-            <Head>
-                <title>Conta Plus - {icon ? icon : 'Meus dados'}</title>
-            </Head>
             <h1 style={{ color: textColor }}>
                 <>{text}</>
             </h1>
