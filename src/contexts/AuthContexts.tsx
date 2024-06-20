@@ -1,8 +1,8 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import { api } from '../services/apiCliente';
-import { toast } from 'react-toastify'
+import { toast } from 'react-toastify';
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
-import Router from 'next/router'
+import Router from 'next/router';
 import { isTokenExpired } from '@/utils/isTokenExpired';
 
 type AuthContextData = {
@@ -16,8 +16,10 @@ type AuthContextData = {
 
 type UsuarioProps = {
   id: number;
+  name: string;
   username?: string;
   token?: string;
+  role: boolean;
 }
 
 type SignInProps = {
@@ -40,12 +42,6 @@ export type SelectedPlanType = {
   plano_id: number
 }
 
-
-type ReqLinkProps = {
-  userId: number,
-  urlReferencia: string
-}
-
 type AuthProviderProps = {
   children: ReactNode;
 }
@@ -56,54 +52,52 @@ export type ResponsePayments = {
   qr_code_base64: string,
 }
 
-export const AuthContexts = createContext({} as AuthContextData)
+export const AuthContexts = createContext({} as AuthContextData);
 
 export function signOut() {
   try {
-    destroyCookie(undefined, '@nextauth.token')
-    sessionStorage.removeItem('id')
-    sessionStorage.removeItem('nivel')
-    Router.push('/')
+    destroyCookie(undefined, '@nextauth.token');
+    sessionStorage.removeItem('id');
+    sessionStorage.removeItem('nivel');
+    Router.push('/');
   } catch {
-    console.log('erro ao deslogar')
+    console.log('Erro ao deslogar');
   }
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-
-  const [usuario, setUsuario] = useState<UsuarioProps>()
+  const [usuario, setUsuario] = useState<UsuarioProps>();
 
   const isAuthenticated = !!usuario;
 
   useEffect(() => {
-    // Verifica se o token expirou ao renderizar o componente de layout
     if (isTokenExpired()) {
-      // Redireciona o usuário para a página de login se o token expirou
-      signOut()
+      console.log("Token expired, signing out");
+      //signOut();
     }
   }, []);
 
   async function signIn({ username, password }: SignInProps) {
     try {
-      const response = await api.post('/auth/signin', {
-        username,
-        password
-      });
-      console.log(response.status);
-      const { id, email, token, isPaymentDone, requirePayment } = response.data;
+      const response = await api.post('/auth/signin', { username, password });
+      const { id, name ,email, token, isPaymentDone, requirePayment, role } = response.data;
 
       if (window) {
-        // set props data to session storage or local storage 
         sessionStorage.setItem('id', id);
       }
 
-      setUsuario({
-        id,
-        username,
-      });
+      setUsuario({ id, name, username, role });
 
-      // Passar para as proximas requisições o token
       api.defaults.headers['Authorization'] = `Bearer ${token}`;
+      if(role){
+        setCookie(undefined, '@nextauth.token', token, {
+          maxAge: 60 * 60 * 24 * 30,
+          path: "/"
+        });
+        Router.push({ pathname: '/admin' });
+        toast.success("Bem vindo à administração do sistema.");
+        return;
+      }
 
       if (requirePayment) {
         const res = await api(`${process.env.NEXT_PUBLIC_API_URL}/payments/planos`);
@@ -114,17 +108,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
         toast.warning("Sem plano definido, escolha um plano.");
         Router.push({
           pathname: '/paymentuser',
-          query: {
-            userData: JSON.stringify({ id, email }), // Passe o usuário corretamente
-            planosData: JSON.stringify(res.data) // Certifique-se de passar o data aqui
-          }
+          query: { userData: JSON.stringify({ id, email }), planosData: JSON.stringify(res.data) }
         });
       }
 
       if (isPaymentDone) {
         setCookie(undefined, '@nextauth.token', token, {
           maxAge: 60 * 60 * 24 * 30,
-          path: "/" // Quais caminhos terao acesso ao cookie
+          path: "/"
         });
         toast.success("Bem vindo!");
         Router.push('/ganhos');
@@ -136,16 +127,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
           query: { paymentData: JSON.stringify(payment.data) }
         });
       }
-
     } catch (err) {
       console.log(err);
       toast.error("Erro ao acessar.");
     }
   }
 
-
   async function signUp({ nome, email, username, senha, codigoRecomendacao }: SignUpProps) {
-
     try {
       const response = await api.post('/user/signup', {
         nome,
@@ -153,13 +141,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
         username,
         senha,
         codigoRecomendacao
-      })
-      toast.success("Conta criada com sucesso!")
-      toast.success("Escolha um plano para seu perfil.")
+      });
+      toast.success("Conta criada com sucesso!");
+      toast.success("Escolha um plano para seu perfil.");
       return response;
     } catch (err) {
-      console.log(err)
-      toast.error("Erro ao cadastrar usuario.")
+      console.log(err);
+      toast.error("Erro ao cadastrar usuário.");
     }
   }
 
@@ -170,12 +158,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
         email,
         usuario_id,
         plano_id
-      })
+      });
       const res: ResponsePayments = await response.data;
-      return res
+      return res;
     } catch (err) {
-      console.log(err)
-      toast.error("Erro consultar planos.")
+      console.log(err);
+      toast.error("Erro ao consultar planos.");
     }
   }
 
@@ -183,5 +171,5 @@ export function AuthProvider({ children }: AuthProviderProps) {
     <AuthContexts.Provider value={{ usuario, isAuthenticated, signIn, signOut, signUp, checkPlan }}>
       {children}
     </AuthContexts.Provider>
-  )
+  );
 }
