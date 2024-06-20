@@ -14,6 +14,7 @@ import Calendar from "@/component/ui/calendar";
 import { toast } from "react-toastify";
 import InputMoney from "@/component/ui/inputMoney";
 import NotFound from "@/component/notfound";
+import Head from "next/head";
 
 interface Metas {
   objetivos: Objetivos[];
@@ -262,6 +263,9 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
   }, []);
   return (
     <>
+      <Head>
+        <title>Conta Plus - Metas</title>
+      </Head>
       <div className={styles.component}>
         <Header />
         <div className={styles.objetivosComponent}>

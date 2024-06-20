@@ -1,8 +1,12 @@
 import HeaderAviso from "@/component/headeraviso";
+import Head from "next/head";
 
 export default function PoliticaDeCookies() {
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
+      <Head>
+        <title>Política de Cookies</title>
+      </Head>
       <HeaderAviso />
       <div className="max-w-4xl mt-4 mx-auto bg-white p-8 shadow-lg rounded">
         <h1 className="text -3xl font-bold mb-6">Política de Cookies</h1>

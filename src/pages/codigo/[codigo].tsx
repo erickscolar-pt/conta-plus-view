@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { setupAPIClient } from "@/services/api";
 import Router, { useRouter } from "next/router";
 import { FaSpinner } from 'react-icons/fa'
+import Head from "next/head";
 
 export default function CodigoPage() {
     const [loading, setLoading] = useState(true);
@@ -39,7 +40,9 @@ export default function CodigoPage() {
     }
     return (
         <div className={styles.container} style={{ background: vinculado ? 'linear-gradient(108deg, #F4FAF3 0%, #D8D8D8 100%)' : 'linear-gradient(108deg, #FFD8D8 0%, #D8D8D8 100%) ' }}>
-
+      <Head>
+        <title>Conta Plus - Vinculo</title>
+      </Head>
             {loading ? (
                 <>
                     <div className={styles.contentLoading}>

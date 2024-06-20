@@ -11,6 +11,7 @@ import { Usuario } from "@/type";
 import { Title } from "@/component/ui/title";
 import { isValidUsername } from "@/helper";
 import Router from "next/router";
+import Head from "next/head";
 
 interface Usuarios {
   usuario: Usuario;
@@ -126,6 +127,9 @@ export default function Perfil({ usuario, plano }: Usuarios) {
 
   return (
     <>
+      <Head>
+        <title>Conta Plus - Perfil</title>
+      </Head>
       <div className={styles.component}>
         <Header />
         <div className={styles.perfilComponent}>

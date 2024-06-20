@@ -17,6 +17,7 @@ import Calendar from "@/component/ui/calendar";
 import { toast } from "react-toastify";
 import InputMoney from "@/component/ui/inputMoney";
 import NotFound from "@/component/notfound";
+import Head from "next/head";
 
 interface Ganhos {
   rendas: Rendas[];
@@ -237,6 +238,9 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
 
   return (
     <>
+      <Head>
+        <title>Conta Plus - Ganhos</title>
+      </Head>
       <div className={styles.component}>
         <Header />
         <div className={styles.ganhosComponent}>

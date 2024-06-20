@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import ChartGrafic from "@/component/chartgrafic";
 import NotFound from "@/component/notfound";
 import { toast } from "react-toastify";
+import Head from "next/head";
 
 interface DashboardChartProps {
   dashboarddata: DashboardData;
@@ -78,6 +79,9 @@ export default function Dashboard({ dashboarddata }: DashboardChartProps) {
 
   return (
     <>
+      <Head>
+        <title>Conta Plus - Dashboard</title>
+      </Head>
       <div className={styles.component}>
         <Header />
         <div className={styles.dashboardComponent}>

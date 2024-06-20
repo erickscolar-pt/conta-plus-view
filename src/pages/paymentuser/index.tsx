@@ -6,6 +6,7 @@ import { useQRCode } from "next-qrcode";
 import Router, { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { formatCurrency } from "@/helper";
+import Head from "next/head";
 
 interface PaymentsProps {
   planos: Data;
@@ -123,6 +124,9 @@ export default function PaymentUser() {
 
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+      <Head>
+        <title>Conta Plus - Pagamento</title>
+      </Head>
       {loading ? (
         <div className="flex items-center justify-center">
           <FaSpinner className="animate-spin text-4xl text-gray-700" />

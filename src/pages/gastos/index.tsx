@@ -21,6 +21,7 @@ import InputMoney from "@/component/ui/inputMoney";
 import NotFound from "@/component/notfound";
 import { Toggle } from "@/component/ui/toggle";
 import { Input } from "@/component/ui/input";
+import Head from "next/head";
 
 interface Gastos {
   dividas: Dividas[];
@@ -369,6 +370,9 @@ export default function Gastos({
 
   return (
     <>
+      <Head>
+        <title>Conta Plus - Gastos</title>
+      </Head>
       <div className={styles.component}>
         <Header />
         <div className={styles.gastosComponent}>

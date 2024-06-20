@@ -8,6 +8,7 @@ import { formatCurrency } from "@/helper";
 import { DashboardAdminProps, Metrics, Payment } from "@/model/type";
 import { useRouter } from "next/router";
 import { FaSpinner } from "react-icons/fa";
+import Head from "next/head";
 
 export default function Admin({ metrics, payments }: DashboardAdminProps) {
   const { usuario } = useContext(AuthContexts);
@@ -27,6 +28,9 @@ export default function Admin({ metrics, payments }: DashboardAdminProps) {
   </div>;
   return (
     <AdminRouteGuard>
+      <Head>
+        <title>Conta Plus - Admin</title>
+      </Head>
       <DashboardAdmin metrics={metrics} payments={payments} />
     </AdminRouteGuard>
   );

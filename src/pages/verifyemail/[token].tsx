@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { setupAPIClient } from "@/services/api";
+import Head from "next/head";
 
 export default function VerifyEmail() {
   const [status, setStatus] = useState("");
@@ -28,11 +29,14 @@ export default function VerifyEmail() {
     }
   }
   useEffect(() => {
-    verify()
+    verify();
   }, [token, router]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <Head>
+        <title>Conta Plus - Confirmação de E-mail</title>
+      </Head>
       <div className="bg-white p-6 rounded-lg shadow-lg text-center">
         <h1 className="text-2xl font-semibold mb-4">Verificação de E-mail</h1>
         <p className="text-gray-700">

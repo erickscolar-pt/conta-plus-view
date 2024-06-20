@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { Usuario } from "../signup";
 import { formatCurrency } from "@/helper";
 import { useQRCode } from "next-qrcode";
+import Head from "next/head";
 interface PaymentAuthProps {
   planos: Planos[];
   usuario: Usuario;
@@ -111,6 +112,9 @@ export default function PaymentAuth({ planos, usuario }: PaymentAuthProps) {
 
   return (
     <>
+      <Head>
+        <title>Conta Plus - Pagamento</title>
+      </Head>
       <div className={styles.component}>
         <Header />
         <div className={styles.perfilComponent}>
