@@ -38,6 +38,7 @@ export default function Home() {
     await signIn(data);
     setLoading(false);
   }
+  
   const colors = ['#0E5734', '#570E0E', '#0E1557'];
   return (
     <>
