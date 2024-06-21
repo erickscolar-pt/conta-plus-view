@@ -25,6 +25,8 @@ interface Planos {
   plano: string;
   descricao: string;
   valor: number;
+  duration: number;
+  is_free: boolean;
 }
 export default function PaymentAuth({ planos, usuario }: PaymentAuthProps) {
   const [selectedPlan, setSelectedPlan] = useState<Planos | null>(null);
@@ -132,30 +134,33 @@ export default function PaymentAuth({ planos, usuario }: PaymentAuthProps) {
                     className="grid gap-8 md:grid-cols-2 lg:grid-cols-3"
                     onSubmit={handleSub}
                   >
-                    {planos?.map((plan) => (
-                      <div
-                        key={plan.id}
-                        className={`p-4 border rounded-md cursor-pointer transition duration-300 ${
-                          selectedPlan === plan
-                            ? "border-blue-500 shadow-md"
-                            : "border-gray-300 hover:border-blue-500 hover:shadow-md"
-                        }`}
-                        onClick={() => selectPlan(plan)}
-                      >
-                        <div className="relative bg-clip-border mt-4 mx-4 rounded-xl overflow-hidden bg-transparent text-gray-700 shadow-none !m-0 p-6">
-                          <h5 className="block antialiased tracking-normal font-sans text-xl font-semibold leading-snug text-blue-gray-900 capitalize">
-                            {plan.plano}
-                          </h5>
-                          <p className="block antialiased font-sans text-sm leading-normal text-inherit font-normal !text-gray-500">
-                            {plan.descricao}
-                          </p>
-                          <h3 className="antialiased tracking-normal font-sans text-3xl font-semibold leading-snug text-blue-gray-900 flex gap-1 mt-4">
-                            {formatCurrency(plan.valor)}
-                            <span className="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-blue-gray-900 -translate-y-0.5 self-end opacity-70"></span>
-                          </h3>
-                        </div>
-                      </div>
-                    ))}
+                    {planos?.map(
+                      (plan) =>
+                        !plan.is_free && (
+                          <div
+                            key={plan.id}
+                            className={`p-4 border rounded-md cursor-pointer transition duration-300 ${
+                              selectedPlan === plan
+                                ? "border-blue-500 shadow-md"
+                                : "border-gray-300 hover:border-blue-500 hover:shadow-md"
+                            }`}
+                            onClick={() => selectPlan(plan)}
+                          >
+                            <div className="relative bg-clip-border mt-4 mx-4 rounded-xl overflow-hidden bg-transparent text-gray-700 shadow-none !m-0 p-6">
+                              <h5 className="block antialiased tracking-normal font-sans text-xl font-semibold leading-snug text-blue-gray-900 capitalize">
+                                {plan.plano}
+                              </h5>
+                              <p className="block antialiased font-sans text-sm leading-normal text-inherit font-normal !text-gray-500">
+                                {plan.descricao}
+                              </p>
+                              <h3 className="antialiased tracking-normal font-sans text-3xl font-semibold leading-snug text-blue-gray-900 flex gap-1 mt-4">
+                                {formatCurrency(plan.valor)}
+                                <span className="block antialiased tracking-normal font-sans text-base font-semibold leading-relaxed text-blue-gray-900 -translate-y-0.5 self-end opacity-70"></span>
+                              </h3>
+                            </div>
+                          </div>
+                        )
+                    )}
                     <div className="mt-6">
                       <button
                         type="submit"

@@ -9,6 +9,9 @@
   left: 0;
   right: 0;
 
+  .fButton{
+    display: none;
+  }
   .login {
     display: flex;
     justify-content: center;
@@ -61,6 +64,7 @@
         border: 1px solid var(--color-border-input, #c0bfc600);
         background: #FFF;
       }
+
 
       .passwordInputContainer {
         position: relative;
@@ -225,6 +229,12 @@
     //position: inherit !important;
     background: url(../public/bg-mobile-login.png) rgba(211, 211, 211, 0) 100% / cover no-repeat;
 
+    .fButton{
+      display: block;
+      a{
+        color: white;
+      }
+    }
     .login {
       margin: 0 !important;
       position: absolute;

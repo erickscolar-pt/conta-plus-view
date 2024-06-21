@@ -16,7 +16,8 @@ interface Planos {
     id: number,
     plano: string,
     descricao: string,
-    valor: number
+    valor: number,
+    is_free: boolean
 }
 
 type Usuario = {
@@ -47,21 +48,23 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
 
             return;
         }
+
+        console.log(selectedPlan)
         setLoading(true);
         if (selectedPlan) {
-            const res: any = await checkPlan({
+            const res: ResponsePayments = await checkPlan({
                 email: userData.email,
                 plano_id: selectedPlan.id,
                 usuario_id: userData.id,
                 description: 'Pagamento do Plano ' + selectedPlan.plano
             });
-
-            if (res) {
+            console.log(res)
+/*             if (res) {
                 setPaymentData(res);
                 setLoading(false);
                 setPayment(true);
                 checkPaymentStatus(res.id);
-            }
+            } */
         }
     };
 
@@ -94,7 +97,7 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
     };
 
     useEffect(() => {
-        if (paymentData && paymentData.id) {
+        if (paymentData && paymentData.id && !paymentData.payment) {
             checkPaymentStatus(paymentData.id);
         }
     }, [paymentData, userData]);
@@ -115,7 +118,7 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
           ) : !payment ? (
             <div className="mt-24">
               <form
-                className="grid gap-8 pb-4 md:grid-cols-2 lg:grid-cols-3"
+                className="m-4 flex justify-center flex-col gap-8 pb-4 md:grid-cols-2 lg:grid-cols-3"
                 onSubmit={handleSub}
               >
                 {planos?.map((plan) => (
@@ -142,7 +145,7 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
                     </div>
                   </div>
                 ))}
-                <div className="mt-6">
+                <div className="mt-6 w-full">
                   <button
                     type="submit"
                     className="bg-primary hover:bg-teal-900 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
