@@ -110,6 +110,8 @@ export default function Perfil({ usuario, plano }: Usuarios) {
 
   function planoDuration(numberPlun: number) {
     switch (numberPlun) {
+      case 60:
+        return "Free(60 dias)";
       case 30:
         return "Mensal";
       case 180:

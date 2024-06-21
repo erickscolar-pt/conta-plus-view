@@ -10,7 +10,7 @@ type AuthContextData = {
   isAuthenticated: boolean;
   signIn: (credentials: SignInProps) => Promise<void>;
   signOut: () => void;
-  checkPlan: (plan: SelectedPlanType) => void;
+  checkPlan: (plan: SelectedPlanType) => Promise<ResponsePayments>;
   signUp: (credentials: SignUpProps) => Promise<Object>
 }
 
@@ -50,6 +50,9 @@ export type ResponsePayments = {
   id: number,
   qr_code: string,
   qr_code_base64: string,
+  payment: boolean,
+  isDone: boolean,
+  msg: string
 }
 
 export const AuthContexts = createContext({} as AuthContextData);
@@ -160,6 +163,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
         plano_id
       });
       const res: ResponsePayments = await response.data;
+      if(!res.isDone){
+        toast.warn(res.msg);
+        return;
+      }
+      if(res.payment === false){
+        Router.push('/')
+        return;
+      }
       return res;
     } catch (err) {
       console.log(err);
