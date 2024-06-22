@@ -17,6 +17,7 @@ interface Planos {
     plano: string,
     descricao: string,
     valor: number,
+    duration: number,
     is_free: boolean
 }
 
@@ -59,12 +60,12 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
                 description: 'Pagamento do Plano ' + selectedPlan.plano
             });
             console.log(res)
-/*             if (res) {
+            if (res) {
                 setPaymentData(res);
                 setLoading(false);
                 setPayment(true);
                 checkPaymentStatus(res.id);
-            } */
+            }
         }
     };
 
