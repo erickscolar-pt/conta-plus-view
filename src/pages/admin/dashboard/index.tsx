@@ -11,6 +11,7 @@ import MetricCardAdmin from '@/component/metriccardadmin';
 import PaymentTable from '@/component/paymenttable';
 import { DashboardAdminProps, Metrics, Payment } from '@/model/type';
 import { formatCurrency } from '@/helper';
+import UsersTable from '@/component/userstable';
 
 export default function DashboardAdmin({
   metrics,
@@ -43,7 +44,7 @@ export default function DashboardAdmin({
   const approvedPaymentsTotal =
     formatCurrency(metrics.approvedPayments?.total) || 'R$ 0,00';
   const activePlans = metrics.activePlans || 0;
-
+  const usersActives = metrics.usersActives || []
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <HeaderAdmin />
@@ -75,6 +76,9 @@ export default function DashboardAdmin({
       </div>
       <div className="mt-8">
         <PaymentTable payments={payments} />
+      </div>
+      <div className="mt-8">
+        <UsersTable users={usersActives} />
       </div>
     </div>
   );

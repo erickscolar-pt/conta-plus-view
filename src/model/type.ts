@@ -9,6 +9,17 @@ export interface Metrics {
     total: number;
   };
   activePlans: number;
+  usersActives: UserMetric[];
+}
+
+export interface UserMetric {
+  created_at: Date;
+  nome: string;
+  username: string;
+  email: string;
+  codigoReferencia: string;
+  codigoRecomendacao: string;
+  emailVerified: boolean;
 }
 
 export interface Payment {
@@ -41,10 +52,10 @@ export interface Dividas {
   data_inclusao: string;
   username?: string;
   vinculo_id?: number;
-  is_edit?:boolean;
+  is_edit?: boolean;
   vinculo?: ContaVinculo
   ref_debt?: number;
-  payment?:boolean;
+  payment?: boolean;
   installments?: number;
   n_installments?: number;
   plot?: string;
@@ -76,8 +87,8 @@ export interface Usuario {
   codigoRecomendacao: string;
   codigoReferencia: string;
   email: string;
-  created_at:string;
-  updated_at:string;
+  created_at: string;
+  updated_at: string;
   dividas: Dividas[];
   rendas: Rendas[];
   objetivos: Objetivos[];

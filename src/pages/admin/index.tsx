@@ -49,6 +49,7 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
       somaPagamentosAprovados,
       totalPlanosAtivos,
       usuariosComPlanos,
+      usuariosCadastrados
     } = response.data;
 
     const metrics: Metrics = {
@@ -62,6 +63,7 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
         total: somaPagamentosAprovados,
       },
       activePlans: totalPlanosAtivos,
+      usersActives: usuariosCadastrados
     };
 
     const payments: Payment[] = usuariosComPlanos.map((user: any) => ({
