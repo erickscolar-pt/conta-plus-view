@@ -38,6 +38,7 @@ export default function Cadastro({planos}) {
     password: '',
     confirmPassword: '',
     referralCode: '',
+    acceptTerms: false
   });
 
   const nextStep = () => {
@@ -54,14 +55,15 @@ export default function Cadastro({planos}) {
       username: userData.username,
       senha: userData.password,
       codigoRecomendacao: userData.referralCode,
-      nome: userData.nome
+      nome: userData.nome,
+      acceptTerms: userData.acceptTerms
     })
     const user: Usuario = await res.data
     setUsuario(user)
   };
 
-  function handleStep1(nome, email, username) {
-    setUserData({ ...userData, nome, email, username })
+  function handleStep1(nome, email, username, acceptTerms) {
+    setUserData({ ...userData, nome, email, username, acceptTerms})
   }
 
   function handleStep2(password, confirmPassword) {

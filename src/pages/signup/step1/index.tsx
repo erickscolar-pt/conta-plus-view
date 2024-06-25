@@ -9,20 +9,23 @@ interface Step1Props {
     nome: string;
     email: string;
     username: string;
+    acceptTerms: boolean;
   };
   setUserData: (
     nome: string,
     email: string,
-    username: string
+    username: string,
+    acceptTerms: boolean
   ) => void;
   nextStep: () => void;
 }
 
-export default function Step1({ userData = { nome: "", email: "", username: "" }, setUserData, nextStep }: Step1Props) {
+export default function Step1({ userData = { nome: "", email: "", username: "", acceptTerms: false }, setUserData, nextStep }: Step1Props) {
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [email, setEmail] = useState(userData.email || "")
   const [nome, setNome] = useState(userData.nome || "")
   const [username, setUsername] = useState(userData.username || "")
+  const [acceptTerms, setAcceptTerms] = useState(false);
 
   const handleNext = () => {
     if (email === '' || username === '') {
@@ -44,8 +47,12 @@ export default function Step1({ userData = { nome: "", email: "", username: "" }
           position: toast.POSITION.TOP_CENTER,
         }
       );
+    } else if (!acceptTerms) {
+      toast.error('Você deve aceitar os termos de uso para prosseguir.', {
+        position: toast.POSITION.TOP_CENTER,
+      });
     } else {
-      setUserData(nome, email, username)
+      setUserData(nome, email, username, acceptTerms)
       nextStep();
     }
   };
@@ -67,7 +74,7 @@ export default function Step1({ userData = { nome: "", email: "", username: "" }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen  bg-blue-400 p-6">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-blue-400 p-6">
       <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
         <h1 className="text-2xl font-bold mb-4">Primeiro, informe seu nome, e-mail e nome de usuário</h1>
         <p className="text-gray-600 mb-6">Você usará o e-mail ou nome de usuário para efetuar o seu login.</p>
@@ -104,6 +111,18 @@ export default function Step1({ userData = { nome: "", email: "", username: "" }
             onChange={handleChangeUsername}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
           />
+        </div>
+
+        <div className="mb-6">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={acceptTerms}
+              onChange={() => setAcceptTerms(!acceptTerms)}
+              className="form-checkbox"
+            />
+            <span className="ml-2 text-sm font-medium text-gray-700">Eu aceito os <a href="/termosdeuso" className="text-primary hover:underline">termos de uso</a></span>
+          </label>
         </div>
 
         <div className="flex justify-between items-center">

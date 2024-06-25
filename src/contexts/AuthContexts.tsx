@@ -32,7 +32,8 @@ type SignUpProps = {
   email: string,
   username: string,
   senha: string,
-  codigoRecomendacao: string
+  codigoRecomendacao: string,
+  acceptTerms: boolean
 }
 
 export type SelectedPlanType = {
@@ -136,14 +137,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  async function signUp({ nome, email, username, senha, codigoRecomendacao }: SignUpProps) {
+  async function signUp({ nome, email, username, senha, codigoRecomendacao, acceptTerms }: SignUpProps) {
     try {
       const response = await api.post('/user/signup', {
         nome,
         email,
         username,
         senha,
-        codigoRecomendacao
+        codigoRecomendacao,
+        acceptTerms
       });
       toast.success("Conta criada com sucesso!");
       toast.success("Escolha um plano para seu perfil.");
