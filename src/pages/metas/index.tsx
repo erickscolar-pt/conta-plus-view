@@ -5,7 +5,6 @@ import styles from "./styles.module.scss";
 import { Title } from "@/component/ui/title";
 import { Table } from "@/component/ui/table";
 import { setupAPIClient } from "@/services/api";
-import { Objetivos, Usuario } from "@/type";
 import { formatCurrency, formatDate, formatVinculoUsername } from "@/helper";
 import { useEffect, useState } from "react";
 import Modal from "@/component/ui/modal";
@@ -15,6 +14,7 @@ import { toast } from "react-toastify";
 import InputMoney from "@/component/ui/inputMoney";
 import NotFound from "@/component/notfound";
 import Head from "next/head";
+import { Objetivos, Usuario } from "@/model/type";
 
 interface Metas {
   objetivos: Objetivos[];

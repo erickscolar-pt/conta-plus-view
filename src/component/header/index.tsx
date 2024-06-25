@@ -18,7 +18,7 @@ export default function Header() {
       <Image src={logo} alt="" />
       <div className={styles.direita}>
         <Link href="/manual" className="flex items-center space-x-1">
-          <span>Manual</span>
+          <span>Sobre</span>
         </Link>
         <Image
           onClick={() => {

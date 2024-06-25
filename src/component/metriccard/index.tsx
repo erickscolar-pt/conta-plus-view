@@ -1,13 +1,10 @@
 
-export default function MetricCard({ icon, title, value, additional }) {
-    return (
-      <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
-        <div className="text-4xl text-primary mr-4">{icon}</div>
-        <div>
-          <h2 className="text-lg font-medium text-gray-600">{title}</h2>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
-          {additional && <p className="text-sm text-gray-600">{additional}</p>}
-        </div>
-      </div>
-    );
-  }
+export default function MetricCard({ title, value, icon: Icon }) {
+  return (
+    <div className="bg-white shadow-md rounded-lg p-6 m-4 text-center">
+      <Icon className="text-indigo-600 text-4xl mx-auto mb-4" />
+      <h2 className="text-2xl font-semibold text-gray-700">{title}</h2>
+      <p className="text-4xl font-bold text-indigo-600 mt-2">{value}</p>
+    </div>
+  );
+};

@@ -5,7 +5,6 @@ import styles from "./styles.module.scss";
 import { Title } from "@/component/ui/title";
 import { Table } from "@/component/ui/table";
 import { setupAPIClient } from "@/services/api";
-import { Dividas, Rendas, Usuario } from "@/type";
 import {
   formatarMoeda,
   formatCurrency,
@@ -22,6 +21,7 @@ import NotFound from "@/component/notfound";
 import { Toggle } from "@/component/ui/toggle";
 import { Input } from "@/component/ui/input";
 import Head from "next/head";
+import { Dividas, Rendas, Usuario } from "@/model/type";
 
 interface Gastos {
   dividas: Dividas[];

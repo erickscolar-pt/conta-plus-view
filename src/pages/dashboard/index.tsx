@@ -9,6 +9,14 @@ import ChartGrafic from "@/component/chartgrafic";
 import NotFound from "@/component/notfound";
 import { toast } from "react-toastify";
 import Head from "next/head";
+import MetricCard from "@/component/metriccard";
+import { formatCurrency } from "@/helper";
+import {
+  FaMoneyBillWave,
+  FaFileInvoiceDollar,
+  FaPiggyBank,
+} from "react-icons/fa";
+import ChartGraficLine from "@/component/chartgraficline";
 
 interface DashboardChartProps {
   dashboarddata: DashboardData;
@@ -76,6 +84,12 @@ export default function Dashboard({ dashboarddata }: DashboardChartProps) {
     );
     setGraficoBarra(response.data);
   };
+  const totalRendas =
+    graficoBarra?.rendas.reduce((acc, item) => acc + item.valortotal, 0) || 0;
+  const totalDividas =
+    graficoBarra?.dividas.reduce((acc, item) => acc + item.valortotal, 0) || 0;
+  const totalMetas =
+    graficoBarra?.metas.reduce((acc, item) => acc + item.valortotal, 0) || 0;
 
   return (
     <>
@@ -149,15 +163,40 @@ export default function Dashboard({ dashboarddata }: DashboardChartProps) {
                   <button onClick={handleRangeChange}>Filtrar</button>
                 </div>
               </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
+                <MetricCard
+                  title="Salário Recebido"
+                  value={`${formatCurrency(totalRendas)}`}
+                  icon={FaMoneyBillWave}
+                />
+                <MetricCard
+                  title="Contas Pagas"
+                  value={`${formatCurrency(totalDividas)}`}
+                  icon={FaFileInvoiceDollar}
+                />
+                <MetricCard
+                  title="Dinheiro Guardado"
+                  value={`${formatCurrency(totalMetas)}`}
+                  icon={FaPiggyBank}
+                />
+              </div>
               {graficoBarra &&
               graficoBarra.dividas.length > 0 &&
               graficoBarra.metas.length > 0 &&
               graficoBarra.rendas.length > 0 ? (
-                <ChartGrafic
-                  data={graficoBarra}
-                  anos={anosText}
-                  meses={mesesText}
-                />
+                <>
+                  <ChartGrafic
+                    data={graficoBarra}
+                    anos={anosText}
+                    meses={mesesText}
+                  />
+
+                  <ChartGraficLine
+                    data={graficoBarra}
+                    anos={anosText}
+                    meses={mesesText}
+                  />
+                </>
               ) : (
                 <NotFound />
               )}

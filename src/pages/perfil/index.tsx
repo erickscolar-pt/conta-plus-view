@@ -7,39 +7,27 @@ import MenuLateral from "@/component/menulateral";
 import { canSSRAuth } from "@/utils/canSSRAuth";
 import styles from "./styles.module.scss";
 import { setupAPIClient } from "@/services/api";
-import { Usuario } from "@/type";
 import { Title } from "@/component/ui/title";
 import { isValidUsername } from "@/helper";
 import Router from "next/router";
 import Head from "next/head";
+import { Plano, Usuario } from "@/model/type";
 
 interface Usuarios {
   usuario: Usuario;
   plano: Plano;
 }
 
-export interface Plano {
-  id: number;
-  usuario_id: number;
-  plano_id: number;
-  payment_id: string;
-  status: string;
-  expiry_date: Date;
-  plan_duration: string;
-  created_at: Date;
-  updated_at: Date;
-}
-
 export default function Perfil({ usuario, plano }: Usuarios) {
   const [nome, setNome] = useState(usuario.nome);
   const [username, setUsername] = useState(usuario.username);
+  const [email, setEmail] = useState(usuario.email);
   const [copied, setCopied] = useState(false);
   const [baseUrl, setBaseUrl] = useState("");
-  console.log(plano);
+
   const handleCopyLink = () => {
     console.log("URL atual:", baseUrl);
 
-    //navigator.clipboard.writeText(`https://view-conta-plus-76f002898a47.herokuapp.com/codigo/${usuario.codigoReferencia}`);
     navigator.clipboard.writeText(
       `${baseUrl}/codigo/${usuario.codigoReferencia}`
     );
@@ -72,7 +60,7 @@ export default function Perfil({ usuario, plano }: Usuarios) {
         return;
       }
       const apiClient = setupAPIClient();
-      await apiClient.put("/user/att", { nome, username });
+      await apiClient.put("/user/att", { nome, username, email });
       toast.success("Alterações salvas com sucesso!", {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
@@ -155,11 +143,13 @@ export default function Perfil({ usuario, plano }: Usuarios) {
                 <div className={styles.edit}>
                   <label>Email:</label>
                   <input
-                    style={{ cursor: "no-drop" }}
                     type="text"
-                    value={usuario.email}
-                    readOnly
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
+                  {!usuario.emailVerified && (
+                    <p className="text-red-500 text-xs mt-2">E-mail não verificado</p>
+                  )}
                 </div>
               </div>
               <div className={styles.componentLinkAccept}>
