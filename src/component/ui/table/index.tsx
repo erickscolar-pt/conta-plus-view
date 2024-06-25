@@ -1,5 +1,5 @@
+import { Dividas, Objetivos, Rendas } from '@/model/type';
 import React from 'react';
-import { Dividas, Objetivos, Rendas } from '@/type';
 
 interface Column {
     title: string;

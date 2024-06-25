@@ -9,7 +9,6 @@ import ChartGrafic from "@/component/chartgrafic";
 import NotFound from "@/component/notfound";
 import { toast } from "react-toastify";
 import Head from "next/head";
-import MetricCard from "@/component/metriccard";
 import { formatCurrency } from "@/helper";
 import {
   FaMoneyBillWave,
@@ -17,6 +16,7 @@ import {
   FaPiggyBank,
 } from "react-icons/fa";
 import ChartGraficLine from "@/component/chartgraficline";
+import MetricCard from "../../component/metriccard";
 
 interface DashboardChartProps {
   dashboarddata: DashboardData;

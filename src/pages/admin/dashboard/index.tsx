@@ -7,7 +7,7 @@ import {
   FaDollarSign,
 } from 'react-icons/fa';
 import HeaderAdmin from '@/component/headeradmin';
-import MetricCard from '@/component/metriccard';
+import MetricCardAdmin from '@/component/metriccardadmin';
 import PaymentTable from '@/component/paymenttable';
 import { DashboardAdminProps, Metrics, Payment } from '@/model/type';
 import { formatCurrency } from '@/helper';
@@ -48,25 +48,25 @@ export default function DashboardAdmin({
     <div className="p-6 bg-gray-100 min-h-screen">
       <HeaderAdmin />
       <div className="grid grid-cols-1 mt-4 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <MetricCard
+        <MetricCardAdmin
           icon={<FaUser />}
           title="Usuários Registrados"
           value={registeredUsers}
           additional={undefined}
         />
-        <MetricCard
+        <MetricCardAdmin
           icon={<FaMoneyCheckAlt />}
           title="Pagamentos Pendentes"
           value={pendingPaymentsCount}
           additional={`Total: ${pendingPaymentsTotal}`}
         />
-        <MetricCard
+        <MetricCardAdmin
           icon={<FaChartLine />}
           title="Pagamentos Aprovados"
           value={approvedPaymentsCount}
           additional={`Total: ${approvedPaymentsTotal}`}
         />
-        <MetricCard
+        <MetricCardAdmin
           icon={<FaDollarSign />}
           title="Planos Ativos"
           value={activePlans}
