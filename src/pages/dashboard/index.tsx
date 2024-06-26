@@ -180,10 +180,7 @@ export default function Dashboard({ dashboarddata }: DashboardChartProps) {
                   icon={FaPiggyBank}
                 />
               </div>
-              {graficoBarra &&
-              graficoBarra.dividas.length > 0 &&
-              graficoBarra.metas.length > 0 &&
-              graficoBarra.rendas.length > 0 ? (
+              {graficoBarra ? (
                 <>
                   <ChartGrafic
                     data={graficoBarra}
