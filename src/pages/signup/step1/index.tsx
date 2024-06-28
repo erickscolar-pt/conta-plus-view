@@ -3,6 +3,7 @@ import { FaArrowRight, FaUser } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import Router from 'next/router';
 import { isValidUsername, validateEmail } from '@/helper';
+import { setupAPIClient } from '@/services/api';
 
 interface Step1Props {
   userData: {
@@ -22,13 +23,32 @@ interface Step1Props {
 
 export default function Step1({ userData = { nome: "", email: "", username: "", acceptTerms: false }, setUserData, nextStep }: Step1Props) {
   const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isValidUsernameCheck, setIsValidUsernameCheck] = useState(true);
   const [email, setEmail] = useState(userData.email || "")
   const [nome, setNome] = useState(userData.nome || "")
   const [username, setUsername] = useState(userData.username || "")
   const [acceptTerms, setAcceptTerms] = useState(false);
 
-  const handleNext = () => {
-    if (email === '' || username === '') {
+  const handleNext = async () => {
+    const apiClient = setupAPIClient();
+
+    const checkUsername = await apiClient.post('user/verify-username',{
+      username: username
+    })
+
+    const checkEmail = await apiClient.post('user/verify-username',{
+      username: email
+    })
+
+    if(!checkEmail.data){
+      setIsValidEmail(false)
+    }else if(!checkUsername.data){
+      setIsValidUsernameCheck(false)
+    }else if(!isValidUsernameCheck){
+      toast.warning('Use outro nome de usuario.',{
+        position: toast.POSITION.TOP_CENTER
+      })
+    }else if (email === '' || username === '') {
       toast.warning('Preencha o email e o nome de usuário para prosseguir.', {
         position: toast.POSITION.TOP_CENTER,
       });
@@ -52,15 +72,29 @@ export default function Step1({ userData = { nome: "", email: "", username: "", 
         position: toast.POSITION.TOP_CENTER,
       });
     } else {
+      setIsValidEmail(true)
+      setIsValidUsernameCheck(true)
+
       setUserData(nome, email, username, acceptTerms)
       nextStep();
     }
   };
 
-  const handleChangeEmail = (e) => {
+  const handleChangeEmail = async (e) => {
     const { value } = e.target;
     setEmail(value)
     setIsValidEmail(validateEmail(value));
+
+    const apiClient = setupAPIClient();
+    const checkEmail = await apiClient.post('user/verify-username',{
+      username: email
+    })
+
+    if(!checkEmail.data){
+      setIsValidEmail(false)
+    }else{
+      setIsValidEmail(true)
+    }
   };
 
   const handleChangeNome = (e) => {
@@ -68,9 +102,21 @@ export default function Step1({ userData = { nome: "", email: "", username: "", 
     setNome(value);
   };
 
-  const handleChangeUsername = (e) => {
+  const handleChangeUsername = async (e) => {
     const { value } = e.target;
     setUsername(value)
+    const apiClient = setupAPIClient();
+
+    const checkUsername = await apiClient.post('user/verify-username',{
+      username: username
+    })
+    
+    if(!checkUsername.data){
+      setIsValidUsernameCheck(false)
+    }else{
+      setIsValidUsernameCheck(true)
+    }
+
   };
 
   return (
@@ -97,7 +143,7 @@ export default function Step1({ userData = { nome: "", email: "", username: "", 
             placeholder="exemplo@email.com.br"
             value={email}
             onChange={handleChangeEmail}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
+            className={`w-full px-4 py-2 border ${isValidEmail ? 'border-gray-300' : 'border-red-300'} rounded-lg focus:outline-none focus:border-primary`}
           />
           {!isValidEmail && <p className="text-red-500 text-xs mt-2">E-mail inválido</p>}
         </div>
@@ -109,7 +155,7 @@ export default function Step1({ userData = { nome: "", email: "", username: "", 
             placeholder="nome_de_usuario"
             value={username}
             onChange={handleChangeUsername}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
+            className={`w-full px-4 py-2 border ${isValidUsernameCheck ? 'border-gray-300':'border-red-300'} rounded-lg focus:outline-none focus:border-primary`}
           />
         </div>
 

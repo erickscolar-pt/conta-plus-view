@@ -20,6 +20,8 @@ export type Usuario = {
 export default function Cadastro({planos}) {
   const { signUp } = useContext(AuthContexts)
   const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+
   const [usuario, setUsuario] = useState<Usuario>({
     id: 0,
     nome: '',
@@ -50,6 +52,7 @@ export default function Cadastro({planos}) {
   };
 
   async function handleFormSubmit() {
+    setLoading(true);
     const res:any = await signUp({
       email: userData.email,
       username: userData.username,
@@ -60,6 +63,8 @@ export default function Cadastro({planos}) {
     })
     const user: Usuario = await res.data
     setUsuario(user)
+    setLoading(false);
+    nextStep()
   };
 
   function handleStep1(nome, email, username, acceptTerms) {
@@ -87,7 +92,7 @@ export default function Cadastro({planos}) {
         <Step2 userData={userData} setUserData={handleStep2} nextStep={nextStep} prevStep={prevStep} />
       )}
       {step === 3 && (
-        <Step3 userData={userData} setUserData={handleStep3} handleFormSubmit={handleFormSubmit} nextStep={nextStep} prevStep={prevStep} />
+        <Step3 userData={userData} setUserData={handleStep3} loading={loading} handleFormSubmit={handleFormSubmit} nextStep={nextStep} prevStep={prevStep} />
       )}
       {step === 4 && (
         <Step4 planos={planos.data} userData={usuario} />

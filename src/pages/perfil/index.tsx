@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { FaCopy } from "react-icons/fa";
+import { FaCopy, FaCheck } from "react-icons/fa";
 import { TiUserDeleteOutline } from "react-icons/ti";
 import Header from "@/component/header";
 import MenuLateral from "@/component/menulateral";
@@ -24,6 +24,7 @@ export default function Perfil({ usuario, plano }: Usuarios) {
   const [email, setEmail] = useState(usuario.email);
   const [copied, setCopied] = useState(false);
   const [baseUrl, setBaseUrl] = useState("");
+  const [inviteEmail, setInviteEmail] = useState("");
 
   const handleCopyLink = () => {
     console.log("URL atual:", baseUrl);
@@ -115,6 +116,33 @@ export default function Perfil({ usuario, plano }: Usuarios) {
     Router.push("/paymentauth");
   }
 
+  const handleSendInvite = async () => {
+    try {
+      const apiClient = setupAPIClient();
+      const response = await apiClient.post("/user/invite-email-user", {
+        email: inviteEmail,
+        link: `${baseUrl}/codigo/${usuario.codigoReferencia}`,
+      });
+      if (response.data) {
+        toast.success("Convite enviado com sucesso!", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      } else {
+        toast.error(
+          "Erro ao enviar convite. Verifique o e-mail e tente novamente.",
+          {
+            position: toast.POSITION.TOP_RIGHT,
+          }
+        );
+      }
+    } catch (error) {
+      console.error("Erro ao enviar convite:", error.message);
+      toast.error("Erro ao enviar convite. Tente novamente mais tarde.", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+  };
+
   return (
     <>
       <Head>
@@ -148,7 +176,9 @@ export default function Perfil({ usuario, plano }: Usuarios) {
                     onChange={(e) => setEmail(e.target.value)}
                   />
                   {!usuario.emailVerified && (
-                    <p className="text-red-500 text-xs mt-2">E-mail não verificado</p>
+                    <p className="text-red-500 text-xs mt-2">
+                      E-mail não verificado
+                    </p>
                   )}
                 </div>
               </div>
@@ -193,12 +223,12 @@ export default function Perfil({ usuario, plano }: Usuarios) {
             <div className={styles.componentButtons}>
               <div className={styles.link}>
                 <p>
-                  Deseja compartilhar contas com alguém ? Click e compartilhe
-                  seu link com um amigo já cadastrado, assim que ele acessar o
+                  Deseja compartilhar contas com alguém ? <b>Click no botão e compartilhe </b>
+                  seu link com um amigo já cadastrado ou <b>envie o convite por e-mail</b>, assim que ele acessar o
                   link vocês estaram vinculados e você poderá compartilhar
                   contas, aproveite!
                 </p>
-                <button onClick={handleCopyLink}>
+                <button className={styles.btnLink} onClick={handleCopyLink}>
                   {copied ? (
                     "Link Copiado, click para copiar novamente!"
                   ) : (
@@ -207,9 +237,23 @@ export default function Perfil({ usuario, plano }: Usuarios) {
                     </>
                   )}
                 </button>
+                <div className="flex w-full mt-4">
+                  <input
+                    className="flex-1 p-2 border border-gray-300 rounded-l-xl"
+                    type="email"
+                    placeholder="Digite o e-mail do convidado"
+                    value={inviteEmail}
+                    onChange={(e) => setInviteEmail(e.target.value)}
+                  />
+                  <button
+                    className="px-4 py-2 text-white border bg-primary rounded-r-xl hover:bg-ganhos"
+                    onClick={handleSendInvite}
+                  >
+                    <FaCheck/>
+                  </button>
+                </div>
               </div>
-
-              <button className={styles.save} onClick={handleSaveChanges}>
+              <button className={styles.btn} onClick={handleSaveChanges}>
                 Salvar Alterações
               </button>
             </div>
