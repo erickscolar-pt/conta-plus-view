@@ -241,7 +241,7 @@ export default function Perfil({ usuario, plano }: Usuarios) {
                   <input
                     className="flex-1 p-2 border border-gray-300 rounded-l-xl"
                     type="email"
-                    placeholder="Digite o e-mail do convidado"
+                    placeholder="Digite o e-mail ou nome de usuario do convidado"
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
                   />
@@ -270,6 +270,8 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
   try {
     const user = await apiClient.get("/user/get");
     const plano = await apiClient.get("/payments/plano-user");
+
+    console.log(user.data)
     return {
       props: {
         usuario: user.data,

@@ -77,7 +77,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     if (isTokenExpired()) {
       console.log("Token expired, signing out");
-      //signOut();
+      signOut();
     }
   }, []);
 
