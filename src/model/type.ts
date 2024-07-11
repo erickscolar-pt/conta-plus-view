@@ -94,6 +94,7 @@ export interface Usuario {
   objetivos: Objetivos[];
   contavinculo: ContaVinculo[];
   emailVerified: boolean
+  acceptMail: boolean
 }
 
 export interface Plano {

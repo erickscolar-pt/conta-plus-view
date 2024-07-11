@@ -79,12 +79,10 @@ export default function PaymentAuth({ planos, usuario }: PaymentAuthProps) {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/payments/${paymentId}/${usuario.id}/status`
       );
-      console.log(response);
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/payments/${paymentId}/${usuario.id}/status`
         );
-        console.log(response);
         const data = await response.json();
 
         if (data.status === "approved") {
@@ -101,7 +99,6 @@ export default function PaymentAuth({ planos, usuario }: PaymentAuthProps) {
   };
 
   const selectPlan = (plan: Planos) => {
-    console.log(plan.id);
     setSelectedPlan(plan);
   };
 

@@ -78,7 +78,6 @@ export default function PaymentUser() {
   };
 
   const selectPlan = (plan: Planos) => {
-    console.log(plan.id);
     setSelectedPlan(plan);
   };
 
@@ -87,12 +86,10 @@ export default function PaymentUser() {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/payments/${paymentId}/${user.id}/status`
       );
-      console.log(response);
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/payments/${paymentId}/${user.id}/status`
         );
-        console.log(response);
         const data = await response.json();
 
         if (data.status === "approved") {

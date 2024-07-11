@@ -25,10 +25,9 @@ export default function Perfil({ usuario, plano }: Usuarios) {
   const [copied, setCopied] = useState(false);
   const [baseUrl, setBaseUrl] = useState("");
   const [inviteEmail, setInviteEmail] = useState("");
+  const [acceptMail, setAcceptMail] = useState(usuario.acceptMail);
 
   const handleCopyLink = () => {
-    console.log("URL atual:", baseUrl);
-
     navigator.clipboard.writeText(
       `${baseUrl}/codigo/${usuario.codigoReferencia}`
     );
@@ -87,6 +86,30 @@ export default function Perfil({ usuario, plano }: Usuarios) {
       });
     }
   }
+
+  const handleToggleAcceptMail = async () => {
+    try {
+      const apiClient = setupAPIClient();
+      await apiClient.post("/user/active-mail", { active: !acceptMail });
+      setAcceptMail(!acceptMail);
+      toast.success(
+        `Notificações por e-mail ${
+          !acceptMail ? "ativadas" : "desativadas"
+        }`,
+        {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        }
+      );
+    } catch (error) {
+      console.error("Erro ao atualizar notificações:", error.message);
+      toast.error(
+        "Erro ao atualizar notificações. Tente novamente mais tarde.",
+        {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        }
+      );
+    }
+  };
 
   useEffect(() => {
     // Verifica se o código está sendo executado no navegador
@@ -181,6 +204,31 @@ export default function Perfil({ usuario, plano }: Usuarios) {
                     </p>
                   )}
                 </div>
+                <div className="flex flex-col justify-start gap-4 mt-4 border border-black rounded-xl p-4 ">
+                  <div className="w-full">
+                    <p>
+                      As notificações são para os lembretes de pagamentos das
+                      suas dividas cadastradas.
+                    </p>
+                  </div>
+                  <div className=" flex justify-start gap-4 w-full">
+                    <label className="text-sm font-medium text-gray-700">
+                      Notificações por E-mail:
+                    </label>
+                    <button
+                      onClick={handleToggleAcceptMail}
+                      className={`${
+                        acceptMail ? "bg-green-500" : "bg-gray-200"
+                      } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none`}
+                    >
+                      <span
+                        className={`${
+                          acceptMail ? "translate-x-6" : "translate-x-1"
+                        } inline-block h-4 w-4 transform bg-white rounded-full transition-transform`}
+                      />
+                    </button>
+                  </div>
+                </div>
               </div>
               <div className={styles.componentLinkAccept}>
                 {plano && (
@@ -223,8 +271,10 @@ export default function Perfil({ usuario, plano }: Usuarios) {
             <div className={styles.componentButtons}>
               <div className={styles.link}>
                 <p>
-                  Deseja compartilhar contas com alguém ? <b>Click no botão e compartilhe </b>
-                  seu link com um amigo já cadastrado ou <b>envie o convite por e-mail</b>, assim que ele acessar o
+                  Deseja compartilhar contas com alguém ?{" "}
+                  <b>Click no botão e compartilhe </b>
+                  seu link com um amigo já cadastrado ou{" "}
+                  <b>envie o convite por e-mail</b>, assim que ele acessar o
                   link vocês estaram vinculados e você poderá compartilhar
                   contas, aproveite!
                 </p>
@@ -249,7 +299,7 @@ export default function Perfil({ usuario, plano }: Usuarios) {
                     className="px-4 py-2 text-white border bg-primary rounded-r-xl hover:bg-ganhos"
                     onClick={handleSendInvite}
                   >
-                    <FaCheck/>
+                    <FaCheck />
                   </button>
                 </div>
               </div>
@@ -257,6 +307,8 @@ export default function Perfil({ usuario, plano }: Usuarios) {
                 Salvar Alterações
               </button>
             </div>
+
+            <div className={styles.toggleContainer}></div>
           </div>
         </div>
       </div>
@@ -271,7 +323,6 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
     const user = await apiClient.get("/user/get");
     const plano = await apiClient.get("/payments/plano-user");
 
-    console.log(user.data)
     return {
       props: {
         usuario: user.data,

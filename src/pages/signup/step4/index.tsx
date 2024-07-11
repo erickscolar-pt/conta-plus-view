@@ -50,7 +50,6 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
             return;
         }
 
-        console.log(selectedPlan)
         setLoading(true);
         if (selectedPlan) {
             const res: ResponsePayments = await checkPlan({
@@ -59,7 +58,6 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
                 usuario_id: userData.id,
                 description: 'Pagamento do Plano ' + selectedPlan.plano
             });
-            console.log(res)
             if (res) {
                 setPaymentData(res);
                 setLoading(false);
@@ -70,17 +68,14 @@ export default function PaymentPage({ planos, userData }: PaymentsProps) {
     };
 
     const selectPlan = (plan: Planos) => {
-        console.log(plan.id);
         setSelectedPlan(plan);
     };
 
     const checkPaymentStatus = (paymentId: number) => {
         const interval = setInterval(async () => {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/${paymentId}/${userData.id}/status`);
-            console.log(response)
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/${paymentId}/${userData.id}/status`);
-                console.log(response)
                 const data = await response.json();
 
                 if (data.status === 'approved') {

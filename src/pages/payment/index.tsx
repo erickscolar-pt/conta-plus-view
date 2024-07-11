@@ -28,7 +28,6 @@ export default function Payment() {
     const [payment, setPayment] = useState<Payment | null>(null);
     const [paymentStatus, setPaymentStatus] = useState('pending');
     const { Image } = useQRCode();
-    console.log(payment)
     useEffect(() => {
         if (paymentData) {
             const parsedPaymentData = Array.isArray(paymentData) ? paymentData[0] : paymentData;

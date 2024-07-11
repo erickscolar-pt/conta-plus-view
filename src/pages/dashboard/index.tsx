@@ -59,7 +59,6 @@ export default function Dashboard({ dashboarddata }: DashboardChartProps) {
   const [anosText, setAnosText] = useState(0);
   const [mesesText, setMesesText] = useState(0);
 
-  console.log({ anos: anosText, meses: mesesText });
   useEffect(() => {
     const fetchData = async () => {
       setGraficoBarra(dashboarddata);
