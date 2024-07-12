@@ -204,7 +204,7 @@ export default function Perfil({ usuario, plano }: Usuarios) {
                     </p>
                   )}
                 </div>
-                <div className="flex flex-col justify-start gap-4 mt-4 border border-black rounded-xl p-4 ">
+                <div className="flex flex-col justify-start gap-4 mt-4 mb-2 border border-black rounded-xl p-4 ">
                   <div className="w-full">
                     <p>
                       As notificações são para os lembretes de pagamentos das
