@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FaCopy, FaCheck } from "react-icons/fa";
 import { TiUserDeleteOutline } from "react-icons/ti";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Header from "@/component/header";
 import MenuLateral from "@/component/menulateral";
 import { canSSRAuth } from "@/utils/canSSRAuth";
@@ -26,7 +27,7 @@ export default function Perfil({ usuario, plano }: Usuarios) {
   const [baseUrl, setBaseUrl] = useState("");
   const [inviteEmail, setInviteEmail] = useState("");
   const [acceptMail, setAcceptMail] = useState(usuario.acceptMail);
-
+  const [loading, setLoading] = useState(false)
   const handleCopyLink = () => {
     navigator.clipboard.writeText(
       `${baseUrl}/codigo/${usuario.codigoReferencia}`
@@ -141,6 +142,7 @@ export default function Perfil({ usuario, plano }: Usuarios) {
 
   const handleSendInvite = async () => {
     try {
+      setLoading(true)
       const apiClient = setupAPIClient();
       const response = await apiClient.post("/user/invite-email-user", {
         email: inviteEmail,
@@ -150,6 +152,8 @@ export default function Perfil({ usuario, plano }: Usuarios) {
         toast.success("Convite enviado com sucesso!", {
           position: toast.POSITION.TOP_RIGHT,
         });
+        setInviteEmail('')
+        setLoading(false)
       } else {
         toast.error(
           "Erro ao enviar convite. Verifique o e-mail e tente novamente.",
@@ -157,6 +161,8 @@ export default function Perfil({ usuario, plano }: Usuarios) {
             position: toast.POSITION.TOP_RIGHT,
           }
         );
+        setInviteEmail('')
+        setLoading(false)
       }
     } catch (error) {
       console.error("Erro ao enviar convite:", error.message);
@@ -272,13 +278,11 @@ export default function Perfil({ usuario, plano }: Usuarios) {
               <div className={styles.link}>
                 <p>
                   Deseja compartilhar contas com alguém ?{" "}
-                  <b>Click no botão e compartilhe </b>
-                  seu link com um amigo já cadastrado ou{" "}
                   <b>envie o convite por e-mail</b>, assim que ele acessar o
                   link vocês estaram vinculados e você poderá compartilhar
                   contas, aproveite!
                 </p>
-                <button className={styles.btnLink} onClick={handleCopyLink}>
+                {/* <button className={styles.btnLink} onClick={handleCopyLink}>
                   {copied ? (
                     "Link Copiado, click para copiar novamente!"
                   ) : (
@@ -286,7 +290,7 @@ export default function Perfil({ usuario, plano }: Usuarios) {
                       <FaCopy /> Copiar Link do Convite
                     </>
                   )}
-                </button>
+                </button> */}
                 <div className="flex w-full mt-4">
                   <input
                     className="flex-1 p-2 border border-gray-300 rounded-l-xl"
@@ -299,7 +303,7 @@ export default function Perfil({ usuario, plano }: Usuarios) {
                     className="px-4 py-2 text-white border bg-primary rounded-r-xl hover:bg-ganhos"
                     onClick={handleSendInvite}
                   >
-                    <FaCheck />
+                    {loading ? <AiOutlineLoading3Quarters size={16} className="animate-spin text-4xl text-white" /> : <FaCheck />}
                   </button>
                 </div>
               </div>

@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { setupAPIClient } from '@/services/api';
 import { toast } from 'react-toastify';
+import { canSSRGuest } from '@/utils/canSSRGuest';
 
 export default function ResetPassword() {
   const [password, setPassword] = useState('');
@@ -35,6 +36,13 @@ export default function ResetPassword() {
       }, 2000);
     }
   };
+
+  useEffect(() => {
+    if (token) {
+        console.warn('ok')
+        return;
+    }
+}, [token]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">

@@ -3,7 +3,6 @@ import { api } from '../services/apiCliente';
 import { toast } from 'react-toastify';
 import { destroyCookie, parseCookies, setCookie } from 'nookies';
 import Router from 'next/router';
-import { isTokenExpired } from '@/utils/isTokenExpired';
 
 type AuthContextData = {
   usuario: UsuarioProps;
@@ -65,7 +64,7 @@ export function signOut() {
     sessionStorage.removeItem('nivel');
     Router.push('/');
   } catch {
-    console.log('Erro ao deslogar');
+    console.error('Erro ao deslogar');
   }
 }
 
@@ -73,13 +72,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [usuario, setUsuario] = useState<UsuarioProps>();
 
   const isAuthenticated = !!usuario;
-
-  useEffect(() => {
-    if (isTokenExpired()) {
-      console.log("Token expired, signing out");
-      signOut();
-    }
-  }, []);
 
   async function signIn({ username, password }: SignInProps) {
     try {
@@ -132,7 +124,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         });
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast.error("Erro ao acessar.");
     }
   }
@@ -151,7 +143,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       toast.success("Escolha um plano para seu perfil.");
       return response;
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast.error("Erro ao cadastrar usuário.");
     }
   }
@@ -175,7 +167,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
       return res;
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast.error("Erro ao consultar planos.");
     }
   }

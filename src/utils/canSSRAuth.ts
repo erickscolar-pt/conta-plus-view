@@ -8,7 +8,7 @@ export function canSSRAuth<P>(fn: GetServerSideProps<P>) {
         const token = cookies['@nextauth.token'];
 
         if (!token) {
-            console.log("No token found, redirecting to login");
+            console.error("No token found, redirecting to login");
             return {
                 redirect: {
                     destination: '/',
@@ -21,7 +21,7 @@ export function canSSRAuth<P>(fn: GetServerSideProps<P>) {
             return await fn(ctx);
         } catch (err) {
             if (err instanceof AuthTokenError) {
-                console.log("AuthTokenError, destroying token and redirecting to login");
+                console.error("AuthTokenError, destroying token and redirecting to login");
                 destroyCookie(ctx, '@nextauth.token');
                 return {
                     redirect: {
@@ -31,7 +31,7 @@ export function canSSRAuth<P>(fn: GetServerSideProps<P>) {
                 };
             }
 
-            console.log("Unexpected error, redirecting to login:", err);
+            console.error("Unexpected error, redirecting to login:", err);
             return {
                 redirect: {
                     destination: '/',
