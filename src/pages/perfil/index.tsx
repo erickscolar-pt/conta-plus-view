@@ -145,8 +145,7 @@ export default function Perfil({ usuario, plano }: Usuarios) {
       setLoading(true)
       const apiClient = setupAPIClient();
       const response = await apiClient.post("/user/invite-email-user", {
-        email: inviteEmail,
-        link: `${baseUrl}/codigo/${usuario.codigoReferencia}`,
+        email: inviteEmail
       });
       if (response.data) {
         toast.success("Convite enviado com sucesso!", {
