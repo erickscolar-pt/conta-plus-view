@@ -4,6 +4,7 @@ import styles from './styles.module.scss'
 import { useEffect, useState } from 'react';
 import { setupAPIClient } from "@/services/api";
 import Router, { useRouter } from "next/router";
+import { useSearchParams } from 'next/navigation'
 import { FaSpinner } from 'react-icons/fa'
 import Head from "next/head";
 
@@ -11,18 +12,20 @@ export default function CodigoPage() {
     const [loading, setLoading] = useState(true);
     const [vinculado, setVinculado] = useState(false);
     const [who, setWho] = useState("");
-
-    const { query } = useRouter()
+    const searchParams = useSearchParams();
+    
+    const codigo = searchParams.get('c');
 
     async function vincularUsuario() {
+        if (!codigo) return;
+
         try {
             const apiClient = setupAPIClient();
-
-            const response = await apiClient.post(`/user/invite/${query.codigo}`);
+            const response = await apiClient.post(`/user/invite/${codigo}`);
             const data = await response.data;
             if (data.inviteAccept) {
                 setVinculado(true);
-                setWho(data.inviteAccept[0].with)
+                setWho(data.inviteAccept[0].with);
             }
         } catch (error) {
             console.error('Erro ao vincular usuário:', error);
@@ -32,12 +35,15 @@ export default function CodigoPage() {
     }
 
     useEffect(() => {
-        vincularUsuario();
-    }, [])
+        if (codigo) {
+            vincularUsuario();
+        }
+    }, [codigo]);
 
     function handleBack() {
-        Router.push('/perfil')
+        Router.push('/perfil');
     }
+
     return (
         <div className={styles.container} style={{ background: vinculado ? 'linear-gradient(108deg, #F4FAF3 0%, #D8D8D8 100%)' : 'linear-gradient(108deg, #FFD8D8 0%, #D8D8D8 100%) ' }}>
       <Head>
@@ -180,11 +186,3 @@ export default function CodigoPage() {
         </div>
     );
 }
-
-
-export const getServerSideProps = canSSRAuth(async (ctx) => {
-
-    return {
-        props: {}
-    }
-})
