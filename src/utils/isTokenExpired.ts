@@ -16,7 +16,7 @@ export function isTokenExpired(): boolean {
 
     // Obtenha o timestamp atual
     const currentTime = Math.floor(Date.now() / 1000);
-
+    
     // Verifique se a data de expiração do token é maior que o timestamp atual
     return decodedToken.exp < currentTime;
   } catch (error) {

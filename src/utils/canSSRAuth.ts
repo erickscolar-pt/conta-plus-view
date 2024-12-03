@@ -1,43 +1,46 @@
+import { jwtDecode } from 'jwt-decode';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { parseCookies, destroyCookie } from 'nookies';
-import { AuthTokenError } from '../services/errors/AuthTokenError';
 
 export function canSSRAuth<P>(fn: GetServerSideProps<P>) {
-    return async (ctx: GetServerSidePropsContext): Promise<GetServerSidePropsResult<P>> => {
-        const cookies = parseCookies(ctx);
-        const token = cookies['@nextauth.token'];
+  return async (ctx: GetServerSidePropsContext): Promise<GetServerSidePropsResult<P>> => {
+    const cookies = parseCookies(ctx);
+    const token = cookies['@nextauth.token'];
 
-        if (!token) {
-            console.error("No token found, redirecting to login");
-            return {
-                redirect: {
-                    destination: '/',
-                    permanent: false,
-                }
-            };
-        }
+    if (!token) {
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false,
+        },
+      };
+    }
 
-        try {
-            return await fn(ctx);
-        } catch (err) {
-            if (err instanceof AuthTokenError) {
-                console.error("AuthTokenError, destroying token and redirecting to login");
-                destroyCookie(ctx, '@nextauth.token');
-                return {
-                    redirect: {
-                        destination: '/',
-                        permanent: false,
-                    }
-                };
-            }
+    try {
+      const decodedToken: { exp: number } = jwtDecode(token);
+      const currentTime = Math.floor(Date.now() / 1000);
 
-            console.error("Unexpected error, redirecting to login:", err);
-            return {
-                redirect: {
-                    destination: '/',
-                    permanent: false,
-                }
-            };
-        }
-    };
+      if (decodedToken.exp < currentTime) {
+        console.error('Token expirado, redirecionando para login');
+        destroyCookie(ctx, '@nextauth.token'); // Remove o token
+        return {
+          redirect: {
+            destination: '/',
+            permanent: false,
+          },
+        };
+      }
+
+      return await fn(ctx);
+    } catch (error) {
+      console.error('Erro ao validar token, redirecionando para login:', error);
+      destroyCookie(ctx, '@nextauth.token');
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false,
+        },
+      };
+    }
+  };
 }
