@@ -14,6 +14,7 @@ import Modal from "../ui/modal";
 import { ButtonPages } from "../ui/buttonPages";
 import { setupAPIClient } from "@/services/api";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 export default function MenuLateral() {
   const [id, setId] = useState(0);
@@ -82,8 +83,8 @@ export default function MenuLateral() {
         fileInputRef.current.type = "text";
         fileInputRef.current.type = "file";
       }
-      if(response.data.error){
-        toast.warn(response.data.error, {autoClose: false, delay: 10})
+      if (response.data.error) {
+        toast.warn(response.data.error, { autoClose: false, delay: 10 });
         return;
       }
       toast.success("Arquivo enviado com sucesso!");
@@ -188,10 +189,16 @@ export default function MenuLateral() {
 
             {/* Botão de Enviar o arquivo se houver arquivo selecionado */}
             {selectedFile && (
-              <ButtonPages loading={loadingSendFileExcel} onClick={handleSendFile}>
+              <ButtonPages
+                loading={loadingSendFileExcel}
+                onClick={handleSendFile}
+              >
                 Enviar Planilha
               </ButtonPages>
             )}
+          </div>
+          <div className="w-full justify-center text-center">
+            <Link href="/importreport">Click para saber mais sobre importar dados.</Link>
           </div>
         </div>
       </Modal>

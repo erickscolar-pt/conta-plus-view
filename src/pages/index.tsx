@@ -86,7 +86,7 @@ export default function Home() {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
-            <Link href="/forgotpassword">Esqueci minha senha</Link>
+            <Link href="/importreport" className="w-full m-2 justify-center">Esqueci minha senha</Link>
             <Button
               type="submit"
               loading={loading}

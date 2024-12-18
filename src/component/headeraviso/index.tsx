@@ -57,6 +57,13 @@ export default function HeaderAviso() {
           >
             <span>Sobre Conta Plus</span>
           </Link>
+
+          <Link
+            href="/importreport"
+            className="flex items-center space-x-1"
+          >
+            <span>Excel</span>
+          </Link>
         </nav>
       </div>
       <div className="md:hidden flex items-center">
