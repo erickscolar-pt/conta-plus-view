@@ -1,15 +1,18 @@
 .content {
     display: flex;
     max-width: 20%;
+
     .menuLateral {
         border-radius: 20px;
         background: #599E52;
-        padding: 1em ;
+        padding: 1em;
         filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+
         .listbutton {
             display: flex;
             flex-direction: column;
             align-items: center;
+
             button {
                 width: 50px;
                 height: 50px;
@@ -23,41 +26,54 @@
                 cursor: pointer !important;
                 filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
                 transition: width 1s, height 1s;
+
                 img {
-                    width: 2em; 
-                    height: 2em; 
+                    width: 2em;
+                    height: 2em;
                 }
             }
 
-            .ganhos{
+            .ganhos {
                 background: #5ABB8C;
-                &:hover{
+
+                &:hover {
                     background: #82cca8;
                 }
             }
-            
-            .gastos{
+
+            .gastos {
                 background: #BF5252;
-                &:hover{
+
+                &:hover {
                     background: #e47b7b;
                 }
             }
 
-            .metas{
+            .metas {
                 background: #138DB4;
-                &:hover{
+
+                &:hover {
                     background: #5cb0cc;
                 }
             }
 
-            .dashboard{
+            .dashboard {
                 background: #A663B1;
-                &:hover{
+
+                &:hover {
                     background: #d39adb;
                 }
             }
 
-            .exit{
+            .excel {
+                background: #0E5734;
+
+                &:hover {
+                    background: #1a6f46;
+                }
+            }
+
+            .exit {
                 background: #FFF;
                 margin-top: 6em;
             }
@@ -65,16 +81,183 @@
     }
 }
 
+.containerModal {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 2em;
+    font-family: "Arial";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    color: white;
+    justify-content: space-between;
+    gap: 6px;
+
+    .selected {
+        border: 1px solid #FFf;
+        border-radius: 5px;
+        width: 100%;
+        padding: 5px;
+        margin-bottom: .5em;
+
+        select {
+            border: none;
+            padding: 5px;
+            border-radius: 5px;
+            font-family: "Arial";
+            font-style: normal;
+            font-weight: 400;
+            font-size: 12px;
+            text-align: center;
+            width: 100%;
+            color: #313131 !important;
+
+
+            option {
+                margin: 5px;
+                border: none;
+                padding: 6px;
+                border-radius: 5px;
+                font-family: "Arial";
+                font-style: normal;
+                font-weight: 400;
+                font-size: 12px;
+                text-align: center;
+                transition: all 1s;
+                color: #313131 !important;
+
+                &:hover {
+                    color: #313131 !important;
+
+                    background-color: #f0f0f0;
+
+                }
+            }
+
+        }
+
+        .fileInputWrapper {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: center;
+            width: 25em;
+        }
+
+        .fileInput {
+            position: absolute;
+            top: 0;
+            left: 0;
+            //width: 100%;
+            //height: 100%;
+            opacity: 0;
+            /* Torna o input invisível */
+            cursor: pointer;
+        }
+
+        .fileInputLabel {
+            margin-top: 1em;
+            margin-bottom: 1em;
+            padding: 0.5em 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #0E5734;
+            color: #fff;
+            font-size: 16px;
+            text-align: center;
+            display: flex;
+            flex-wrap: nowrap;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+
+            &:hover {
+                background: #45a049;
+                /* Cor ao passar o mouse */
+            }
+
+            &:disabled {
+                background: #e0e0e0;
+                cursor: not-allowed;
+            }
+        }
+
+
+        .contentselected {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+
+            label {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+
+                input {
+                    border: none;
+                    border-radius: 5px;
+                    font-family: "Arial";
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 12px;
+                    text-align: center;
+                    background: #D9D9D9;
+                    color: #313131 !important;
+
+
+                }
+
+            }
+
+            .info {
+                border: none;
+                border-radius: 5px;
+                padding: .5em;
+                background-color: white;
+                font-weight: bold;
+                color: #0E5734;
+                text-align: center;
+            }
+        }
+
+    }
+
+    button {
+        border: none;
+        border-radius: 5px;
+        background: #32437a;
+        color: white;
+        padding: 1em;
+        cursor: pointer;
+        transition: 1s all;
+
+        &:hover {
+            background: #32437ab2;
+        }
+    }
+}
+
+
+
+
 @media screen and (max-width: 768px) {
-    .content{
+    .content {
         max-width: 100% !important;
         width: 100%;
         margin: 0 !important;
         padding: 0 !important;
-        .menuLateral{
+
+        .menuLateral {
             padding: .5em;
             width: 100%;
-            .listbutton{
+
+            .listbutton {
                 padding: 0 !important;
                 display: flex;
                 flex-direction: row;
@@ -82,20 +265,101 @@
                 flex-wrap: nowrap;
                 /* align-content: center; */
                 justify-content: center;
-                button{
+
+                button {
                     margin: 0.3em !important;
-                    width: 3em;
-                    height: 3em;
+                    width: 2.7em;
+                    height: 2.7em;
+
                     img {
-                        width: 1.5em; 
-                        height: 1.5em; 
+                        width: 1.5em;
+                        height: 1.5em;
                     }
                 }
 
-                .exit{
+                .exit {
                     margin: .3em !important;
                 }
             }
+        }
+    }
+
+    .containerModal {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        padding: 2em;
+        justify-content: space-between;
+        gap: 6px;
+    
+        .selected {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: .5em;
+    
+            select {
+                padding: 5px;
+                width: 100%;
+                option {
+                    margin: 5px;
+                    padding: 6px;
+                }
+    
+            }
+    
+            .fileInputWrapper {
+                display: flex;
+                flex-direction: column;
+                flex-wrap: nowrap;
+                align-items: center;
+                justify-content: center;
+                width: 14em;
+            }
+    
+            .fileInput {
+                position: absolute;
+                top: 0;
+                left: 0;
+                opacity: 0;
+                cursor: pointer;
+            }
+    
+            .fileInputLabel {
+                margin-top: 1em;
+                margin-bottom: 1em;
+                padding: 0.5em 1em;
+                display: flex;
+                flex-wrap: nowrap;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                }
+    
+    
+            .contentselected {
+                display: flex;
+                justify-content: center;
+                flex-direction: column;
+    
+                label {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    width: 100%;
+    
+                    input {
+
+                    }
+    
+                }
+            }
+    
+        }
+    
+        button {
+            padding: 1em;
         }
     }
 }
