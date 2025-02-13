@@ -2,11 +2,13 @@ import { setupAPIClient } from "@/services/api";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { FaSpinner } from "react-icons/fa";
+import { useRouter } from 'next/router';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,6 +22,8 @@ export default function ForgotPassword() {
     setMessage(data.data.message);
     toast.success("Link para resetar senha enviado, olhe sem email.");
     setLoading(false)
+    router.push('/');
+
   };
 
   return (
