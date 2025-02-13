@@ -12,10 +12,11 @@ import {
 } from "@/contexts/AuthContexts";
 import { FaCheck, FaCopy, FaSpinner } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { Usuario } from "../signup";
 import { formatCurrency } from "@/helper";
 import { useQRCode } from "next-qrcode";
 import Head from "next/head";
+import { Usuario } from "@/model/type";
+
 interface PaymentAuthProps {
   planos: Planos[];
   usuario: Usuario;
@@ -115,7 +116,7 @@ export default function PaymentAuth({ planos, usuario }: PaymentAuthProps) {
         <title>Conta Plus - Pagamento</title>
       </Head>
       <div className={styles.component}>
-        <Header />
+        <Header usuario={usuario}/>
         <div className={styles.perfilComponent}>
           <MenuLateral />
           <div className={styles.perfil}>

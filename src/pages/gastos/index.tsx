@@ -373,7 +373,7 @@ export default function Gastos({
         <title>Conta Plus - Gastos</title>
       </Head>
       <div className={styles.component}>
-        <Header />
+        <Header usuario={usuario}/>
         <div className={styles.gastosComponent}>
           <MenuLateral />
           <div className={styles.gastos}>

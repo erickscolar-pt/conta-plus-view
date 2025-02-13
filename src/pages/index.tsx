@@ -13,6 +13,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { setupAPIClient } from "@/services/api";
 import FloatingButton from "@/component/floatingbutton";
 import Link from "next/link";
+import Chat from "@/pages/chat";
 
 export default function Home() {
   const { signIn } = useContext(AuthContexts);
@@ -86,7 +87,7 @@ export default function Home() {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
-            <Link href="/importreport" className="w-full m-2 justify-center">Esqueci minha senha</Link>
+            <Link href="/forgotpassword" className="w-full m-2 justify-center">Esqueci minha senha</Link>
             <Button
               type="submit"
               loading={loading}

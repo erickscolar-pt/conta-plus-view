@@ -15,6 +15,7 @@ import InputMoney from "@/component/ui/inputMoney";
 import NotFound from "@/component/notfound";
 import Head from "next/head";
 import { Objetivos, Usuario } from "@/model/type";
+import Chat from "@/pages/chat";
 
 interface Metas {
   objetivos: Objetivos[];
@@ -267,7 +268,7 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
         <title>Conta Plus - Metas</title>
       </Head>
       <div className={styles.component}>
-        <Header />
+        <Header usuario={usuario}/>
         <div className={styles.objetivosComponent}>
           <MenuLateral />
           <div className={styles.objetivos}>
