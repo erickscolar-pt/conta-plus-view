@@ -55,6 +55,7 @@ export default function Chat(type: { usuario: Usuario }) {
     });
   
     socket.on("msgToClient", (message: Payload) => {
+      console.log(message);
       setMessages((prev) => [
         ...prev,
         { id: uuidv4(), ...message, sender: message.sender },
@@ -66,7 +67,6 @@ export default function Chat(type: { usuario: Usuario }) {
       socket.off("msgToClient");
     };
   }, [type.usuario.id]);
-  
 
   const validateInput = () => text.trim().length > 0;
   const sendMessage = (e: FormEvent) => {
