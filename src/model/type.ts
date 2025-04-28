@@ -59,6 +59,7 @@ export interface Dividas {
   installments?: number;
   n_installments?: number;
   plot?: string;
+  tipo_divida_id?: number;
 }
 export interface Objetivos {
   id: number;
@@ -107,4 +108,11 @@ export interface Plano {
   plan_duration: string;
   created_at: Date;
   updated_at: Date;
+}
+
+export interface ITipoDivida {
+  id: number;
+  nome: string;
+  createdAt: string;
+  updatedAt: string;
 }

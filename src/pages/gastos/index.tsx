@@ -21,12 +21,13 @@ import NotFound from "@/component/notfound";
 import { Toggle } from "@/component/ui/toggle";
 import { Input } from "@/component/ui/input";
 import Head from "next/head";
-import { Dividas, Rendas, Usuario } from "@/model/type";
+import { Dividas, ITipoDivida, Rendas, Usuario } from "@/model/type";
 
 interface Gastos {
   dividas: Dividas[];
   rendas: Rendas[];
   usuario: Usuario;
+  tipodivida: ITipoDivida[];
 }
 interface RequestData {
   nome_divida: string;
@@ -36,11 +37,13 @@ interface RequestData {
   vinculo_id?: number;
   ref_debt?: number;
   installments?: number;
+  tipoDividaId: number;
 }
 export default function Gastos({
   dividas: initialDividas,
   rendas: initialRendas,
   usuario,
+  tipodivida,
 }: Gastos) {
   const [isModalEdit, setIsModalEdit] = useState(false);
   const [isModalCreate, setIsModalCreate] = useState(false);
@@ -48,7 +51,8 @@ export default function Gastos({
   const [nomeDivida, setNomeDivida] = useState("");
   const [selectedValueEdit, setSelectedValueEdit] = useState("");
   const [createValorDebt, setCreateValorDebt] = useState(0);
-
+  const [tipoDividaSelected, setTipoDividaSelected] = useState("");
+  const [tipoDividaEditSelected, setTipoDividaEditSelected] = useState(0);
   const [createValor, setCreateValor] = useState(0);
   const [refDebt, setRefDebt] = useState(0);
   const [editValorDebt, setEditValorDebt] = useState(0);
@@ -78,9 +82,15 @@ export default function Gastos({
     0
   );
 
+  const getTipoDivida = (tipoDividaId: number) => {
+    const tipoDivida = tipodivida.find((tipo) => tipo.id === tipoDividaId);
+    return tipoDivida ? tipoDivida.nome : "Tipo não encontrado";
+  };
+
   const columns = [
     { title: "Conta", key: "nome_divida" },
     { title: "Valor do boleto", key: "valor", formatter: formatCurrency },
+    { title: "Tipo", key: "tipo_divida_id", formatter: getTipoDivida },
     { title: "Vou dividir com", key: "username" },
     {
       title: "Quanto meu parceiro(a) paga",
@@ -182,6 +192,7 @@ export default function Gastos({
     if (divida.vinculo) {
       setSelectedValueEdit(JSON.stringify(divida.vinculo.id));
     }
+    setTipoDividaEditSelected(divida.tipo_divida_id);
     setRefDebt(divida.ref_debt);
     setModalDividas(divida);
     setEditValorDebt(divida.valor_debito_vinculo);
@@ -214,6 +225,7 @@ export default function Gastos({
     const requestData: RequestData = {
       nome_divida: nomeDivida,
       valor: valor,
+      tipoDividaId: +tipoDividaEditSelected,
     };
 
     if (
@@ -230,7 +242,7 @@ export default function Gastos({
       requestData.ref_debt = null;
     }
 
-    const response = await apiClient.patch(`/Dividas/${id}`, requestData);
+    const response = await apiClient.patch(`/dividas/${id}`, requestData);
     if (response) {
       setLoading(false);
       toast.success("Divida atualizada com sucesso!");
@@ -261,6 +273,7 @@ export default function Gastos({
       nome_divida: createNomeDivida,
       valor: createValor,
       data_inclusao: date,
+      tipoDividaId: +tipoDividaSelected,
     };
 
     if (selectedValue !== null && selectedValue !== "") {
@@ -280,6 +293,7 @@ export default function Gastos({
       setCreateNomeDivida("");
       setCreateValor(0);
       setCreateVinculo("");
+      setTipoDividaSelected("");
       setCreateValorDebt(0);
       setInstallments(1);
       setLoading(false);
@@ -363,6 +377,14 @@ export default function Gastos({
     setCreateValor(novoValor);
   }
 
+  const handleChangeTipoDivida = (event) => {
+    setTipoDividaSelected(event.target.value);
+  };
+
+  const handleChangeEditTipoDivida = (event) => {
+    setTipoDividaEditSelected(event.target.value);
+  };
+
   useEffect(() => {
     fetchDividas();
   }, []);
@@ -373,7 +395,7 @@ export default function Gastos({
         <title>Conta Plus - Gastos</title>
       </Head>
       <div className={styles.component}>
-        <Header usuario={usuario}/>
+        <Header usuario={usuario} />
         <div className={styles.gastosComponent}>
           <MenuLateral />
           <div className={styles.gastos}>
@@ -486,6 +508,21 @@ export default function Gastos({
               )}
             </div>
           )}
+          {tipodivida.length > 0 && (
+            <div className={styles.selected}>
+              <select
+                value={tipoDividaEditSelected}
+                onChange={handleChangeEditTipoDivida}
+              >
+                <option value={0}>Selecione o Tipo</option>
+                {tipodivida.map((tipo) => (
+                  <option key={tipo.id} value={tipo.id}>
+                    {tipo.nome}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <span>
             Data vencimento: {formatDate(modalDividas?.data_inclusao)}
           </span>
@@ -565,6 +602,21 @@ export default function Gastos({
               )}
             </div>
           )}
+          {tipodivida.length > 0 && (
+            <div className={styles.selected}>
+              <select
+                value={tipoDividaSelected}
+                onChange={handleChangeTipoDivida}
+              >
+                <option value={0}>Selecione o Tipo</option>
+                {tipodivida.map((tipo) => (
+                  <option key={tipo.id} value={tipo.id}>
+                    {tipo.nome}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <Calendar
             colorButton="#570E0E"
             textButton="Salvar"
@@ -584,6 +636,7 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
   try {
     const user = await apiClient.get("/user/get");
     const dividas = await apiClient.get("/dividas");
+    const tipodivida = await apiClient.get("/dividas/getTipoDivida");
     const rendas = await apiClient.get("/rendas");
 
     return {
@@ -591,6 +644,7 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
         dividas: dividas.data,
         rendas: rendas.data,
         usuario: user.data,
+        tipodivida: tipodivida.data,
       },
     };
   } catch (error) {
@@ -600,6 +654,7 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
         dividas: [],
         rendas: [],
         usuario: [],
+        tipodivida: [],
       },
     };
   }
