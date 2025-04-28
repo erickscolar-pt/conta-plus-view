@@ -177,7 +177,7 @@ export default function Perfil({ usuario, plano }: Usuarios) {
         <title>Conta Plus - Perfil</title>
       </Head>
       <div className={styles.component}>
-        <Header />
+        <Header usuario={usuario}/>
         <div className={styles.perfilComponent}>
           <MenuLateral />
           <div className={styles.perfil}>

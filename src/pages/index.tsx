@@ -13,6 +13,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { setupAPIClient } from "@/services/api";
 import FloatingButton from "@/component/floatingbutton";
 import Link from "next/link";
+import Chat from "@/pages/chat";
 
 export default function Home() {
   const { signIn } = useContext(AuthContexts);
