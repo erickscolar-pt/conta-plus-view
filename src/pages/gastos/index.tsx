@@ -221,7 +221,11 @@ export default function Gastos({
     const apiClient = setupAPIClient();
 
     setIsModalEdit(false);
-
+    if(+tipoDividaEditSelected !== 0) {
+      toast.warning("Selecione o tipo de divida!");
+      setLoading(false);
+      return;
+    }
     const requestData: RequestData = {
       nome_divida: nomeDivida,
       valor: valor,
