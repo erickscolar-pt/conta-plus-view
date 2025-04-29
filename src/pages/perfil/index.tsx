@@ -13,6 +13,7 @@ import { isValidUsername } from "@/helper";
 import Router from "next/router";
 import Head from "next/head";
 import { Plano, Usuario } from "@/model/type";
+import Chat from "@/component/chat";
 
 interface Usuarios {
   usuario: Usuario;
@@ -315,6 +316,8 @@ export default function Perfil({ usuario, plano }: Usuarios) {
           </div>
         </div>
       </div>
+      <Chat usuario={usuario}/>
+
     </>
   );
 }

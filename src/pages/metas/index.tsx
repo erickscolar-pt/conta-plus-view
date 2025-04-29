@@ -15,7 +15,7 @@ import InputMoney from "@/component/ui/inputMoney";
 import NotFound from "@/component/notfound";
 import Head from "next/head";
 import { Objetivos, Usuario } from "@/model/type";
-import Chat from "@/pages/chat";
+import Chat from "@/component/chat";
 
 interface Metas {
   objetivos: Objetivos[];
