@@ -34,7 +34,7 @@ const socket = io("http://localhost:3009", {
 
 export default function Chat(type: { usuario: Usuario }) {
   const [title] = useState("Fale com os nossos consultores");
-  const [name] = useState(type.usuario.nome);
+  const [name] = useState(type.usuario.nome || "Sem nome");
   const [text, setText] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isChatOpen, setIsChatOpen] = useState(true); // Controle para abrir/fechar chat
@@ -121,7 +121,7 @@ export default function Chat(type: { usuario: Usuario }) {
             <div className={styles.messagetext}>
               <ul className={styles.messages}>
                 {messages.map((message) => {
-                  const isCliente = message.name === name;
+                  const isCliente = message.name === type.usuario.nome;
                   return (
                     <li
                       key={message.id}

@@ -9,7 +9,7 @@ import { BiExit } from "react-icons/bi";
 import { useContext } from "react";
 import { AuthContexts } from "@/contexts/AuthContexts";
 import Router from "next/router";
-import Chat from "../../pages/chat";
+import Chat from "../chat";
 import { setupAPIClient } from "@/services/api";
 import { Plano, Usuario } from "@/model/type";
 
@@ -39,7 +39,6 @@ export default function Header(type: {usuario: Usuario}) {
         </div>
       </header>
 
-      <Chat usuario={type.usuario}/>
     </>
   );
 }
