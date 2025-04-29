@@ -242,7 +242,7 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
         <title>Conta Plus - Ganhos</title>
       </Head>
       <div className={styles.component}>
-        <Header />
+        <Header usuario={usuario}/>
         <div className={styles.ganhosComponent}>
           <MenuLateral />
           <div className={styles.ganhos}>

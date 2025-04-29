@@ -9,32 +9,37 @@ import { BiExit } from "react-icons/bi";
 import { useContext } from "react";
 import { AuthContexts } from "@/contexts/AuthContexts";
 import Router from "next/router";
+import Chat from "../../pages/chat";
+import { setupAPIClient } from "@/services/api";
+import { Plano, Usuario } from "@/model/type";
 
-export default function Header() {
+interface Usuarios {
+  usuario?: Usuario;
+  plano?: Plano;
+}
+export default function Header(type: {usuario: Usuario}) {
   const { signOut } = useContext(AuthContexts);
 
   return (
-    <header className={styles.fixedheader}>
-      <Image src={logo} alt="" />
-      <div className={styles.direita}>
-        <Link href="/manual" className="flex items-center space-x-1">
-          <span>Sobre</span>
-        </Link>
-        <Image
-          onClick={() => {
-            Router.push("/perfil");
-          }}
-          className={styles.perfil}
-          src={avatar}
-          alt=""
-        />
-      </div>
-    </header>
+    <>
+      <header className={styles.fixedheader}>
+        <Image src={logo} alt="" />
+        <div className={styles.direita}>
+          <Link href="/manual" className="flex items-center space-x-1">
+            <span>Sobre</span>
+          </Link>
+          <Image
+            onClick={() => {
+              Router.push("/perfil");
+            }}
+            className={styles.perfil}
+            src={avatar}
+            alt=""
+          />
+        </div>
+      </header>
+
+      <Chat usuario={type.usuario}/>
+    </>
   );
 }
-
-export const getServerSideProps = canSSRGuest(async (ctx) => {
-  return {
-    props: {},
-  };
-});
