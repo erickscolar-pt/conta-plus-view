@@ -28,7 +28,7 @@ interface Payload {
   targetRole: "cliente" | "consultor";
 }
 
-const socket = io("http://localhost:3010", {
+const socket = io("https://chat-api.contaplus.app.br", {
   withCredentials: true,
   transports: ["websocket"],
 });
