@@ -3,7 +3,6 @@ import Head from "next/head";
 import styles from "../../styles/Home.module.scss";
 import Image from "next/image";
 import imgLogo from "../../public/logo_login.png";
-import imgfundo from "../../public/img_login.png";
 import { Button } from "@/component/ui/button";
 import { AuthContexts } from "../contexts/AuthContexts";
 import { toast } from "react-toastify";
@@ -13,7 +12,6 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { setupAPIClient } from "@/services/api";
 import FloatingButton from "@/component/floatingbutton";
 import Link from "next/link";
-import Chat from "@/component/chat";
 
 export default function Home() {
   const { signIn } = useContext(AuthContexts);

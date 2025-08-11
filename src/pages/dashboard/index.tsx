@@ -18,10 +18,11 @@ import {
 import ChartGraficLine from "@/component/chartgraficline";
 import MetricCard from "../../component/metriccard";
 import { Usuario } from "@/model/type";
+import Chat from "@/component/chat";
 
 interface DashboardChartProps {
   dashboarddata: DashboardData;
-  usuario: Usuario
+  usuario: Usuario;
 }
 
 export interface DashboardData {
@@ -50,7 +51,10 @@ const months = [
   "Dezembro",
 ];
 
-export default function Dashboard({ dashboarddata, usuario }: DashboardChartProps) {
+export default function Dashboard({
+  dashboarddata,
+  usuario,
+}: DashboardChartProps) {
   const date = new Date();
   const [graficoBarra, setGraficoBarra] = useState<DashboardData | null>(null);
   const [monthRange, setMonthRange] = useState([0, 11]);
@@ -98,7 +102,7 @@ export default function Dashboard({ dashboarddata, usuario }: DashboardChartProp
         <title>Conta Plus - Dashboard</title>
       </Head>
       <div className={styles.component}>
-        <Header usuario={usuario}/>
+        <Header usuario={usuario} />
         <div className={styles.dashboardComponent}>
           <MenuLateral />
           <div className={styles.dashboard}>
@@ -202,6 +206,7 @@ export default function Dashboard({ dashboarddata, usuario }: DashboardChartProp
           </div>
         </div>
       </div>
+      <Chat usuario={usuario} />
     </>
   );
 }
@@ -225,8 +230,7 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
     return {
       props: {
         dashboarddata: dashboarddata.data,
-        usuario: user.data
-
+        usuario: user.data,
       },
     };
   } catch (error) {
@@ -234,7 +238,7 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
     return {
       props: {
         dashboarddata: [],
-        usuario: []
+        usuario: [],
       },
     };
   }

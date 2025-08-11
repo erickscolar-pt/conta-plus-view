@@ -22,6 +22,7 @@ import { Toggle } from "@/component/ui/toggle";
 import { Input } from "@/component/ui/input";
 import Head from "next/head";
 import { Dividas, ITipoDivida, Rendas, Usuario } from "@/model/type";
+import Chat from "@/component/chat";
 
 interface Gastos {
   dividas: Dividas[];
@@ -221,7 +222,7 @@ export default function Gastos({
     const apiClient = setupAPIClient();
 
     setIsModalEdit(false);
-    if(+tipoDividaEditSelected === 0) {
+    if (+tipoDividaEditSelected === 0) {
       toast.warning("Selecione o tipo de divida!");
       setLoading(false);
       return;
@@ -630,6 +631,7 @@ export default function Gastos({
           />
         </div>
       </Modal>
+      <Chat usuario={usuario} />
     </>
   );
 }

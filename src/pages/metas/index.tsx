@@ -268,7 +268,7 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
         <title>Conta Plus - Metas</title>
       </Head>
       <div className={styles.component}>
-        <Header usuario={usuario}/>
+        <Header usuario={usuario} />
         <div className={styles.objetivosComponent}>
           <MenuLateral />
           <div className={styles.objetivos}>
@@ -373,6 +373,7 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
           />
         </div>
       </Modal>
+      <Chat usuario={usuario} />
     </>
   );
 }

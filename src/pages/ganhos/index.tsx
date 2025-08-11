@@ -18,6 +18,7 @@ import InputMoney from "@/component/ui/inputMoney";
 import NotFound from "@/component/notfound";
 import Head from "next/head";
 import { Rendas, Usuario } from "@/model/type";
+import Chat from "@/component/chat";
 
 interface Ganhos {
   rendas: Rendas[];
@@ -242,7 +243,7 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
         <title>Conta Plus - Ganhos</title>
       </Head>
       <div className={styles.component}>
-        <Header usuario={usuario}/>
+        <Header usuario={usuario} />
         <div className={styles.ganhosComponent}>
           <MenuLateral />
           <div className={styles.ganhos}>
@@ -345,6 +346,7 @@ export default function Ganhos({ rendas: initialRendas, usuario }: Ganhos) {
           />
         </div>
       </Modal>
+      <Chat usuario={usuario} />
     </>
   );
 }
