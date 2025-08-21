@@ -1,4 +1,3 @@
-import { Dividas, Objetivos, Rendas } from '@/model/type';
 import React from 'react';
 
 interface Column {
@@ -11,10 +10,10 @@ interface Column {
 interface TableProps {
     columns: Column[];
     color?: string;
-    data: [] | Rendas[] | Dividas[] | Objetivos[];
+    data: any[];
 }
 
-export function Table({ columns, data, color }: TableProps) {
+export function Table({ columns, data }: TableProps) {
     const getValue = (object: any, path: string) => {
         const keys = path.split('.');
         let value = object;
@@ -29,27 +28,28 @@ export function Table({ columns, data, color }: TableProps) {
     };
 
     return (
-        <div className="overflow-x-auto">
-            <table className="w-full border-separate border-spacing-2">
+        <div className="overflow-x-auto w-full">
+            <table className="min-w-[600px] w-full text-left">
                 <thead>
-                    <tr>
+                    <tr className="bg-gray-50 text-gray-600 uppercase text-sm leading-normal">
                         {columns.map(column => (
-                            <th key={String(column.key)} className="text-black text-center text-lg font-bold p-2 rounded-md">{column.title}</th>
+                            <th key={String(column.key)} className="py-3 px-6">{column.title}</th>
                         ))}
                     </tr>
                 </thead>
-                <tbody>
+                <tbody className="text-gray-600 text-sm font-light">
                     {data.map((item, index) => (
-                        <tr key={index}>
+                        <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
                             {columns.map((column, columnIndex) => (
-                                <td key={String(column.key)} className="p-2 text-center text-sm font-normal text-white rounded-md " style={{ background: column.render ? 'none' : color || '#FFF' }}>
-                                    {column.render ? (
-                                        column.render(item)
-                                    ) : column.formatter ? (
-                                        column.formatter(item[column.key])
-                                    ) : (
-                                        getValue(item, column.key)
-                                    )}
+                                <td
+                                    key={String(column.key)}
+                                    className={`py-3 px-6 ${columnIndex === columns.length - 1 ? 'text-center' : ''}`}
+                                >
+                                    {column.render
+                                        ? column.render(item)
+                                        : column.formatter
+                                        ? column.formatter(item[column.key])
+                                        : getValue(item, column.key)}
                                 </td>
                             ))}
                         </tr>
@@ -58,4 +58,4 @@ export function Table({ columns, data, color }: TableProps) {
             </table>
         </div>
     );
-};
+}

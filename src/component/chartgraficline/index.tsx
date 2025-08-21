@@ -37,7 +37,7 @@ export default function ChartGraficLine({ data, anos, meses }) {
             borderColor: "#5ABB8C",
             data: rendas,
             fill: false,
-            tension: 0.2
+            tension: 0.2,
           },
           {
             label: "Dívidas",
@@ -45,8 +45,7 @@ export default function ChartGraficLine({ data, anos, meses }) {
             borderColor: "#BF5252",
             data: dividas,
             fill: false,
-            tension: 0.2
-
+            tension: 0.2,
           },
           {
             label: "Metas",
@@ -54,8 +53,7 @@ export default function ChartGraficLine({ data, anos, meses }) {
             borderColor: "#138DB4",
             data: metas,
             fill: false,
-            tension: 0.2
-
+            tension: 0.2,
           },
         ],
       },
@@ -67,30 +65,29 @@ export default function ChartGraficLine({ data, anos, meses }) {
             title: {
               display: true,
               text: "Mês",
-              color: "white",
+              color: "#374151",
             },
             ticks: {
-              color: "rgba(255, 255, 255, 0.7)",
+              color: "#6B7280",
             },
             grid: {
               display: false,
-              color: "rgba(33, 37, 41, 0.3)",
+              color: "rgba(33, 37, 41, 0.1)",
             },
-            display: true
+            display: true,
           },
           y: {
             title: {
               display: true,
               text: "Total",
-              color: "white",
+              color: "#374151",
             },
             ticks: {
               callback: (value) => `${formatCurrency(+value)}`,
-              color: "rgba(255, 255, 255, 0.7)",
+              color: "#6B7280",
             },
             grid: {
-              color: "rgba(255, 255, 255, 0.15)",
-
+              color: "rgba(33, 37, 41, 0.07)",
             },
           },
         },
@@ -98,19 +95,18 @@ export default function ChartGraficLine({ data, anos, meses }) {
           legend: {
             position: "bottom",
             labels: {
-              color: "white",
+              color: "#374151",
             },
           },
           tooltip: {
-            mode: 'index',
-            intersect:false,
+            mode: "index",
+            intersect: false,
             callbacks: {
               label: (context: any) => {
                 const value = context.raw ? context.raw.y : 0;
                 return `${formatCurrency(+value)}`;
               },
             },
-            
           },
         },
       },
@@ -124,21 +120,8 @@ export default function ChartGraficLine({ data, anos, meses }) {
   }, [data]);
 
   return (
-    <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-blueGray-700">
-      <div className="rounded-t mb-0 px-4 py-3 bg-transparent">
-        <div className="flex flex-wrap items-center">
-          <div className="relative w-full max-w-full flex-grow flex-1">
-            <h6 className="uppercase text-white mb-1 text-xs font-semibold">
-              Curva Financeira
-            </h6>
-          </div>
-        </div>
-      </div>
-      <div className="p-4 flex-auto">
-        <div className="relative h-96">
-          <canvas ref={chartRef} />
-        </div>
-      </div>
+    <div className="relative w-full h-96">
+      <canvas ref={chartRef} />
     </div>
   );
 }

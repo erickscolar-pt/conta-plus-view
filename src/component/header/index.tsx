@@ -1,39 +1,35 @@
 import Image from "next/image";
-import styles from "./styles.module.scss";
 import Link from "next/link";
 import avatar from "../../../public/Avatar.png";
 import logo from "../../../public/logo_branco.png";
-import { useContext } from "react";
-import { AuthContexts } from "@/contexts/AuthContexts";
 import Router from "next/router";
-import { Plano, Usuario } from "@/model/type";
 
-interface Usuarios {
-  usuario?: Usuario;
-  plano?: Plano;
-}
-export default function Header(type: {usuario: Usuario}) {
-  const { signOut } = useContext(AuthContexts);
-
+export default function Header({ usuario }) {
   return (
-    <>
-      <header className={styles.fixedheader}>
-        <Image src={logo} alt="" />
-        <div className={styles.direita}>
-          <Link href="/manual" className="flex items-center space-x-1">
-            <span>Sobre</span>
-          </Link>
+    <header className="h-16 bg-white shadow-md flex justify-between items-center px-2 sm:px-4 md:px-8">
+      <div className="flex items-center space-x-2 sm:space-x-4">
+        <Image src={logo} alt="Logo" width={80} className="sm:w-[100px]" />
+      </div>
+      <div className="flex items-center space-x-2 sm:space-x-4">
+        <Link
+          href="/manual"
+          className="text-gray-600 hover:text-emerald-600 text-sm sm:text-base"
+        >
+          Sobre
+        </Link>
+        <button
+          className="flex items-center space-x-2"
+          onClick={() => Router.push("/perfil")}
+        >
           <Image
-            onClick={() => {
-              Router.push("/perfil");
-            }}
-            className={styles.perfil}
             src={avatar}
-            alt=""
+            alt="Avatar do usuário"
+            width={36}
+            height={36}
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full"
           />
-        </div>
-      </header>
-
-    </>
+        </button>
+      </div>
+    </header>
   );
 }

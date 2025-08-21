@@ -1,14 +1,11 @@
 import MenuLateral from "@/component/menulateral";
 import Header from "@/component/header";
 import { canSSRAuth } from "@/utils/canSSRAuth";
-import styles from "./styles.module.scss";
-import { Title } from "@/component/ui/title";
 import { Table } from "@/component/ui/table";
 import { setupAPIClient } from "@/services/api";
-import { formatCurrency, formatDate, formatVinculoUsername } from "@/helper";
+import { formatCurrency, formatDate } from "@/helper";
 import { useEffect, useState } from "react";
 import Modal from "@/component/ui/modal";
-import { ButtonPages } from "@/component/ui/buttonPages";
 import Calendar from "@/component/ui/calendar";
 import { toast } from "react-toastify";
 import InputMoney from "@/component/ui/inputMoney";
@@ -16,6 +13,9 @@ import NotFound from "@/component/notfound";
 import Head from "next/head";
 import { Objetivos, Usuario } from "@/model/type";
 import Chat from "@/component/chat";
+import { MdAdd, MdEdit, MdDelete, MdAccountBalanceWallet } from "react-icons/md";
+import styles from "./styles.module.scss";
+import { ButtonPages } from "@/component/ui/buttonPages";
 
 interface Metas {
   objetivos: Objetivos[];
@@ -34,109 +34,73 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
   const [valor, setValor] = useState(0);
   const [nomeObjetivo, setNomeObjetivo] = useState("");
   const [selectedValueEdit, setSelectedValueEdit] = useState("");
-
   const [createValor, setCreateValor] = useState(0);
   const [createNomeObjetivo, setCreateNomeObjetivo] = useState("");
-  const [createVinculo, setCreateVinculo] = useState("");
-  const [createSelectedDate, setCreateSelectedDate] = useState<Date | null>(
-    null
-  );
   const [selectedValue, setSelectedValue] = useState("");
   const [modalObjetivos, setModalObjetivos] = useState<Objetivos>();
   const [loading, setLoading] = useState(false);
   const [objetivos, setObjetivos] = useState<Objetivos[]>(initialObjetivos);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [filterDate, setFilterDate] = useState("");
   const [filterType, setFilterType] = useState<"day" | "month">("day");
 
   const total = objetivos.reduce(
-    (acc: number, Objetivo: Objetivos) => acc + (Objetivo.valor || 0),
+    (acc: number, obj: Objetivos) => acc + (obj.valor || 0),
     0
   );
 
   const columns = [
-    { title: "Minha meta :", key: "nome_objetivo" },
+    { title: "Minha meta", key: "nome_objetivo" },
     { title: "Valor", key: "valor", formatter: formatCurrency },
-    { title: "Guardei dia :", key: "data_inclusao", formatter: formatDate },
+    { title: "Guardei dia", key: "data_inclusao", formatter: formatDate },
     {
-      title: "",
-      key: "edit",
-      render: (Objetivo: Objetivos) => (
-        <button className={styles.edit} onClick={() => handleEdit(Objetivo)}>
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+      title: "Ações",
+      key: "actions",
+      render: (obj: Objetivos) => (
+        <div className="flex item-center justify-center space-x-4">
+          <button
+            className="w-8 h-8 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center hover:bg-blue-200"
+            onClick={() => handleEdit(obj)}
           >
-            <path
-              d="M11.7167 7.5L12.5 8.28333L4.93333 15.8333H4.16667V15.0667L11.7167 7.5ZM14.7167 2.5C14.5083 2.5 14.2917 2.58333 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667C17.5833 5.54167 17.5833 5 17.2583 4.69167L15.3083 2.74167C15.1417 2.575 14.9333 2.5 14.7167 2.5ZM11.7167 5.15833L2.5 14.375V17.5H5.625L14.8417 8.28333L11.7167 5.15833Z"
-              fill="white"
-            />
-          </svg>
-        </button>
-      ),
-    },
-    {
-      title: "",
-      key: "delete",
-      render: (Objetivo: Objetivos) => (
-        <button className={styles.del} onClick={() => handleDelete(Objetivo)}>
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 17 17"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+            <MdEdit size={20} />
+          </button>
+          <button
+            className="w-8 h-8 rounded-full bg-red-100 text-red-500 flex items-center justify-center hover:bg-red-200"
+            onClick={() => handleDelete(obj)}
           >
-            <path
-              d="M15.7913 1.2085L1.20801 15.7918"
-              stroke="white"
-              stroke-width="2.33"
-              stroke-linecap="round"
-            />
-            <path
-              d="M1.20801 1.2085L15.7913 15.7918"
-              stroke="white"
-              stroke-width="2.33"
-              stroke-linecap="round"
-            />
-          </svg>
-        </button>
+            <MdDelete size={20} />
+          </button>
+        </div>
       ),
     },
   ];
 
-  const handleEdit = (Objetivo: Objetivos) => {
-    if (Objetivo.vinculo) {
-      setSelectedValueEdit(JSON.stringify(Objetivo.vinculo.id));
+  const handleEdit = (obj: Objetivos) => {
+    if (obj.vinculo) {
+      setSelectedValueEdit(String(obj.vinculo.id));
     }
-    setModalObjetivos(Objetivo);
-    setNomeObjetivo(Objetivo.nome_objetivo);
-    setValor(Objetivo.valor);
+    setModalObjetivos(obj);
+    setNomeObjetivo(obj.nome_objetivo);
+    setValor(obj.valor);
     setIsModalEdit(true);
   };
 
-  async function handleDelete(Objetivo: Objetivos) {
+  async function handleDelete(obj: Objetivos) {
     setLoading(true);
     const apiClient = setupAPIClient();
-
     setIsModalEdit(false);
-    const response = await apiClient.delete(`/Objetivos/${Objetivo.id}`);
+    const response = await apiClient.delete(`/objetivos/${obj.id}`);
     if (response) {
       setLoading(false);
-      toast.warning("Objetivo excluida!");
+      toast.warning("Objetivo excluído!");
       fetchObjetivos();
     } else {
-      toast.warning("Erro ao deletar Objetivo");
+      toast.warning("Erro ao deletar objetivo");
     }
   }
 
   async function saveEdit(id: number) {
     setLoading(true);
     const apiClient = setupAPIClient();
-
     setIsModalEdit(false);
 
     const requestData: RequestData = {
@@ -147,20 +111,20 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
     if (
       selectedValueEdit !== null &&
       selectedValueEdit !== "" &&
-      +selectedValueEdit !== 1
+      +selectedValueEdit !== 0
     ) {
-      requestData.vinculo_id = +selectedValueEdit - 1;
+      requestData.vinculo_id = +selectedValueEdit;
     } else {
       requestData.vinculo_id = null;
     }
 
-    const response = await apiClient.patch(`/Objetivos/${id}`, requestData);
+    const response = await apiClient.patch(`/objetivos/${id}`, requestData);
     if (response) {
       setLoading(false);
-      toast.success("Objetivo atualizada com sucesso!");
+      toast.success("Objetivo atualizado com sucesso!");
       fetchObjetivos();
     } else {
-      toast.warning("Erro ao editar Objetivo");
+      toast.warning("Erro ao editar objetivo");
     }
   }
 
@@ -186,128 +150,124 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
       requestData.vinculo_id = +selectedValue;
     }
 
-    const response = await apiClient.post(`/Objetivos`, requestData);
+    const response = await apiClient.post(`/objetivos`, requestData);
     if (response) {
       setSelectedValue("");
       setCreateNomeObjetivo("");
       setCreateValor(0);
-      setCreateVinculo("");
       setLoading(false);
-      toast.success("Objetivo criada com sucesso!");
+      toast.success("Objetivo criado com sucesso!");
       fetchObjetivos();
       setIsModalCreate(false);
     } else {
-      toast.error("Erro ao editar Objetivo");
+      toast.error("Erro ao criar objetivo");
     }
   }
 
-  const handleCloseEdit = () => {
-    setIsModalEdit(false);
-  };
-  const handleCloseCreate = () => {
-    setIsModalCreate(false);
-  };
+  const handleCloseEdit = () => setIsModalEdit(false);
+  const handleCloseCreate = () => setIsModalCreate(false);
 
   const fetchObjetivos = async () => {
     const apiClient = setupAPIClient();
     try {
       if (filterDate !== "") {
         const response = await apiClient.get(
-          `/Objetivos/${filterDate}/${filterType}`
+          `/objetivos/${filterDate}/${filterType}`
         );
-
         setObjetivos(response.data);
       } else {
-        const response = await apiClient.get("/Objetivos");
+        const response = await apiClient.get("/objetivos");
         setObjetivos(response.data);
       }
     } catch (error) {
-      console.error("Erro ao buscar as Objetivos:", error.message);
       setObjetivos([]);
     }
   };
 
   const filterObjetivosByDate = async (date: Date, type: "day" | "month") => {
     const apiClient = setupAPIClient();
-
     try {
       if (date && type) {
         const formattedDate = date.toISOString().split("T")[0] + "T03:00:00Z";
-
         setFilterDate(formattedDate);
         setFilterType(type);
-
         const response = await apiClient.get(
-          `/Objetivos/${formattedDate}/${type}`
+          `/objetivos/${formattedDate}/${type}`
         );
-
         setObjetivos(response.data);
       } else {
         setObjetivos(initialObjetivos);
       }
     } catch (error) {
-      console.error("Erro ao buscar as Objetivos:", error.message);
       setObjetivos([]);
     }
-  };
-
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
-
-  const handleChangeEdit = (event) => {
-    setSelectedValueEdit(event.target.value);
   };
 
   useEffect(() => {
     fetchObjetivos();
   }, []);
+
   return (
     <>
       <Head>
         <title>Conta Plus - Metas</title>
       </Head>
-      <div className={styles.component}>
-        <Header usuario={usuario} />
-        <div className={styles.objetivosComponent}>
-          <MenuLateral />
-          <div className={styles.objetivos}>
-            <Title
-              textColor="#0E1557"
-              color="#B7C1DA"
-              icon="metas"
-              text="MINHAS METAS"
-            />
-            <div className={styles.content}>
-              <div className={styles.filters}>
+      <div className="flex flex-col md:flex-row h-screen bg-gray-100">
+        <MenuLateral />
+        <div className="flex-1 flex flex-col md:ml-20">
+          <Header usuario={usuario} />
+          <main className="flex-1 p-2 sm:p-4 md:p-8">
+            <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+                  Minhas Metas
+                </h1>
+                <p className="text-gray-500">
+                  Acompanhe seus objetivos e valores guardados.
+                </p>
+              </div>
+              <button
+                className="flex items-center space-x-2 px-4 py-2 bg-emerald-500 text-white rounded-lg shadow-sm hover:bg-emerald-600 w-full sm:w-auto"
+                onClick={() => setIsModalCreate(true)}
+              >
+                <MdAdd size={24} />
+                <span>Criar Objetivo</span>
+              </button>
+            </header>
+            <div className="bg-white p-2 sm:p-4 md:p-6 rounded-2xl shadow-md">
+              <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-6 gap-4">
                 <Calendar
                   textButton="Filtrar"
-                  type="day"
+                  type={filterType}
                   colorButton="#0E1557"
-                  onDateSelect={(date, type) =>
-                    filterObjetivosByDate(date, type)
-                  }
+                  onDateSelect={filterObjetivosByDate}
                 />
               </div>
-              {objetivos.length > 0 ? (
-                <Table columns={columns} data={objetivos} color="#686D9F" />
-              ) : (
-                <NotFound />
-              )}
-              <div className={styles.footercreate}>
-                <div className={styles.total}>
-                  <p>Guardado este Mês: </p>
-                  <span>{formatCurrency(total)}</span>
+              <div className="w-full">
+                {objetivos.length > 0 ? (
+                  <Table columns={columns} data={objetivos} color="#686D9F" />
+                ) : (
+                  <NotFound />
+                )}
+              </div>
+              <div className="bg-indigo-900 text-white rounded-xl p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-center mt-8 gap-4">
+                <div className="flex items-center space-x-4">
+                  <MdAccountBalanceWallet size={32} />
+                  <div>
+                    <p className="text-lg">Guardado este Mês</p>
+                    <p className="text-2xl font-bold">{formatCurrency(total)}</p>
+                  </div>
                 </div>
-                <ButtonPages
-                  bg="#0E1557"
+                <button
+                  className="bg-emerald-500 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-emerald-600 transition flex items-center space-x-2 w-full sm:w-auto"
                   onClick={() => setIsModalCreate(true)}
                 >
-                  Criar Objetivo
-                </ButtonPages>
+                  <MdAdd size={24} />
+                  <span>Criar Objetivo</span>
+                </button>
               </div>
             </div>
-          </div>
+          </main>
         </div>
       </div>
 

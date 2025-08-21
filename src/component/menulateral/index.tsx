@@ -1,12 +1,3 @@
-import Image from "next/image";
-import { canSSRGuest } from "../../utils/canSSRGuest";
-import styles from "./styles.module.scss";
-import iconGanhos from "../../../public/icons/icon_ganhos.png";
-import iconGastos from "../../../public/icons/icon_gastos.png";
-import iconMetas from "../../../public/icons/icon_metas.png";
-import iconDashboard from "../../../public/icons/icon_dashboard.png";
-import iconExcel from "../../../public/icons/icon_excel.png";
-import exit from "../../../public/icons/ci_exit.png";
 import { useEffect, useState, useContext, useRef } from "react";
 import Router from "next/router";
 import { AuthContexts } from "@/contexts/AuthContexts";
@@ -15,6 +6,15 @@ import { ButtonPages } from "../ui/buttonPages";
 import { setupAPIClient } from "@/services/api";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import {
+  MdTrendingUp,
+  MdTrendingDown,
+  MdTrackChanges,
+  MdPieChart,
+  MdPerson,
+  MdLogout,
+  MdImportExport,
+} from "react-icons/md";
 
 export default function MenuLateral() {
   const [id, setId] = useState(0);
@@ -33,7 +33,7 @@ export default function MenuLateral() {
 
   const handleCloseExcel = () => {
     setIsModalExcel(false);
-    setSelectedFile(null); // Reseta o estado do arquivo selecionado ao fechar o modal
+    setSelectedFile(null);
   };
 
   const downloadExcel = async () => {
@@ -55,14 +55,12 @@ export default function MenuLateral() {
       toast.success("Download da planilha concluído.");
       setLoadingDownloadExcel(false);
     } catch (error) {
-      console.error("Erro ao baixar o arquivo:", error);
       setLoadingDownloadExcel(false);
     }
   };
 
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
-    console.log(file);
     setSelectedFile(file || null);
   };
 
@@ -76,7 +74,6 @@ export default function MenuLateral() {
 
     try {
       const response = await apiClient.post(`/files/import-excel`, formData);
-      console.log("Resposta da importação:", response.data);
       setSelectedFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = null;
@@ -89,11 +86,10 @@ export default function MenuLateral() {
       }
       toast.success("Arquivo enviado com sucesso!");
     } catch (error) {
-      console.error("Erro ao enviar o arquivo:", error);
       toast.success("Erro ao enviar o arquivo. Tente novamente.");
     } finally {
       setLoadingSendFileExcel(false);
-      setSelectedFile(null); // Limpa o estado após o envio
+      setSelectedFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = null;
         fileInputRef.current.type = "text";
@@ -103,91 +99,101 @@ export default function MenuLateral() {
     }
   };
 
+  // Responsivo: vertical em md+, horizontal fixo em baixo no mobile
   return (
-    <div className={styles.content}>
-      <div className={styles.menuLateral}>
-        <div className={styles.listbutton}>
+    <div>
+      <aside
+        className="
+      fixed
+        md:top-0 md:left-0
+        md:h-screen
+        md:w-20
+        w-full
+        bottom-0
+        bg-emerald-600
+        text-white
+        flex
+        md:flex-col
+        flex-row
+        items-center
+        justify-between
+        md:justify-start
+        py-2 md:py-4
+        z-40
+        md:space-y-6
+      "
+        style={{ right: "auto" }}
+      >
+        <nav className="flex flex-1 flex-row md:flex-col items-center justify-around md:justify-start w-full md:space-y-4">
           <button
-            className={styles.ganhos}
-            onClick={() => {
-              Router.push("/ganhos");
-            }}
+            className="p-3 hover:bg-emerald-700 rounded-lg"
+            onClick={() => Router.push("/ganhos")}
+            title="Ganhos"
           >
-            <Image alt="" src={iconGanhos} />
+            <MdTrendingUp size={24} />
           </button>
-
           <button
-            className={styles.gastos}
-            onClick={() => {
-              Router.push("/gastos");
-            }}
+            className="p-3 hover:bg-emerald-700 rounded-lg"
+            onClick={() => Router.push("/gastos")}
+            title="Gastos"
           >
-            <Image alt="" src={iconGastos} />
+            <MdTrendingDown size={24} />
           </button>
-
           <button
-            className={styles.metas}
-            onClick={() => {
-              Router.push("/metas");
-            }}
+            className="p-3 hover:bg-emerald-700 rounded-lg"
+            onClick={() => Router.push("/metas")}
+            title="Metas"
           >
-            <Image alt="" src={iconMetas} />
+            <MdTrackChanges size={24} />
           </button>
-
           <button
-            className={styles.dashboard}
-            onClick={() => {
-              Router.push("/dashboard");
-            }}
+            className="p-3 hover:bg-emerald-700 rounded-lg"
+            onClick={() => Router.push("/dashboard")}
+            title="Dashboard"
           >
-            <Image alt="" src={iconDashboard} />
+            <MdPieChart size={24} />
           </button>
-
           <button
-            className={styles.excel}
-            onClick={() => {
-              setIsModalExcel(true);
-            }}
+            className="p-3 hover:bg-emerald-700 rounded-lg"
+            onClick={() => Router.push("/perfil")}
+            title="Perfil"
           >
-            <Image alt="" src={iconExcel} />
+            <MdPerson size={24} />
           </button>
-
           <button
-            className={styles.exit}
-            onClick={() => {
-              signOut();
-            }}
+            className="p-3 hover:bg-emerald-700 rounded-lg"
+            onClick={() => setIsModalExcel(true)}
+            title="Importar/Exportar"
           >
-            <Image alt="" src={exit} />
+            <MdImportExport size={24} />
+          </button>
+        </nav>
+        <div className="md:mt-auto">
+          <button
+            className="p-3 hover:bg-emerald-700 rounded-lg"
+            onClick={signOut}
+            title="Sair"
+          >
+            <MdLogout size={24} />
           </button>
         </div>
-      </div>
+      </aside>
       <Modal isOpen={isModalExcel} onClose={handleCloseExcel}>
-        <div className={styles.containerModal}>
-          <h2>Enviar Planilha com Dados</h2>
-
-          {/* Botão para Download da Planilha */}
+        <div className="flex flex-col gap-4 p-4 bg-emerald-600 rounded-2xl text-white w-full max-w-md">
+          <h2 className="text-xl font-bold mb-2">Enviar Planilha com Dados</h2>
           <ButtonPages loading={loadingDownloadExcel} onClick={downloadExcel}>
             Baixar modelo de Planilha
           </ButtonPages>
-
-          {/* Selecione o arquivo e envie */}
-          <div className={styles.selected}>
-            <div className={styles.fileInputWrapper}>
-              <input
-                type="file"
-                accept=".xlsx"
-                id="fileInput"
-                onChange={handleFileChange}
-                disabled={loadingSendFileExcel}
-                className={styles.fileInput}
-              />
-              <label htmlFor="fileInput" className={styles.fileInputLabel}>
-                {selectedFile ? selectedFile.name : "Escolher arquivo"}
-              </label>
-            </div>
-
-            {/* Botão de Enviar o arquivo se houver arquivo selecionado */}
+          <div className="flex flex-col gap-2">
+            <input
+              type="file"
+              accept=".xlsx"
+              id="fileInput"
+              onChange={handleFileChange}
+              disabled={loadingSendFileExcel}
+              ref={fileInputRef}
+              className="block w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 cursor-pointer focus:outline-none"
+            />
             {selectedFile && (
               <ButtonPages
                 loading={loadingSendFileExcel}
@@ -198,16 +204,12 @@ export default function MenuLateral() {
             )}
           </div>
           <div className="w-full justify-center text-center">
-            <Link href="/importreport">Click para saber mais sobre importar dados.</Link>
+            <Link href="/importreport" className="underline">
+              Click para saber mais sobre importar dados.
+            </Link>
           </div>
         </div>
       </Modal>
     </div>
   );
 }
-
-export const getServerSideProps = canSSRGuest(async (ctx) => {
-  return {
-    props: {},
-  };
-});

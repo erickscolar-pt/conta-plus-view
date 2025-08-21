@@ -1,13 +1,11 @@
 import MenuLateral from "@/component/menulateral";
 import Header from "@/component/header";
 import { canSSRAuth } from "@/utils/canSSRAuth";
-import styles from "./styles.module.scss";
 import { Title } from "@/component/ui/title";
 import { setupAPIClient } from "@/services/api";
 import { useEffect, useState } from "react";
 import ChartGrafic from "@/component/chartgrafic";
 import NotFound from "@/component/notfound";
-import { toast } from "react-toastify";
 import Head from "next/head";
 import { formatCurrency } from "@/helper";
 import {
@@ -16,7 +14,7 @@ import {
   FaPiggyBank,
 } from "react-icons/fa";
 import ChartGraficLine from "@/component/chartgraficline";
-import MetricCard from "../../component/metriccard";
+import MetricCard from "@/component/metriccard";
 import { Usuario } from "@/model/type";
 import Chat from "@/component/chat";
 
@@ -66,11 +64,7 @@ export default function Dashboard({
   const [mesesText, setMesesText] = useState(0);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setGraficoBarra(dashboarddata);
-    };
-
-    fetchData();
+    setGraficoBarra(dashboarddata);
   }, [dashboarddata]);
 
   const handleRangeChange = async () => {
@@ -89,6 +83,7 @@ export default function Dashboard({
     );
     setGraficoBarra(response.data);
   };
+
   const totalRendas =
     graficoBarra?.rendas.reduce((acc, item) => acc + item.valortotal, 0) || 0;
   const totalDividas =
@@ -101,115 +96,153 @@ export default function Dashboard({
       <Head>
         <title>Conta Plus - Dashboard</title>
       </Head>
-      <div className={styles.component}>
-        <Header usuario={usuario} />
-        <div className={styles.dashboardComponent}>
-          <MenuLateral />
-          <div className={styles.dashboard}>
-            <Title
-              textColor="#400E57"
-              color="#DAB7D8"
-              icon="dashboard"
-              text="GRÀFICO GERAL"
-            />
-            <div className={styles.content}>
-              <div className={styles.filter}>
-                <label htmlFor="monthRangeStart">Meses:</label>
-                <input
-                  type="range"
-                  id="monthRangeStart"
-                  min="0"
-                  max="11"
-                  value={monthRange[0]}
-                  onChange={(e) =>
-                    setMonthRange([Number(e.target.value), monthRange[1]])
-                  }
-                />
-                <input
-                  type="range"
-                  id="monthRangeEnd"
-                  min="0"
-                  max="11"
-                  value={monthRange[1]}
-                  onChange={(e) =>
-                    setMonthRange([monthRange[0], Number(e.target.value)])
-                  }
-                />
-                <div className={styles.infomeses}>
-                  {months[monthRange[0]]} - {months[monthRange[1]]}
+      <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
+        <MenuLateral />
+        <div className="flex-1 flex flex-col md:ml-20">
+          <Header usuario={usuario} />
+          <main className="flex-1 p-2 sm:p-4 md:p-8 overflow-y-auto">
+            <div className="bg-white rounded-2xl p-2 sm:p-4 md:p-6 mb-6 sm:mb-8 shadow-lg">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+                <h2 className="text-xl font-semibold text-gray-700">
+                  Filtro Geral
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                <div>
+                  <label
+                    className="block text-sm font-medium text-gray-600 mb-2"
+                    htmlFor="meses"
+                  >
+                    Meses:
+                  </label>
+                  <div className="relative">
+                    <input
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      max="11"
+                      min="0"
+                      type="range"
+                      value={monthRange[0]}
+                      onChange={(e) =>
+                        setMonthRange([Number(e.target.value), monthRange[1]])
+                      }
+                    />
+                    <input
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-2"
+                      max="11"
+                      min="0"
+                      type="range"
+                      value={monthRange[1]}
+                      onChange={(e) =>
+                        setMonthRange([monthRange[0], Number(e.target.value)])
+                      }
+                    />
+                    <div className="flex justify-between text-sm text-gray-500 mt-1">
+                      <span>{months[monthRange[0]]}</span>
+                      <span>{months[monthRange[1]]}</span>
+                    </div>
+                  </div>
                 </div>
-
-                <label htmlFor="yearRangeStart">Anos:</label>
-                <input
-                  type="range"
-                  id="yearRangeStart"
-                  min={1990}
-                  max={2060}
-                  value={yearRange[0]}
-                  onChange={(e) =>
-                    setYearRange([Number(e.target.value), yearRange[1]])
-                  }
-                />
-                <input
-                  type="range"
-                  id="yearRangeEnd"
-                  min={1990}
-                  max={2060}
-                  value={yearRange[1]}
-                  onChange={(e) =>
-                    setYearRange([yearRange[0], Number(e.target.value)])
-                  }
-                />
-                <div className={styles.infoanos}>
-                  {yearRange[0]} - {yearRange[1]}
+                <div>
+                  <label
+                    className="block text-sm font-medium text-gray-600 mb-2"
+                    htmlFor="anos"
+                  >
+                    Anos:
+                  </label>
+                  <div className="relative">
+                    <input
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      max={2060}
+                      min={1990}
+                      type="range"
+                      value={yearRange[0]}
+                      onChange={(e) =>
+                        setYearRange([Number(e.target.value), yearRange[1]])
+                      }
+                    />
+                    <input
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-2"
+                      max={2060}
+                      min={1990}
+                      type="range"
+                      value={yearRange[1]}
+                      onChange={(e) =>
+                        setYearRange([yearRange[0], Number(e.target.value)])
+                      }
+                    />
+                    <div className="flex justify-between text-sm text-gray-500 mt-1">
+                      <span>{yearRange[0]}</span>
+                      <span>{yearRange[1]}</span>
+                    </div>
+                  </div>
                 </div>
-
-                <div className={styles.buttonFilter}>
-                  <button onClick={handleRangeChange}>Filtrar</button>
+                <div className="flex items-end">
+                  <button
+                    className="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
+                    onClick={handleRangeChange}
+                  >
+                    Filtrar
+                  </button>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
-                <MetricCard
-                  title="Salário Recebido"
-                  value={`${formatCurrency(totalRendas)}`}
-                  icon={FaMoneyBillWave}
-                />
-                <MetricCard
-                  title="Contas Pagas"
-                  value={`${formatCurrency(totalDividas)}`}
-                  icon={FaFileInvoiceDollar}
-                />
-                <MetricCard
-                  title="Dinheiro Guardado"
-                  value={`${formatCurrency(totalMetas)}`}
-                  icon={FaPiggyBank}
-                />
-              </div>
-              {graficoBarra ? (
-                <>
+            </div>
+            {/* Cards de Métricas */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 mb-6 sm:mb-8">
+              <MetricCard
+                title="Salário Recebido"
+                value={formatCurrency(totalRendas)}
+                icon={FaMoneyBillWave}
+              />
+              <MetricCard
+                title="Contas Pagas"
+                value={formatCurrency(totalDividas)}
+                icon={FaFileInvoiceDollar}
+              />
+              <MetricCard
+                title="Dinheiro Guardado"
+                value={formatCurrency(totalMetas)}
+                icon={FaPiggyBank}
+              />
+            </div>
+            {/* Gráficos */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
+              <div className="bg-white rounded-2xl p-2 sm:p-4 md:p-6 shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-700 mb-4">
+                  Gráfico Referente aos Últimos Meses
+                </h3>
+                {graficoBarra ? (
                   <ChartGrafic
                     data={graficoBarra}
                     anos={anosText}
                     meses={mesesText}
                   />
-
+                ) : (
+                  <NotFound />
+                )}
+              </div>
+              <div className="bg-white rounded-2xl p-2 sm:p-4 md:p-6 shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-700 mb-4">
+                  Linha Financeira
+                </h3>
+                {graficoBarra ? (
                   <ChartGraficLine
                     data={graficoBarra}
                     anos={anosText}
                     meses={mesesText}
                   />
-                </>
-              ) : (
-                <NotFound />
-              )}
+                ) : (
+                  <NotFound />
+                )}
+              </div>
             </div>
-          </div>
+          </main>
         </div>
       </div>
       <Chat usuario={usuario} />
     </>
   );
 }
+
 
 export const getServerSideProps = canSSRAuth(async (ctx) => {
   const apiClient = setupAPIClient(ctx);

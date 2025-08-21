@@ -7,19 +7,6 @@ export default function ChartGrafic({ data, anos, meses }) {
   const chartInstanceRef = useRef(null);
 
   useEffect(() => {
-    const rendas = data.rendas.map((item) => ({
-      x: item.mes,
-      y: item.valortotal,
-    }));
-    const dividas = data.dividas.map((item) => ({
-      x: item.mes,
-      y: item.valortotal,
-    }));
-    const metas = data.metas.map((item) => ({
-      x: item.mes,
-      y: item.valortotal,
-    }));
-
     const ctx = chartRef.current.getContext("2d");
 
     if (chartInstanceRef.current) {
@@ -34,20 +21,17 @@ export default function ChartGrafic({ data, anos, meses }) {
           {
             label: "Rendas",
             backgroundColor: "#5ABB8C",
-            borderColor: "#5ABB8C",
-            data: rendas,
+            data: data.rendas.map((item) => item.valortotal),
           },
           {
             label: "Dívidas",
             backgroundColor: "#BF5252",
-            borderColor: "#BF5252",
-            data: dividas,
+            data: data.dividas.map((item) => item.valortotal),
           },
           {
             label: "Metas",
             backgroundColor: "#138DB4",
-            borderColor: "#138DB4",
-            data: metas,
+            data: data.metas.map((item) => item.valortotal),
           },
         ],
       },
@@ -59,27 +43,29 @@ export default function ChartGrafic({ data, anos, meses }) {
             title: {
               display: true,
               text: "Mês",
-              color: "white",
+              color: "#374151",
             },
             ticks: {
-              color: "rgba(255, 255, 255, 0.7)",
+              color: "#6B7280",
             },
             grid: {
-              color: "rgba(33, 37, 41, 0.3)",
+              display: false,
+              color: "rgba(33, 37, 41, 0.1)",
             },
+            display: true,
           },
           y: {
             title: {
               display: true,
               text: "Total",
-              color: "white",
+              color: "#374151",
             },
             ticks: {
               callback: (value) => `${formatCurrency(+value)}`,
-              color: "rgba(255, 255, 255, 0.7)",
+              color: "#6B7280",
             },
             grid: {
-              color: "rgba(255, 255, 255, 0.15)",
+              color: "rgba(33, 37, 41, 0.07)",
             },
           },
         },
@@ -87,15 +73,13 @@ export default function ChartGrafic({ data, anos, meses }) {
           legend: {
             position: "bottom",
             labels: {
-              color: "white",
+              color: "#374151",
             },
           },
           tooltip: {
             callbacks: {
-              label: (context) => {
-                const value: any = context.raw ? context.raw : 0;
-
-                return `${formatCurrency(value.y)}`;
+              label: (context: any) => {
+                return `${formatCurrency(context.raw)}`;
               },
             },
           },
@@ -111,21 +95,8 @@ export default function ChartGrafic({ data, anos, meses }) {
   }, [data]);
 
   return (
-    <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-blueGray-700">
-      <div className="rounded-t mb-0 px-4 py-3 bg-transparent">
-        <div className="flex flex-wrap items-center">
-          <div className="relative w-full max-w-full flex-grow flex-1">
-            <h6 className="uppercase text-white mb-1 text-xs font-semibold">
-              Grafico referente aos últimos meses
-            </h6>
-          </div>
-        </div>
-      </div>
-        <div className="p-4 flex-auto">
-          <div className="relative h-96">
-            <canvas ref={chartRef} />
-          </div>
-        </div>
+    <div className="relative w-full h-96">
+      <canvas ref={chartRef} />
     </div>
   );
 }
