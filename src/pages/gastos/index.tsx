@@ -1,16 +1,10 @@
+import styles from "./styles.module.scss";
 import MenuLateral from "@/component/menulateral";
 import Header from "@/component/header";
 import { canSSRAuth } from "@/utils/canSSRAuth";
-import styles from "./styles.module.scss";
-import { Title } from "@/component/ui/title";
 import { Table } from "@/component/ui/table";
 import { setupAPIClient } from "@/services/api";
-import {
-  formatarMoeda,
-  formatCurrency,
-  formatDate,
-  formatVinculoUsername,
-} from "@/helper";
+import { formatCurrency, formatDate } from "@/helper";
 import { useEffect, useState } from "react";
 import Modal from "@/component/ui/modal";
 import { ButtonPages } from "@/component/ui/buttonPages";
@@ -19,10 +13,10 @@ import { toast } from "react-toastify";
 import InputMoney from "@/component/ui/inputMoney";
 import NotFound from "@/component/notfound";
 import { Toggle } from "@/component/ui/toggle";
-import { Input } from "@/component/ui/input";
 import Head from "next/head";
 import { Dividas, ITipoDivida, Rendas, Usuario } from "@/model/type";
 import Chat from "@/component/chat";
+import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
 
 interface Gastos {
   dividas: Dividas[];
@@ -121,19 +115,12 @@ export default function Gastos({
       key: "edit",
       render: (divida: Dividas) =>
         divida.is_edit && (
-          <button className={styles.edit} onClick={() => handleEdit(divida)}>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M11.7167 7.5L12.5 8.28333L4.93333 15.8333H4.16667V15.0667L11.7167 7.5ZM14.7167 2.5C14.5083 2.5 14.2917 2.58333 14.1333 2.74167L12.6083 4.26667L15.7333 7.39167L17.2583 5.86667C17.5833 5.54167 17.5833 5 17.2583 4.69167L15.3083 2.74167C15.1417 2.575 14.9333 2.5 14.7167 2.5ZM11.7167 5.15833L2.5 14.375V17.5H5.625L14.8417 8.28333L11.7167 5.15833Z"
-                fill="white"
-              />
-            </svg>
+          <button
+            className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center hover:bg-blue-600"
+            onClick={() => handleEdit(divida)}
+            title="Editar"
+          >
+            <MdEdit size={24} className="text-white" />
           </button>
         ),
     },
@@ -142,27 +129,12 @@ export default function Gastos({
       key: "delete",
       render: (divida: Dividas) =>
         divida.is_edit && (
-          <button className={styles.del} onClick={() => handleDelete(divida)}>
-            <svg
-              width="17"
-              height="17"
-              viewBox="0 0 17 17"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M15.7913 1.2085L1.20801 15.7918"
-                stroke="white"
-                stroke-width="2.33"
-                stroke-linecap="round"
-              />
-              <path
-                d="M1.20801 1.2085L15.7913 15.7918"
-                stroke="white"
-                stroke-width="2.33"
-                stroke-linecap="round"
-              />
-            </svg>
+          <button
+            className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center hover:bg-red-600"
+            onClick={() => handleDelete(divida)}
+            title="Excluir"
+          >
+            <MdDelete size={24} className="text-white" />
           </button>
         ),
     },
@@ -399,75 +371,88 @@ export default function Gastos({
       <Head>
         <title>Conta Plus - Gastos</title>
       </Head>
-      <div className={styles.component}>
-        <Header usuario={usuario} />
-        <div className={styles.gastosComponent}>
-          <MenuLateral />
-          <div className={styles.gastos}>
-            <Title
-              textColor="#570E0E"
-              color="#DAB7B7"
-              icon="gastos"
-              text="MEUS GASTOS"
-            />
-            <div className={styles.content}>
-              <div className={styles.filters}>
+      <div className="flex flex-col md:flex-row h-screen bg-gray-100">
+        <MenuLateral />
+        <div className="flex-1 flex flex-col md:ml-20">
+          <Header usuario={usuario} />
+          <main className="flex-1 p-2 sm:p-4 md:p-8">
+            <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+                  Meus Gastos
+                </h1>
+                <p className="text-gray-500">
+                  Controle suas dívidas e pagamentos.
+                </p>
+              </div>
+
+              <button
+                className="flex items-center space-x-2 px-4 py-2 bg-teal-500 text-white rounded-lg shadow-sm hover:bg-teal-600 w-full sm:w-auto"
+                onClick={() => setIsModalCreate(true)}
+              >
+                Criar Dívida
+                <MdAdd size={24} className="inline-block ml-2" />
+              </button>
+            </header>
+            <div className="bg-white p-2 sm:p-4 md:p-6 rounded-2xl shadow-md">
+              <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-6 gap-4">
                 <Calendar
                   textButton="Filtrar"
-                  type="day"
+                  type={filterType}
                   colorButton="#570E0E"
-                  onDateSelect={(date, type) => filterDividasByDate(date, type)}
+                  onDateSelect={filterDividasByDate}
                 />
               </div>
-              {dividas.length > 0 ? (
-                <Table columns={columns} data={dividas} color="#C07C7C" />
-              ) : (
-                <NotFound />
-              )}
-
-              <div className={styles.footercreate}>
-                <div className={styles.total}>
-                  <div className={styles.desc}>
-                    <p>Total de divida: </p>
-                    <span>{formatCurrency(total)}</span>
+              <div className="w-full">
+                {dividas.length > 0 ? (
+                  <Table columns={columns} data={dividas} color="#C07C7C" />
+                ) : (
+                  <NotFound />
+                )}
+              </div>
+              <div className="mt-6 p-4 bg-gray-800 text-white rounded-lg flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 items-start sm:items-center w-full">
+                  <div>
+                    Total de dívida:{" "}
+                    <span className="font-bold text-lg">
+                      {formatCurrency(total)}
+                    </span>
                   </div>
-
-                  <div className={styles.desc}>
-                    <p>Pago :</p>
-                    <span style={{ color: "#0E5734" }}>
+                  <div>
+                    Pagos:{" "}
+                    <span className="font-bold text-lg">
                       {formatCurrency(totalPago)}
                     </span>
                   </div>
-
-                  <div className={styles.desc}>
-                    <p>Renda neste mês:</p>
-                    <span style={{ color: "#0E5734" }}>
+                  <div>
+                    Renda neste mês:{" "}
+                    <span className="font-bold text-lg">
                       {formatCurrency(totalRendas)}
                     </span>
                   </div>
-
-                  <div className={styles.desc}>
-                    <p>Sobra:</p>
+                  <div>
+                    Sobra:{" "}
                     <span
-                      style={{
-                        backgroundColor:
-                          totalRendas - total < 0 ? "#C07C7C" : "#0E5734",
-                        color: totalRendas - total < 0 ? "#570E0E" : "#B5E1A0",
-                      }}
+                      className={`font-bold text-lg ${
+                        totalRendas - total < 0
+                          ? "text-red-400"
+                          : "text-green-300"
+                      }`}
                     >
                       {formatCurrency(totalRendas - total)}
                     </span>
                   </div>
                 </div>
-                <ButtonPages
-                  bg="#570E0E"
+                <button
+                  className="flex items-center space-x-2 px-4 py-2 bg-teal-500 text-white rounded-lg shadow-sm hover:bg-teal-600 w-full sm:w-auto"
                   onClick={() => setIsModalCreate(true)}
                 >
-                  Criar Divida
-                </ButtonPages>
+                  Criar Dívida
+                  <MdAdd size={24} className="inline-block ml-2" />
+                </button>
               </div>
             </div>
-          </div>
+          </main>
         </div>
       </div>
 

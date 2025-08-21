@@ -1,6 +1,6 @@
 {
   "name": "conta-plus-view",
-  "version": "1.3.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "build": "next build",
@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.7",
     "@react-icons/all-files": "^4.1.0",
     "axios": "^1.6.0",
     "chart.js": "4.4.3",
