@@ -214,7 +214,7 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
       </Head>
       <div className="flex flex-col md:flex-row h-screen bg-gray-100">
         <MenuLateral />
-        <div className="flex-1 flex flex-col md:ml-20">
+        <div className="flex-1 flex flex-col md:ml-20 pb-16">
           <Header usuario={usuario} />
           <main className="flex-1 p-2 sm:p-4 md:p-8">
             <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">

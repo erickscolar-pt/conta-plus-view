@@ -109,7 +109,7 @@ export default function Perfil({ usuario, plano }: Usuarios) {
       </Head>
       <div className="flex h-screen bg-gray-100">
         <MenuLateral />
-        <div className="flex-1 flex flex-col md:ml-20">
+        <div className="flex-1 flex flex-col md:ml-20 pb-16">
           <Header usuario={usuario} />
           <main className="flex-1 p-8 overflow-y-auto">
             <div className="max-w-4xl mx-auto">

@@ -106,7 +106,7 @@ export default function PaymentAuth({ planos, usuario }: PaymentAuthProps) {
       </Head>
       <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
         <MenuLateral />
-        <div className="flex-1 flex flex-col md:ml-20">
+        <div className="flex-1 flex flex-col md:ml-20 pb-16">
           <Header usuario={usuario} />
           <main className="flex-1 p-2 sm:p-4 md:p-8 flex flex-col items-center">
             <div className="w-full max-w-5xl mx-auto bg-white rounded-2xl shadow-md p-4 sm:p-8 mt-4 flex flex-col items-center">
