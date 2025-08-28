@@ -179,7 +179,7 @@ export default function MenuLateral() {
         </div>
       </aside>
       <Modal isOpen={isModalExcel} onClose={handleCloseExcel}>
-        <div className="flex flex-col gap-4 p-4 bg-emerald-600 rounded-2xl text-white w-full max-w-md">
+        <div className="flex flex-col gap-4 p-4  text-white w-full max-w-md">
           <h2 className="text-xl font-bold mb-2">Enviar Planilha com Dados</h2>
           <ButtonPages loading={loadingDownloadExcel} onClick={downloadExcel}>
             Baixar modelo de Planilha
@@ -188,11 +188,11 @@ export default function MenuLateral() {
             <input
               type="file"
               accept=".xlsx"
-              id="fileInput"
+              id="file_input"
               onChange={handleFileChange}
               disabled={loadingSendFileExcel}
               ref={fileInputRef}
-              className="block w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 cursor-pointer focus:outline-none"
+              className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
             />
             {selectedFile && (
               <ButtonPages

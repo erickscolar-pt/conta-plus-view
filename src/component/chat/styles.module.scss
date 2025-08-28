@@ -28,7 +28,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-  
+
     &.minimized {
       width: 60px;
       height: 60px;
@@ -36,29 +36,29 @@
       background: none !important;
       box-shadow: none !important;
     }
-  
+
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-  
+
       .title {
         font-size: 1.25rem;
         font-weight: bold;
         transition: font-size 0.3s ease;
-  
+
         &.small {
           font-size: 0.75rem;
         }
       }
-  
+
       .minimizebtn {
         background: none;
         border: none;
         cursor: pointer;
       }
     }
-  
+
     .openbtn {
       background-color: #3490dc;
       color: white;
@@ -69,103 +69,111 @@
       cursor: pointer;
       text-align: center;
     }
-  
 
-  
+
+
     .messagebox {
       height: 200px;
       overflow-y: auto;
       margin-top: 1rem;
-  
-  
-      
-  
+
+
+
+
       .mymessage,
       .othermessage {
         display: flex;
         justify-content: flex-start;
         margin-bottom: 1rem;
       }
-  
+
       .mymessage {
         justify-content: flex-end;
       }
-  
+
       .mymessagebox,
       .othermessagebox {
         padding: 0.5rem;
         border-radius: 8px;
         max-width: 70%;
       }
-  
+
       .mymessagebox {
         background-color: #3490dc;
         color: white;
       }
-  
+
       .othermessagebox {
         background-color: #f3f3f3;
         color: #333;
       }
-  
+
       .messageauthor {
         font-weight: bold;
         font-size: 0.75rem;
       }
-  
+
       .messagetext {
         margin-top: 0.2rem;
       }
     }
+
     .messages {
       list-style-type: none;
       padding: 0;
-    
+
       .consultorMessage {
         display: flex;
         justify-content: flex-start;
         margin-bottom: 1rem;
         text-align: end;
-    
+
         .messageBox {
           padding: 0.5rem;
           border-radius: 8px;
           width: 100%;
-          background-color: #5c7176; /* Cor para mensagens do consultor */
+          background-color: #5c7176;
+          /* Cor para mensagens do consultor */
           color: #ffffff;
         }
       }
-    
+
       .clienteMessage {
         display: flex;
         justify-content: flex-end;
         margin-bottom: 1rem;
-    
+
         .messageBox {
           padding: 0.5rem;
           border-radius: 8px;
           width: 100%;
-          background-color: #2a9d8f; /* Cor para mensagens do cliente */
+          background-color: #2a9d8f;
+          /* Cor para mensagens do cliente */
           color: #ffffff;
         }
       }
-    
+
       .messageAuthor {
         font-weight: bold;
         font-size: 0.75rem;
       }
     }
-  
-    .messagetext {
-      flex-grow: 1; /* Permite que a área de mensagens expanda para ocupar o espaço disponível */
-      overflow-y: auto; /* Adiciona a barra de rolagem vertical */
-      padding: 0.5rem; /* Adiciona um espaçamento interno */
-      margin-bottom: 0.5rem; /* Espaço abaixo da área de mensagens */
-      max-height: 300px; /* Altura máxima para limitar a área de mensagens */
-    }
-  
 
-  
+    .messagetext {
+      flex-grow: 1;
+      /* Permite que a área de mensagens expanda para ocupar o espaço disponível */
+      overflow-y: auto;
+      /* Adiciona a barra de rolagem vertical */
+      padding: 0.5rem;
+      /* Adiciona um espaçamento interno */
+      margin-bottom: 0.5rem;
+      /* Espaço abaixo da área de mensagens */
+      max-height: 300px;
+      /* Altura máxima para limitar a área de mensagens */
+    }
+
+
+
     .exitbtn {
       background-color: #e3342f;
       color: white;
@@ -176,7 +184,7 @@
       width: 100%;
     }
 
-    .boxSender{
+    .boxSender {
       display: flex;
       flex-direction: row;
       justify-content: center;
@@ -212,4 +220,12 @@
   display: none;
 }
 
+@media screen and (max-width: 600px) {
+  .chatwindow {
+    &.minimized {
+      padding: 0 0px 5em 0;
 
+    }
+  }
+
+}

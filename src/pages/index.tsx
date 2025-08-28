@@ -49,7 +49,7 @@ export default function Home() {
         <div className="flex gap-2">
           <Link
             href="/signup"
-            className="h-10 px-4 bg-primary flex items-center text-white font-bold rounded-lg hover:opacity-90"
+            className="h-10 px-4 bg-primary flex items-center text-center text-sm text-white font-bold rounded-lg hover:opacity-90"
           >
             Criar Conta
           </Link>

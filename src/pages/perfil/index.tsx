@@ -109,11 +109,11 @@ export default function Perfil({ usuario, plano }: Usuarios) {
       </Head>
       <div className="flex h-screen bg-gray-100">
         <MenuLateral />
-        <div className="flex-1 flex flex-col md:ml-20 pb-16">
+        <div className="flex-1 flex flex-col md:ml-20 max-sm:pb-16">
           <Header usuario={usuario} />
-          <main className="flex-1 p-8 overflow-y-auto">
+          <main className="flex-1 overflow-y-auto">
             <div className="max-w-4xl mx-auto">
-              <div className="bg-white rounded-lg shadow-lg p-8">
+              <div className="bg-white rounded-lg shadow-lg p-8 lg:m-8">
                 <h2 className="text-2xl font-bold text-gray-800 mb-6">Meu Perfil</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
@@ -238,7 +238,7 @@ export default function Perfil({ usuario, plano }: Usuarios) {
                     </button>
                   </div>
                 </div>
-                <div className="mt-8 flex justify-end">
+                <div className="mt-8 flex justify-end max-md:justify-start">
                   <button
                     className="bg-emerald-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-emerald-700 transition-colors shadow-md"
                     onClick={handleSaveChanges}

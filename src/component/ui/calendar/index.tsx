@@ -68,7 +68,7 @@ export default function Calendar({
                     </button>
                 </div>
             )}
-            <div className="relative w-full sm:w-auto">
+            <div className="w-full sm:w-auto">
                 <input
                     type={selectedType === 'day' ? 'date' : 'month'}
                     value={selectedDate}
