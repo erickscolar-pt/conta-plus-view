@@ -273,277 +273,29 @@ export default function Home() {
         </div>
       </section>
       <section className="py-20 px-8 bg-creme">
-        <h2 className="text-[#111418] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
-          Preços e Planos
-        </h2>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(228px,1fr))] gap-2.5 px-4 py-3 @3xl:grid-cols-4">
-          <div className="flex flex-1 flex-col gap-4 rounded-lg border border-solid border-[#dbe0e6] bg-white p-6">
-            <div className="flex flex-col gap-1">
-              <h1 className="text-[#111418] text-base font-bold leading-tight">
-                Free
-              </h1>
-              <p className="flex items-baseline gap-1 text-[#111418]">
-                <span className="text-[#111418] text-4xl font-black leading-tight tracking-[-0.033em]">
-                  R$0
-                </span>
-                <span className="text-[#111418] text-base font-bold leading-tight">
-                  /mês
-                </span>
-              </p>
-            </div>
+        <div className="max-w-4xl mx-auto rounded-3xl border border-[#dbe0e6] bg-white p-8 md:p-12 shadow-sm">
+          <h2 className="text-[#111418] text-[22px] font-bold leading-tight tracking-[-0.015em] mb-3">
+            Acesso simplificado
+          </h2>
+          <h3 className="text-[#111418] text-3xl font-bold leading-tight mb-4">
+            Nesta fase, o Conta Plus está sem cobrança e sem etapas extras para começar
+          </h3>
+          <p className="text-[#60758a] text-base leading-normal mb-6">
+            Você cria sua conta, entra no sistema e já pode cadastrar ganhos, gastos, metas e usar os relatórios normalmente.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
             <Link
               href="/signup"
-              className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#f0f2f5] text-[#111418] text-sm font-bold leading-normal tracking-[0.015em]"
+              className="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-bold text-white hover:opacity-90"
             >
-              <span className="truncate">Cadastre-se</span>
+              Criar Conta
             </Link>
-            <div className="flex flex-col gap-2">
-              <div className="text-[13px] font-normal leading-normal flex gap-3 text-[#111418]">
-                <div
-                  className="text-[#111418]"
-                  data-icon="Check"
-                  data-size="20px"
-                  data-weight="regular"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20px"
-                    height="20px"
-                    fill="currentColor"
-                    viewBox="0 0 256 256"
-                  >
-                    <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                  </svg>
-                </div>
-                Durante um mês
-              </div>
-              <div className="text-[13px] font-normal leading-normal flex gap-3 text-[#111418]">
-                <div
-                  className="text-[#111418]"
-                  data-icon="Check"
-                  data-size="20px"
-                  data-weight="regular"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20px"
-                    height="20px"
-                    fill="currentColor"
-                    viewBox="0 0 256 256"
-                  >
-                    <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                  </svg>
-                </div>
-                Avaliar sistema e recursos
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-1 flex-col gap-4 rounded-lg border border-solid border-[#dbe0e6] bg-white p-6">
-            <div className="flex flex-col gap-1">
-              <h1 className="text-[#111418] text-base font-bold leading-tight">
-                Mensal
-              </h1>
-              <p className="flex items-baseline gap-1 text-[#111418]">
-                <span className="text-[#111418] text-4xl font-black leading-tight tracking-[-0.033em]">
-                  R$15
-                </span>
-                <span className="text-[#111418] text-base font-bold leading-tight">
-                  /mês
-                </span>
-              </p>
-            </div>
-            <Link
-              href="/signup"
-              className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#f0f2f5] text-[#111418] text-sm font-bold leading-normal tracking-[0.015em]"
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="inline-flex items-center justify-center rounded-lg bg-[#f0f2f5] px-6 py-3 text-sm font-bold text-[#111418] hover:bg-gray-200"
             >
-              <span className="truncate">Cadastre-se</span>
-            </Link>
-            <div className="flex flex-col gap-2">
-              <div className="text-[13px] font-normal leading-normal flex gap-3 text-[#111418]">
-                <div
-                  className="text-[#111418]"
-                  data-icon="Check"
-                  data-size="20px"
-                  data-weight="regular"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20px"
-                    height="20px"
-                    fill="currentColor"
-                    viewBox="0 0 256 256"
-                  >
-                    <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                  </svg>
-                </div>
-                Mensal
-              </div>
-              <div className="text-[13px] font-normal leading-normal flex gap-3 text-[#111418]">
-                <div
-                  className="text-[#111418]"
-                  data-icon="Check"
-                  data-size="20px"
-                  data-weight="regular"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20px"
-                    height="20px"
-                    fill="currentColor"
-                    viewBox="0 0 256 256"
-                  >
-                    <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                  </svg>
-                </div>
-                Avaliar sistema e recursos
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-1 flex-col gap-4 rounded-lg border border-solid border-[#dbe0e6] bg-white p-6">
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between">
-                <h1 className="text-[#111418] text-base font-bold leading-tight">
-                  Semestral
-                </h1>
-                <p className="text-white text-xs font-medium leading-normal tracking-[0.015em] rounded-lg bg-[#0d80f2] px-3 py-[3px] text-center">
-                  Mais Popular
-                </p>
-              </div>
-              <p className="flex items-baseline gap-1 text-[#111418]">
-                <span className="text-[#111418] text-4xl font-black leading-tight tracking-[-0.033em]">
-                  R$ 81,00
-                </span>
-                <span className="text-[#111418] text-base font-bold leading-tight">
-                  /semestral
-                </span>
-              </p>
-            </div>
-            <Link
-              href="/signup"
-              className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#f0f2f5] text-[#111418] text-sm font-bold leading-normal tracking-[0.015em]"
-            >
-              <span className="truncate">Cadastre-se</span>
-            </Link>
-            <div className="flex flex-col gap-2">
-              <div className="text-[13px] font-normal leading-normal flex gap-3 text-[#111418]">
-                <div
-                  className="text-[#111418]"
-                  data-icon="Check"
-                  data-size="20px"
-                  data-weight="regular"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20px"
-                    height="20px"
-                    fill="currentColor"
-                    viewBox="0 0 256 256"
-                  >
-                    <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                  </svg>
-                </div>
-                Use o sistema e os recusos como quiser
-              </div>
-              <div className="text-[13px] font-normal leading-normal flex gap-3 text-[#111418]">
-                <div
-                  className="text-[#111418]"
-                  data-icon="Check"
-                  data-size="20px"
-                  data-weight="regular"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20px"
-                    height="20px"
-                    fill="currentColor"
-                    viewBox="0 0 256 256"
-                  >
-                    <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                  </svg>
-                </div>
-                Chat de suporte
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-1 flex-col gap-4 rounded-lg border border-solid border-[#dbe0e6] bg-white p-6">
-            <div className="flex flex-col gap-1">
-              <h1 className="text-[#111418] text-base font-bold leading-tight">
-                Anual
-              </h1>
-              <p className="flex items-baseline gap-1 text-[#111418]">
-                <span className="text-[#111418] text-4xl font-black leading-tight tracking-[-0.033em]">
-                  R$ 162,00
-                </span>
-                <span className="text-[#111418] text-base font-bold leading-tight">
-                  /ano
-                </span>
-              </p>
-            </div>
-            <Link
-              href="/signup"
-              className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[#f0f2f5] text-[#111418] text-sm font-bold leading-normal tracking-[0.015em]"
-            >
-              <span className="truncate">Cadastre-se</span>
-            </Link>
-            <div className="flex flex-col gap-2">
-              <div className="text-[13px] font-normal leading-normal flex gap-3 text-[#111418]">
-                <div
-                  className="text-[#111418]"
-                  data-icon="Check"
-                  data-size="20px"
-                  data-weight="regular"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20px"
-                    height="20px"
-                    fill="currentColor"
-                    viewBox="0 0 256 256"
-                  >
-                    <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                  </svg>
-                </div>
-                Pague uma vez por ano
-              </div>
-              <div className="text-[13px] font-normal leading-normal flex gap-3 text-[#111418]">
-                <div
-                  className="text-[#111418]"
-                  data-icon="Check"
-                  data-size="20px"
-                  data-weight="regular"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20px"
-                    height="20px"
-                    fill="currentColor"
-                    viewBox="0 0 256 256"
-                  >
-                    <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                  </svg>
-                </div>
-                Prioridade no suporte
-              </div>
-              <div className="text-[13px] font-normal leading-normal flex gap-3 text-[#111418]">
-                <div
-                  className="text-[#111418]"
-                  data-icon="Check"
-                  data-size="20px"
-                  data-weight="regular"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20px"
-                    height="20px"
-                    fill="currentColor"
-                    viewBox="0 0 256 256"
-                  >
-                    <path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"></path>
-                  </svg>
-                </div>
-                Recuro exclusivo, direito a declaração de imposto de renda
-              </div>
-            </div>
+              Entrar Agora
+            </button>
           </div>
         </div>
       </section>
@@ -554,8 +306,7 @@ export default function Home() {
               Comece a Gerenciar Suas Finanças Hoje
             </h1>
             <p className="text-[#111418] text-base font-normal leading-normal max-w-[720px]">
-              Crie sua conta no Conta Plus e assuma o controle do seu futuro
-              financeiro com nosso plano gratuito.
+              Crie sua conta no Conta Plus e comece a organizar sua vida financeira sem etapas extras.
             </p>
           </div>
           <div className="flex flex-1 justify-center">

@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { FaCheck } from "react-icons/fa";
-import { TiUserDeleteOutline } from "react-icons/ti";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Head from "next/head";
 import Header from "@/component/header";
@@ -9,25 +7,24 @@ import MenuLateral from "@/component/menulateral";
 import { canSSRAuth } from "@/utils/canSSRAuth";
 import { setupAPIClient } from "@/services/api";
 import { isValidUsername } from "@/helper";
-import Router from "next/router";
 import Chat from "@/component/chat";
-import { Plano, Usuario } from "@/model/type";
+import { Usuario } from "@/model/type";
 import {
 MdPersonRemove,
+MdContentCopy,
 MdSend
 } from "react-icons/md";
 
 interface Usuarios {
   usuario: Usuario;
-  plano: Plano;
 }
 
-export default function Perfil({ usuario, plano }: Usuarios) {
+export default function Perfil({ usuario }: Usuarios) {
   const [nome, setNome] = useState(usuario.nome);
   const [username, setUsername] = useState(usuario.username);
   const [email, setEmail] = useState(usuario.email);
-  const [inviteEmail, setInviteEmail] = useState("");
-  const [acceptMail, setAcceptMail] = useState(usuario.acceptMail);
+  const [inviteIdentifier, setInviteIdentifier] = useState("");
+  const [inviteLink, setInviteLink] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleNomeChange = (event: React.ChangeEvent<HTMLInputElement>) => setNome(event.target.value);
@@ -58,48 +55,27 @@ export default function Perfil({ usuario, plano }: Usuarios) {
     }
   }
 
-  const handleToggleAcceptMail = async () => {
-    try {
-      const apiClient = setupAPIClient();
-      await apiClient.post("/user/active-mail", { active: !acceptMail });
-      setAcceptMail(!acceptMail);
-      toast.success(`Notificações por e-mail ${!acceptMail ? "ativadas" : "desativadas"}`, { position: toast.POSITION.BOTTOM_RIGHT });
-    } catch (error: any) {
-      toast.error("Erro ao atualizar notificações. Tente novamente mais tarde.", { position: toast.POSITION.BOTTOM_RIGHT });
-    }
-  };
-
-  function planoDuration(numberPlun: number) {
-    switch (numberPlun) {
-      case 60: return "Free (60 dias)";
-      case 30: return "Mensal";
-      case 180: return "Semestral";
-      case 365: return "Anual";
-      default: return "";
-    }
-  }
-
-  function handlePlan() {
-    Router.push("/paymentauth");
-  }
-
   const handleSendInvite = async () => {
     try {
       setLoading(true);
       const apiClient = setupAPIClient();
-      const response = await apiClient.post("/user/invite-email-user", { email: inviteEmail });
-      if (response.data) {
-        toast.success("Convite enviado com sucesso!", { position: toast.POSITION.TOP_RIGHT });
-        setInviteEmail("");
-      } else {
-        toast.error("Erro ao enviar convite. Verifique o e-mail e tente novamente.", { position: toast.POSITION.TOP_RIGHT });
-        setInviteEmail("");
-      }
+      const response = await apiClient.post("/user/invite-link", { identifier: inviteIdentifier });
+      setInviteLink(response.data.link);
+      toast.success("Link de convite gerado com sucesso!", { position: toast.POSITION.TOP_RIGHT });
     } catch (error: any) {
-      toast.error("Erro ao enviar convite. Tente novamente mais tarde.", { position: toast.POSITION.TOP_RIGHT });
+      toast.error("Erro ao gerar convite. Verifique o usuário informado.", { position: toast.POSITION.TOP_RIGHT });
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCopyInviteLink = async () => {
+    if (!inviteLink) {
+      return;
+    }
+
+    await navigator.clipboard.writeText(inviteLink);
+    toast.success("Link copiado!", { position: toast.POSITION.TOP_RIGHT });
   };
 
   return (
@@ -152,42 +128,8 @@ export default function Perfil({ usuario, plano }: Usuarios) {
                         )}
                       </div>
                     </form>
-                    <div className="mt-8 border-t border-gray-200 pt-6">
-                      <h3 className="text-lg font-medium text-gray-900">Notificações</h3>
-                      <p className="mt-1 text-sm text-gray-600">
-                        As notificações são para os lembretes de pagamentos das suas dívidas cadastradas.
-                      </p>
-                      <div className="mt-4 flex items-center justify-between bg-gray-50 p-4 rounded-lg">
-                        <span className="font-medium text-gray-700">Notificações por E-mail</span>
-                        <label className="relative inline-flex items-center cursor-pointer" htmlFor="email-notifications">
-                          <input
-                            id="email-notifications"
-                            type="checkbox"
-                            className="sr-only peer"
-                            checked={acceptMail}
-                            onChange={handleToggleAcceptMail}
-                          />
-                          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:bg-emerald-600 transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full peer-checked:after:border-white"></div>
-                        </label>
-                      </div>
-                    </div>
                   </div>
                   <div className="space-y-8">
-                    <div className="bg-emerald-50 border-l-4 border-emerald-500 p-6 rounded-lg">
-                      <h3 className="text-lg font-semibold text-emerald-800">
-                        Plano Atual: {plano ? planoDuration(+plano.plan_duration) : "—"}
-                      </h3>
-                      <p className="text-sm text-emerald-700 mt-1">
-                        {plano.plan_duration ? `Seu plano atual é válido até ${plano.expiry_date}` : ""}
-                      </p>
-                      <button
-                        className="mt-4 w-full bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-emerald-700 transition-colors"
-                        onClick={handlePlan}
-                        type="button"
-                      >
-                        Mudar Plano
-                      </button>
-                    </div>
                     <div className="bg-gray-50 p-6 rounded-lg">
                       <h3 className="text-lg font-semibold text-gray-800 mb-4">
                         Pessoas que compartilho contas
@@ -215,15 +157,15 @@ export default function Perfil({ usuario, plano }: Usuarios) {
                 <div className="mt-8 border-t border-gray-200 pt-6">
                   <h3 className="text-lg font-medium text-gray-900">Compartilhar Contas</h3>
                   <p className="mt-1 text-sm text-gray-600">
-                    Deseja compartilhar contas com alguém? <strong>Envie o convite por e-mail</strong>, assim que ele acessar o link vocês estarão vinculados e você poderá compartilhar contas, aproveite!
+                    Gere um link para outro usuário já cadastrado. Basta informar o e-mail ou nome de usuário dele e compartilhar o link manualmente.
                   </p>
                   <div className="mt-4 flex items-center space-x-2">
                     <input
                       className="flex-grow px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
                       placeholder="Digite o e-mail ou nome de usuário do convidado"
                       type="text"
-                      value={inviteEmail}
-                      onChange={e => setInviteEmail(e.target.value)}
+                      value={inviteIdentifier}
+                      onChange={e => setInviteIdentifier(e.target.value)}
                     />
                     <button
                       className="p-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors flex items-center justify-center"
@@ -237,6 +179,19 @@ export default function Perfil({ usuario, plano }: Usuarios) {
                       )}
                     </button>
                   </div>
+                  {inviteLink && (
+                    <div className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 p-4">
+                      <p className="text-sm text-emerald-900 break-all">{inviteLink}</p>
+                      <button
+                        className="mt-3 inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                        onClick={handleCopyInviteLink}
+                        type="button"
+                      >
+                        <MdContentCopy size={18} />
+                        Copiar link
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <div className="mt-8 flex justify-end max-md:justify-start">
                   <button
@@ -262,19 +217,16 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
 
   try {
     const user = await apiClient.get("/user/get");
-    const plano = await apiClient.get("/payments/plano-user");
 
     return {
       props: {
         usuario: user.data,
-        plano: plano.data,
       },
     };
   } catch (error: any) {
     return {
       props: {
         usuario: [],
-        plano: [],
       },
     };
   }

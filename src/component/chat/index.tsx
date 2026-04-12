@@ -5,10 +5,7 @@ import styles from "./styles.module.scss"; // Importando o arquivo SCSS
 import { IoChatbubbleEllipses } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { IoIosSend } from "react-icons/io";
-import { canSSRGuest } from "@/utils/canSSRGuest";
-import { setupAPIClient } from "@/services/api";
-import { Plano, Usuario } from "@/model/type";
-const notificationSound = "/public/sounds/notification.mp3"; // coloque o arquivo de som na pasta public/sounds
+import { Usuario } from "@/model/type";
 
 interface Message {
   id: string;

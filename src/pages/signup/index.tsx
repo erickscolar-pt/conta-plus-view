@@ -17,7 +17,7 @@ export type Usuario = {
   created_at: string,
   updated_at: string
 }
-export default function Cadastro({planos}) {
+export default function Cadastro() {
   const { signUp } = useContext(AuthContexts)
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -95,33 +95,8 @@ export default function Cadastro({planos}) {
         <Step3 userData={userData} setUserData={handleStep3} loading={loading} handleFormSubmit={handleFormSubmit} nextStep={nextStep} prevStep={prevStep} />
       )}
       {step === 4 && (
-        <Step4 planos={planos.data} userData={usuario} />
+        <Step4 userData={usuario} />
       )}
     </div>
   );
-}
-
-
-export async function getStaticProps() {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/planos`)
-    if (!res.ok) {
-      throw new Error('Failed to fetch');
-    }
-    const planos = await res.json()
-  
-    return {
-      props: {
-        planos,
-      },
-    }
-  } catch (error) {
-    console.error('Error fetching planos:', error);
-    return {
-      props: {
-        planos: [],
-      },
-      revalidate: 10, // Revalida após 10 segundos
-    }
-  }
 }
