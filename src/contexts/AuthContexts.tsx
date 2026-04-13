@@ -72,10 +72,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
       api.defaults.headers['Authorization'] = `Bearer ${token}`;
       setCookie(undefined, '@nextauth.token', token, {
         maxAge: 60 * 60 * 24 * 30,
-        path: "/"
+        path: '/',
+        sameSite: 'lax',
+        secure:
+          typeof window !== 'undefined' &&
+          window.location.protocol === 'https:',
       });
-      toast.success("Bem vindo!");
-      Router.push('/movimentacoes');
+      toast.success('Bem vindo!');
+      /* Navegação completa: garante que o cookie vá no pedido ao SSR (canSSRAuth + middleware).
+         Router.push após setCookie costuma fazer o GSSP rodar sem o token → redirect para /. */
+      if (typeof window !== 'undefined') {
+        window.location.assign('/movimentacoes');
+      } else {
+        await Router.push('/movimentacoes');
+      }
     } catch (err) {
       console.error(err);
       toast.error("Erro ao acessar.");
