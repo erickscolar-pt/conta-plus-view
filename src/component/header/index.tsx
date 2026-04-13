@@ -1,30 +1,42 @@
 import Image from "next/image";
 import Link from "next/link";
 import avatar from "../../../public/Avatar.png";
-import logo from "../../../public/logo_branco.png";
+import logoBranco from "../../../public/logo_branco.png";
 import Router from "next/router";
 import NotificationBell from "@/component/notifications/NotificationBell";
+
+/** Dimensões nativas do PNG (proporção ~2:1 — ícone + marca) */
+const LOGO_WIDTH = 115;
+const LOGO_HEIGHT = 56;
 
 export default function Header({ usuario }: { usuario?: unknown }) {
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-slate-950/80 px-3 backdrop-blur-xl sm:px-6 md:px-10">
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/20 ring-1 ring-emerald-500/30 sm:h-11 sm:w-11">
+      <Link
+        href="/dashboard"
+        className="group flex min-w-0 items-center gap-2.5 rounded-xl py-1.5 pl-0.5 pr-2 transition hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 sm:gap-3"
+      >
+        <span className="relative flex shrink-0 items-center justify-center rounded-xl bg-white/[0.04] px-2 py-1 ring-1 ring-white/10 transition group-hover:bg-white/[0.06] group-hover:ring-white/15 sm:px-2.5 sm:py-1.5">
           <Image
-            src={logo}
+            src={logoBranco}
             alt="Conta+"
-            width={28}
-            height={28}
-            className="h-7 w-auto"
+            width={LOGO_WIDTH}
+            height={LOGO_HEIGHT}
+            sizes="(max-width: 640px) 90px, 115px"
+            className="h-8 w-auto max-w-[calc(100vw-8rem)] object-contain object-left sm:h-9 md:h-10"
+            priority
           />
-        </div>
-        <div className="hidden leading-tight sm:block">
-          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
-            Conta+
-          </p>
-          <p className="text-sm font-semibold text-slate-100">Gestão financeira</p>
-        </div>
-      </div>
+        </span>
+        {/* Só no mobile: texto reforça a marca; a partir de sm a arte do PNG já traz Conta+ */}
+        <span className="flex min-w-0 flex-col sm:hidden">
+          <span className="text-sm font-bold leading-tight tracking-tight text-slate-50">
+            CONTA<span className="text-emerald-400">+</span>
+          </span>
+          <span className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.12em] text-slate-500">
+            Gestão financeira
+          </span>
+        </span>
+      </Link>
       <div className="flex items-center gap-2 sm:gap-4">
         <Link
           href="/manual"
