@@ -123,9 +123,6 @@ export default function Perfil({ usuario }: Usuarios) {
                           value={email}
                           onChange={e => setEmail(e.target.value)}
                         />
-                        {!usuario.emailVerified && (
-                          <p className="text-red-500 text-xs mt-2">E-mail não verificado</p>
-                        )}
                       </div>
                     </form>
                   </div>

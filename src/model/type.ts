@@ -1,39 +1,3 @@
-export interface Metrics {
-  registeredUsers: number;
-  pendingPayments: {
-    count: number;
-    total: number;
-  };
-  approvedPayments: {
-    count: number;
-    total: number;
-  };
-  activePlans: number;
-  usersActives: UserMetric[];
-}
-
-export interface UserMetric {
-  created_at: Date;
-  nome: string;
-  username: string;
-  email: string;
-  codigoReferencia: string;
-  codigoRecomendacao: string;
-  emailVerified: boolean;
-}
-
-export interface Payment {
-  id: number;
-  user: string;
-  amount: number;
-  status: string;
-}
-
-export interface DashboardAdminProps {
-  metrics?: Metrics;
-  payments?: Payment[];
-}
-
 export interface Rendas {
   id: number;
   nome_renda: string;
@@ -94,20 +58,6 @@ export interface Usuario {
   rendas: Rendas[];
   objetivos: Objetivos[];
   contavinculo: ContaVinculo[];
-  emailVerified: boolean
-  acceptMail: boolean
-}
-
-export interface Plano {
-  id: number;
-  usuario_id: number;
-  plano_id: number;
-  payment_id: string;
-  status: string;
-  expiry_date: Date;
-  plan_duration: string;
-  created_at: Date;
-  updated_at: Date;
 }
 
 export interface ITipoDivida {
