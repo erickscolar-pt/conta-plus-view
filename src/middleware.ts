@@ -39,13 +39,9 @@ export function middleware(req: NextRequest) {
     '/',
     '/login',
     '/signup',
-    '/forgotpassword',
-    '/resetpassword',
     '/tecnologiasderastreamento',
     '/politicadeprivacidade',
     '/politicadecookies',
-    '/paymentuser',
-    '/payment',
     '/manual',
     '/codigo',
   ];
@@ -61,5 +57,5 @@ export function middleware(req: NextRequest) {
 
 // Configuração de rotas
 export const config = {
-  matcher: ['/dashboard/:path*', '/ganhos', '/metas', '/gastos', '/perfil', '/paymentauth'], // Rotas protegidas e públicas
+  matcher: ['/dashboard/:path*', '/movimentacoes', '/ganhos', '/metas', '/gastos', '/perfil'],
 };

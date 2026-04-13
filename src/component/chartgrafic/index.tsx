@@ -2,12 +2,39 @@ import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 import { formatCurrency } from "@/helper";
 
-export default function ChartGrafic({ data, anos, meses }) {
-  const chartRef = useRef(null);
-  const chartInstanceRef = useRef(null);
+type DashboardLike = {
+  rendas: { mes: string; valortotal: number }[];
+  dividas: { mes: string; valortotal: number }[];
+  metas: { mes: string; valortotal: number }[];
+  aligned?: {
+    labels: string[];
+    rendas: number[];
+    dividas: number[];
+    metas: number[];
+  };
+};
+
+export default function ChartGrafic({
+  data,
+  anos,
+  meses,
+}: {
+  data: DashboardLike;
+  anos: number;
+  meses: number;
+}) {
+  const chartRef = useRef<HTMLCanvasElement>(null);
+  const chartInstanceRef = useRef<Chart | null>(null);
 
   useEffect(() => {
+    if (!chartRef.current) return;
     const ctx = chartRef.current.getContext("2d");
+    if (!ctx) return;
+
+    const labels = data.aligned?.labels ?? data.rendas.map((item) => item.mes);
+    const r = data.aligned?.rendas ?? data.rendas.map((item) => item.valortotal);
+    const d = data.aligned?.dividas ?? data.dividas.map((item) => item.valortotal);
+    const m = data.aligned?.metas ?? data.metas.map((item) => item.valortotal);
 
     if (chartInstanceRef.current) {
       chartInstanceRef.current.destroy();
@@ -16,22 +43,25 @@ export default function ChartGrafic({ data, anos, meses }) {
     chartInstanceRef.current = new Chart(ctx, {
       type: "bar",
       data: {
-        labels: data.rendas.map((item) => item.mes),
+        labels,
         datasets: [
           {
-            label: "Rendas",
-            backgroundColor: "#5ABB8C",
-            data: data.rendas.map((item) => item.valortotal),
+            label: "Entradas",
+            backgroundColor: "rgba(16, 185, 129, 0.85)",
+            data: r,
+            borderRadius: 4,
           },
           {
-            label: "Dívidas",
-            backgroundColor: "#BF5252",
-            data: data.dividas.map((item) => item.valortotal),
+            label: "Dívidas / gastos",
+            backgroundColor: "rgba(239, 68, 68, 0.85)",
+            data: d,
+            borderRadius: 4,
           },
           {
-            label: "Metas",
-            backgroundColor: "#138DB4",
-            data: data.metas.map((item) => item.valortotal),
+            label: "Objetivos (valor)",
+            backgroundColor: "rgba(59, 130, 246, 0.85)",
+            data: m,
+            borderRadius: 4,
           },
         ],
       },
@@ -42,22 +72,22 @@ export default function ChartGrafic({ data, anos, meses }) {
           x: {
             title: {
               display: true,
-              text: "Mês",
+              text: "Período",
               color: "#374151",
             },
             ticks: {
               color: "#6B7280",
+              maxRotation: 45,
+              minRotation: 0,
             },
             grid: {
               display: false,
-              color: "rgba(33, 37, 41, 0.1)",
             },
-            display: true,
           },
           y: {
             title: {
               display: true,
-              text: "Total",
+              text: "Valor (R$)",
               color: "#374151",
             },
             ticks: {
@@ -65,7 +95,7 @@ export default function ChartGrafic({ data, anos, meses }) {
               color: "#6B7280",
             },
             grid: {
-              color: "rgba(33, 37, 41, 0.07)",
+              color: "rgba(15, 23, 42, 0.06)",
             },
           },
         },
@@ -74,12 +104,14 @@ export default function ChartGrafic({ data, anos, meses }) {
             position: "bottom",
             labels: {
               color: "#374151",
+              usePointStyle: true,
             },
           },
           tooltip: {
             callbacks: {
-              label: (context: any) => {
-                return `${formatCurrency(context.raw)}`;
+              label: (ctx) => {
+                const v = ctx.raw as number;
+                return `${ctx.dataset.label}: ${formatCurrency(+v)}`;
               },
             },
           },
@@ -92,10 +124,10 @@ export default function ChartGrafic({ data, anos, meses }) {
         chartInstanceRef.current.destroy();
       }
     };
-  }, [data]);
+  }, [data, anos, meses]);
 
   return (
-    <div className="relative w-full h-96">
+    <div className="relative w-full h-80 md:h-96">
       <canvas ref={chartRef} />
     </div>
   );

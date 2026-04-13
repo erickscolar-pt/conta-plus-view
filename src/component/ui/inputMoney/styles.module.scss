@@ -1,18 +1,24 @@
 .inputMoney {
-    display: flex;
-    align-items: center;
-  }
-  
-  .currencySymbol {
-    margin-right: 5px;
-  }
-  
-  .inputField {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-  }
-  
-  /* Adicione outros estilos conforme necessário */
-  
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.inputField {
+  width: 100%;
+  margin-top: 0.25rem;
+  display: block;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background-color: rgb(2 6 23 / 0.8);
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: rgb(241 245 249);
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: rgb(16 185 129);
+  box-shadow: 0 0 0 2px rgb(16 185 129 / 0.3);
+}

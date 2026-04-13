@@ -12,7 +12,7 @@ export function canSSRGuest<P>(fn: GetServerSideProps<P>) {
             try {
                 return {
                     redirect: {
-                        destination: '/ganhos',
+                        destination: '/movimentacoes',
                         permanent: false,
                     }
                 };

@@ -1,101 +1,62 @@
-// pages/manual.js
-import HeaderAviso from "@/component/headeraviso";
-import Head from "next/head";
-import React from "react";
+import PublicDocLayout from "@/component/layout/PublicDocLayout";
 
 export default function Manual() {
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <Head>
-        <title>Manual de instruções</title>
-      </Head>
-      <HeaderAviso />
-      <div className="min-h-screen bg-gray-100 py-10">
-        <div className="container mx-auto px-4">
-          <div className="bg-white p-8 rounded-lg shadow-md">
-            <h1 className="text-3xl font-bold mb-6">Manual de Instruções</h1>
+    <PublicDocLayout title="Manual de instrucoes">
+      <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">Manual de Instrucoes</h1>
+      <p className="mb-8 max-w-3xl text-slate-300">
+        Guia rapido para comecar no Conta Plus e aproveitar melhor as funcionalidades
+        de controle financeiro.
+      </p>
 
-            <section className="mb-6">
-              <h2 className="text-2xl font-semibold mb-3">Introdução</h2>
-              <p className="text-gray-700">
-                Bem-vindo ao Conta Plus! Este manual de instruções foi criado
-                para ajudá-lo a navegar e usar nossa plataforma de forma eficaz.
-              </p>
-            </section>
+      <div className="grid gap-4">
+        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
+          <h2 className="text-xl font-semibold text-slate-100">Primeiros passos</h2>
+          <ol className="mt-2 list-inside list-decimal space-y-1 text-slate-300 marker:text-emerald-300">
+            <li>Cadastre-se ou faca login.</li>
+            <li>Cadastre rendas e saidas.</li>
+            <li>Acompanhe o saldo no dashboard.</li>
+            <li>Defina metas financeiras para seu planejamento.</li>
+          </ol>
+        </section>
 
-            <section className="mb-6">
-              <h2 className="text-2xl font-semibold mb-3">Como Usar</h2>
-              <ol className="list-decimal list-inside text-gray-700">
-                <li className="mb-2">
-                  Cadastre-se ou faça login na plataforma.
-                </li>
-                <li className="mb-2">
-                  Adicione suas finanças pessoais, como rendas e dívidas.
-                </li>
-                <li className="mb-2">
-                  Gerencie suas contas e acompanhe seus objetivos financeiros.
-                </li>
-                <li className="mb-2">
-                  Receba notificações e lembretes sobre suas finanças.
-                </li>
-              </ol>
-            </section>
+        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
+          <h2 className="text-xl font-semibold text-slate-100">Funcionalidades principais</h2>
+          <ul className="mt-2 list-inside list-disc space-y-1 text-slate-300 marker:text-emerald-300">
+            <li>
+              <strong>Rendas:</strong> registre entradas por data e categoria.
+            </li>
+            <li>
+              <strong>Saidas e dividas:</strong> controle pagamentos, status e tipos.
+            </li>
+            <li>
+              <strong>Metas:</strong> acompanhe objetivos e progresso mensal.
+            </li>
+            <li>
+              <strong>Dashboard:</strong> visualize graficos, filtros e indicadores.
+            </li>
+          </ul>
+        </section>
 
-            <section className="mb-6">
-              <h2 className="text-2xl font-semibold mb-3">Funcionalidades</h2>
-              <ul className="list-disc list-inside text-gray-700">
-                <li className="mb-2">
-                  <strong>Gerenciamento de Rendas:</strong> Adicione e acompanhe
-                  suas fontes de renda.
-                </li>
-                <li className="mb-2">
-                  <strong>Controle de Dívidas:</strong> Registre e monitore suas
-                  dívidas e contas a pagar.
-                </li>
-                <li className="mb-2">
-                  <strong>Objetivos Financeiros:</strong> Defina e alcance seus
-                  objetivos financeiros.
-                </li>
-                <li className="mb-2">
-                  <strong>Notificações:</strong> Receba lembretes de contas a
-                  pagar e outras notificações importantes.
-                </li>
-              </ul>
-            </section>
-
-            <section className="mb-6">
-              <h2 className="text-2xl font-semibold mb-3">FAQs</h2>
-              <div className="text-gray-700">
-                <p className="mb-2">
-                  <strong>Como posso redefinir minha senha?</strong>
-                </p>
-                <p className="mb-4">
-                  Você pode redefinir sua senha clicando em "Esqueci minha
-                  senha" na página de login e seguindo as instruções.
-                </p>
-
-                <p className="mb-2">
-                  <strong>Como adiciono uma nova dívida?</strong>
-                </p>
-                <p className="mb-4">
-                  Para adicionar uma nova dívida, vá para a seção "Dívidas" e
-                  clique em "Adicionar Dívida". Preencha as informações
-                  necessárias e salve.
-                </p>
-
-                <p className="mb-2">
-                  <strong>Posso configurar notificações?</strong>
-                </p>
-                <p className="mb-4">
-                  Sim, você pode configurar notificações nas configurações de
-                  sua conta para receber lembretes sobre contas a pagar e outros
-                  alertas.
-                </p>
-              </div>
-            </section>
+        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
+          <h2 className="text-xl font-semibold text-slate-100">Duvidas frequentes</h2>
+          <div className="mt-2 space-y-4 text-slate-300">
+            <div>
+              <p className="font-semibold text-slate-100">Como redefinir minha senha?</p>
+              <p>Clique em "Esqueci minha senha" na tela de login e siga as instrucoes.</p>
+            </div>
+            <div>
+              <p className="font-semibold text-slate-100">Como adicionar uma nova divida?</p>
+              <p>Na tela de saidas, clique em "Nova divida" e preencha os dados.</p>
+            </div>
+            <div>
+              <p className="font-semibold text-slate-100">Onde vejo alertas e lembretes?</p>
+              <p>As notificacoes aparecem no sino no topo da aplicacao.</p>
+            </div>
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </PublicDocLayout>
   );
 }
+

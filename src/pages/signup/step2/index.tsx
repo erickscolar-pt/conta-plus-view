@@ -1,119 +1,152 @@
-import React, { useState } from 'react';
-import { FaArrowRight, FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { toast } from 'react-toastify';
+import React, { useState } from "react";
+import { FaArrowRight, FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "react-toastify";
+import SignupLayout from "@/component/layout/SignupLayout";
 
 interface Step2Props {
   userData: {
-    password: string;
-    confirmPassword: string;
+    nome: string;
+    email: string;
+    username: string;
   };
-  setUserData: (
-    password: string,
-    confirmPassword: string
-  ) => void;
-  nextStep: () => void;
+  handleSignUp: (senha: string) => Promise<void>;
+  loading: boolean;
   prevStep: () => void;
 }
 
-export default function Step2({ userData = { password: "", confirmPassword: "" }, setUserData, nextStep, prevStep }: Step2Props) {
-  const [password, setPassword] = useState(userData.password || "");
-  const [confirmPassword, setConfirmPassword] = useState(userData.confirmPassword || "");
+export default function Step2({
+  userData,
+  handleSignUp,
+  loading,
+  prevStep,
+}: Step2Props) {
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const isPasswordValid = (password: string): boolean => {
-    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-    return passwordRegex.test(password);
+  const isPasswordValid = (pwd: string): boolean => {
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    return passwordRegex.test(pwd);
   };
 
-  const handleNext = () => {
+  const handleFinish = async () => {
     if (!isPasswordValid(password)) {
-      showToast('A senha deve ter no mínimo 8 caracteres, incluindo pelo menos 1 letra maiúscula, 1 número e 1 caractere especial.');
-    } else if (password !== confirmPassword) {
-      showToast('As senhas não coincidem.');
-    } else {
-      setUserData(password, confirmPassword)
-      nextStep();
+      toast.warning(
+        "A senha deve ter no mínimo 8 caracteres, incluindo pelo menos 1 letra maiúscula, 1 número e 1 caractere especial.",
+        { position: toast.POSITION.TOP_CENTER },
+      );
+      return;
     }
-  };
-
-  const handlePrevious = () => {
-    prevStep();
-  };
-
-  const showToast = (message: string) => {
-    toast.warning(message, {
-      position: toast.POSITION.TOP_CENTER
-    });
+    if (password !== confirmPassword) {
+      toast.warning("As senhas não coincidem.", {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      return;
+    }
+    await handleSignUp(password);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-blue-400 p-6">
-      <div className="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
-        <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold mb-2">Agora, crie uma senha</h1>
-          <p className="text-gray-600">Crie uma senha forte e garanta segurança para sua conta</p>
+    <SignupLayout
+      title="Segurança da conta"
+      description="Confira seu usuário gerado e crie uma senha forte."
+      step={2}
+      totalSteps={3}
+    >
+      <div className="space-y-5">
+        <div className="rounded-xl border border-white/10 bg-slate-950/50 px-4 py-3">
+          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+            Seu nome de usuário
+          </p>
+          <p className="mt-1 font-mono text-lg font-semibold text-emerald-300">
+            {userData.username}
+          </p>
+          <p className="mt-1 text-xs text-slate-500">{userData.email}</p>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Digite a senha</label>
+        <div>
+          <label className="mb-2 block text-sm font-medium text-slate-300">
+            Senha
+          </label>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="Senha"
+              placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
+              autoComplete="new-password"
+              className="w-full rounded-xl border border-white/10 bg-slate-950/50 px-4 py-3 pr-12 text-slate-100 placeholder:text-slate-500 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500"
+              className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 transition hover:text-white"
+              aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
         </div>
 
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Repita a senha</label>
+        <div>
+          <label className="mb-2 block text-sm font-medium text-slate-300">
+            Confirmar senha
+          </label>
           <div className="relative">
             <input
               type={showConfirmPassword ? "text" : "password"}
-              placeholder="Confirme a senha"
+              placeholder="••••••••"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
+              autoComplete="new-password"
+              className="w-full rounded-xl border border-white/10 bg-slate-950/50 px-4 py-3 pr-12 text-slate-100 placeholder:text-slate-500 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
             />
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500"
+              className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 transition hover:text-white"
+              aria-label={
+                showConfirmPassword ? "Ocultar confirmação" : "Mostrar confirmação"
+              }
             >
               {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
         </div>
 
-        <div className="mb-6 text-sm text-gray-600">
-          <p><strong>Dica para a sua senha:</strong> ela deve conter no mínimo 8 caracteres, sendo ao menos 1 letra maiúscula, 1 número e 1 caractere especial.</p>
-        </div>
+        <p className="rounded-xl border border-white/5 bg-slate-950/30 px-4 py-3 text-xs leading-relaxed text-slate-400">
+          <strong className="text-slate-300">Dica:</strong> use no mínimo 8
+          caracteres, com 1 letra maiúscula, 1 número e 1 caractere especial
+          (!@#$%^&*).
+        </p>
 
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
           <button
-            onClick={handlePrevious}
-            className="flex items-center text-primary hover:text-primary-dark"
+            type="button"
+            onClick={prevStep}
+            disabled={loading}
+            className="inline-flex items-center justify-center gap-2 text-sm font-medium text-slate-400 transition hover:text-white disabled:opacity-50"
           >
-            <FaArrowLeft className="mr-2" /> Voltar
+            <FaArrowLeft /> Voltar
           </button>
           <button
-            onClick={handleNext}
-            className="flex items-center bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark"
+            type="button"
+            onClick={handleFinish}
+            disabled={loading}
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Avançar <FaArrowRight className="ml-2" />
+            {loading ? (
+              "Criando conta..."
+            ) : (
+              <>
+                Criar conta <FaArrowRight />
+              </>
+            )}
           </button>
         </div>
       </div>
-    </div>
+    </SignupLayout>
   );
-};
+}

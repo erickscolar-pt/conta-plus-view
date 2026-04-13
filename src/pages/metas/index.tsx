@@ -1,5 +1,4 @@
-import MenuLateral from "@/component/menulateral";
-import Header from "@/component/header";
+import LoggedLayout from "@/component/layout/LoggedLayout";
 import { canSSRAuth } from "@/utils/canSSRAuth";
 import { Table } from "@/component/ui/table";
 import { setupAPIClient } from "@/services/api";
@@ -12,10 +11,20 @@ import InputMoney from "@/component/ui/inputMoney";
 import NotFound from "@/component/notfound";
 import Head from "next/head";
 import { Objetivos, Usuario } from "@/model/type";
-import Chat from "@/component/chat";
-import { MdAdd, MdEdit, MdDelete, MdAccountBalanceWallet } from "react-icons/md";
-import styles from "./styles.module.scss";
+import {
+  MdAdd,
+  MdEdit,
+  MdDelete,
+  MdAccountBalanceWallet,
+  MdOutlineSavings,
+} from "react-icons/md";
 import { ButtonPages } from "@/component/ui/buttonPages";
+import {
+  modalLabel,
+  modalInput,
+  modalMuted,
+  modalTitle,
+} from "@/component/ui/modal/modalClasses";
 
 interface Metas {
   objetivos: Objetivos[];
@@ -58,13 +67,15 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
       render: (obj: Objetivos) => (
         <div className="flex item-center justify-center space-x-4">
           <button
-            className="w-8 h-8 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center hover:bg-blue-200"
+            type="button"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-500/20 text-sky-300 hover:bg-sky-500/30"
             onClick={() => handleEdit(obj)}
           >
             <MdEdit size={20} />
           </button>
           <button
-            className="w-8 h-8 rounded-full bg-red-100 text-red-500 flex items-center justify-center hover:bg-red-200"
+            type="button"
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-red-500/20 text-red-300 hover:bg-red-500/30"
             onClick={() => handleDelete(obj)}
           >
             <MdDelete size={20} />
@@ -210,36 +221,34 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
   return (
     <>
       <Head>
-        <title>Conta Plus - Metas</title>
+        <title>Metas | Conta+</title>
       </Head>
-      <div className="flex flex-col md:flex-row h-screen bg-gray-100">
-        <MenuLateral />
-        <div className="flex-1 flex flex-col md:ml-20 pb-16">
-          <Header usuario={usuario} />
-          <main className="flex-1 p-2 sm:p-4 md:p-8">
-            <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+      <LoggedLayout usuario={usuario}>
+        <main className="relative flex-1 overflow-y-auto p-2 sm:p-4 md:p-8">
+            <header className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
-                  Minhas Metas
+                <h1 className="text-2xl font-bold text-slate-50 sm:text-3xl">
+                  Minhas metas
                 </h1>
-                <p className="text-gray-500">
+                <p className="text-slate-400">
                   Acompanhe seus objetivos e valores guardados.
                 </p>
               </div>
               <button
-                className="flex items-center space-x-2 px-4 py-2 bg-emerald-500 text-white rounded-lg shadow-sm hover:bg-emerald-600 w-full sm:w-auto"
+                type="button"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400 sm:w-auto"
                 onClick={() => setIsModalCreate(true)}
               >
-                <MdAdd size={24} />
-                <span>Criar Objetivo</span>
+                <MdOutlineSavings size={22} />
+                <span>Criar objetivo</span>
               </button>
             </header>
-            <div className="bg-white p-2 sm:p-4 md:p-6 rounded-2xl shadow-md">
-              <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-6 gap-4">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-2 shadow-md backdrop-blur-sm sm:p-4 md:p-6">
+              <div className="mb-6 flex flex-col items-stretch justify-between gap-4 sm:flex-row sm:items-center">
                 <Calendar
                   textButton="Filtrar"
                   type={filterType}
-                  colorButton="#0E1557"
+                  colorButton="#10b981"
                   onDateSelect={filterObjetivosByDate}
                 />
               </div>
@@ -250,52 +259,53 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
                   <NotFound />
                 )}
               </div>
-              <div className="bg-indigo-900 text-white rounded-xl p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-center mt-8 gap-4">
+              <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-slate-100 backdrop-blur-sm sm:flex-row sm:p-6">
                 <div className="flex items-center space-x-4">
-                  <MdAccountBalanceWallet size={32} />
+                  <MdAccountBalanceWallet
+                    size={32}
+                    className="text-emerald-400"
+                  />
                   <div>
-                    <p className="text-lg">Guardado este Mês</p>
-                    <p className="text-2xl font-bold">{formatCurrency(total)}</p>
+                    <p className="text-lg text-slate-300">Guardado este mês</p>
+                    <p className="text-2xl font-bold text-white">
+                      {formatCurrency(total)}
+                    </p>
                   </div>
                 </div>
                 <button
-                  className="bg-emerald-500 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-emerald-600 transition flex items-center space-x-2 w-full sm:w-auto"
+                  type="button"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400 sm:w-auto"
                   onClick={() => setIsModalCreate(true)}
                 >
-                  <MdAdd size={24} />
-                  <span>Criar Objetivo</span>
+                  <MdOutlineSavings size={22} />
+                  <span>Criar objetivo</span>
                 </button>
               </div>
             </div>
-          </main>
-        </div>
-      </div>
+        </main>
+      </LoggedLayout>
 
-      <Modal isOpen={isModalEdit} onClose={handleCloseEdit}>
-        <div className={styles.containerModal}>
-          <h2>Editar Objetivo</h2>
-          <label>
-            <span>Recebido de:</span>
+      <Modal isOpen={isModalEdit} onClose={handleCloseEdit} size="md">
+        <div className="flex flex-col gap-4">
+          <h2 className={modalTitle}>Editar objetivo</h2>
+          <label className="block">
+            <span className={modalLabel}>Nome do objetivo</span>
             <input
               type="text"
               value={nomeObjetivo}
               onChange={(e) => setNomeObjetivo(e.target.value)}
+              className={modalInput}
             />
           </label>
-          <label>
-            <span>Valor:</span>
-            <input
-              type="text"
-              value={valor}
-              onChange={(e) => setValor(parseFloat(e.target.value))}
-            />
-            <InputMoney value={valor} onChange={(valor) => setValor(valor)} />
+          <label className="block">
+            <span className={modalLabel}>Valor</span>
+            <InputMoney value={valor} onChange={(v) => setValor(v)} />
           </label>
-          <span>
-            Data de Inclusão: {formatDate(modalObjetivos?.data_inclusao)}
+          <span className={modalMuted}>
+            Data de inclusão: {formatDate(modalObjetivos?.data_inclusao)}
           </span>
           <ButtonPages
-            bg="#0E1557"
+            bg="#059669"
             loading={loading}
             onClick={() => saveEdit(modalObjetivos?.id)}
           >
@@ -304,28 +314,29 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
         </div>
       </Modal>
 
-      <Modal isOpen={isModalCreate} onClose={handleCloseCreate}>
-        <div className={styles.containerModal}>
-          <h2>Criar Objetivo</h2>
-          <label>
-            <span>Recebido de:</span>
+      <Modal isOpen={isModalCreate} onClose={handleCloseCreate} size="md">
+        <div className="flex flex-col gap-4">
+          <h2 className={modalTitle}>Criar objetivo</h2>
+          <label className="block">
+            <span className={modalLabel}>Nome do objetivo</span>
             <input
               onChange={(e) => {
                 setCreateNomeObjetivo(e.target.value);
               }}
               type="text"
               value={createNomeObjetivo}
+              className={modalInput}
             />
           </label>
-          <label>
-            <span>Valor:</span>
+          <label className="block">
+            <span className={modalLabel}>Valor</span>
             <InputMoney
               value={createValor}
               onChange={(valor) => setCreateValor(valor)}
             />
           </label>
           <Calendar
-            colorButton="#0E1557"
+            colorButton="#059669"
             textButton="Salvar"
             hideType={true}
             type={"day"}
@@ -333,7 +344,6 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
           />
         </div>
       </Modal>
-      <Chat usuario={usuario} />
     </>
   );
 }
@@ -350,13 +360,11 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
         usuario: user.data,
       },
     };
-  } catch (error) {
-    console.error("Erro ao buscar as objetivos:", error.message);
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : "erro";
+    console.error("Erro ao buscar as objetivos:", msg);
     return {
-      props: {
-        objetivos: [],
-        usuario: [],
-      },
+      redirect: { destination: "/movimentacoes", permanent: false },
     };
   }
 });

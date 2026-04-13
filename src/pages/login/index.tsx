@@ -89,16 +89,6 @@ export default function Login() {
                 </button>
               </div>
             </div>
-
-            <div className="flex justify-between items-center text-sm">
-              <Link
-                href="/forgotpassword"
-                className="text-primary hover:underline"
-              >
-                Esqueci minha senha
-              </Link>
-            </div>
-
             <button
               type="submit"
               disabled={loading}
