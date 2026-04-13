@@ -18,6 +18,25 @@ import NotFound from "@/component/notfound";
 import { Rendas, Usuario } from "@/model/type";
 import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
 
+/** Valor para input type=date (yyyy-mm-dd) a partir da data salva na API */
+function dateToInputValue(iso: string | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+/** Alinha à criação: +1 dia antes de enviar (createRenda muta a data igual) */
+function buildDataInclusaoFromInput(yyyyMmDd: string): Date {
+  const d = new Date(`${yyyyMmDd}T12:00:00`);
+  d.setDate(d.getDate() + 1);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
 export type GanhosPanelProps = {
   rendas: Rendas[];
   usuario: Usuario;
@@ -46,6 +65,7 @@ export default function GanhosPanel({
   const [createValor, setCreateValor] = useState(0);
   const [createNomeRenda, setCreateNomeRenda] = useState("");
   const [modalRendas, setModalRendas] = useState<Rendas>();
+  const [editDataInclusao, setEditDataInclusao] = useState("");
   const [loading, setLoading] = useState(false);
   const [rendas, setRendas] = useState<Rendas[]>(initialRendas);
   const [filterDate, setFilterDate] = useState("");
@@ -93,6 +113,7 @@ export default function GanhosPanel({
     setModalRendas(renda);
     setNomeRenda(renda.nome_renda);
     setValor(renda.valor);
+    setEditDataInclusao(dateToInputValue(renda.data_inclusao));
     setIsModalEdit(true);
   };
 
@@ -113,21 +134,31 @@ export default function GanhosPanel({
 
   async function saveEdit(id: number | undefined) {
     if (id == null) return;
+    if (!editDataInclusao) {
+      toast.warning("Selecione a data do lançamento.");
+      return;
+    }
     setLoading(true);
     const apiClient = setupAPIClient();
-    setIsModalEdit(false);
     const requestData: RequestData = {
       nome_renda: nomeRenda,
       valor: valor,
+      data_inclusao: buildDataInclusaoFromInput(editDataInclusao),
     };
-    const response = await apiClient.patch(`/rendas/${id}`, requestData);
-    if (response) {
-      setLoading(false);
+    try {
+      await apiClient.patch(`/rendas/${id}`, requestData);
+      setIsModalEdit(false);
       toast.success("Renda atualizada com sucesso!");
       await fetchRendas();
       onDataMutated?.();
-    } else {
-      toast.warning("Erro ao editar renda");
+    } catch (e: unknown) {
+      const msg =
+        e instanceof AxiosError
+          ? getErrorMessage(e.response?.data)
+          : "Erro ao editar renda.";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -165,7 +196,10 @@ export default function GanhosPanel({
     }
   }
 
-  const handleCloseEdit = () => setIsModalEdit(false);
+  const handleCloseEdit = () => {
+    setIsModalEdit(false);
+    setEditDataInclusao("");
+  };
   const handleCloseCreate = () => setIsModalCreate(false);
 
   const fetchRendas = async () => {
@@ -312,9 +346,18 @@ export default function GanhosPanel({
             <span className={modalLabel}>Valor</span>
             <InputMoney value={valor} onChange={(v) => setValor(v)} />
           </label>
-          <span className={`block ${modalMuted}`}>
-            Data de inclusão: {formatDate(modalRendas?.data_inclusao)}
-          </span>
+          <label className="block">
+            <span className={modalLabel}>Data do lançamento</span>
+            <input
+              type="date"
+              value={editDataInclusao}
+              onChange={(e) => setEditDataInclusao(e.target.value)}
+              className={modalInput}
+            />
+            <span className={`mt-1 block ${modalMuted}`}>
+              Mesma regra da criação: o dia enviado à API é ajustado para o fluxo do sistema.
+            </span>
+          </label>
           <ButtonPages
             loading={loading}
             onClick={() => saveEdit(modalRendas?.id)}
