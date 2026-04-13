@@ -2,25 +2,39 @@ import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 import { formatCurrency } from "@/helper";
 
-export default function ChartGraficLine({ data, anos, meses }) {
-  const chartRef = useRef(null);
-  const chartInstanceRef = useRef(null);
+type DashboardLike = {
+  rendas: { mes: string; valortotal: number }[];
+  dividas: { mes: string; valortotal: number }[];
+  metas: { mes: string; valortotal: number }[];
+  aligned?: {
+    labels: string[];
+    rendas: number[];
+    dividas: number[];
+    metas: number[];
+  };
+};
+
+export default function ChartGraficLine({
+  data,
+  anos,
+  meses,
+}: {
+  data: DashboardLike;
+  anos: number;
+  meses: number;
+}) {
+  const chartRef = useRef<HTMLCanvasElement>(null);
+  const chartInstanceRef = useRef<Chart | null>(null);
 
   useEffect(() => {
-    const rendas = data.rendas.map((item) => ({
-      x: item.mes,
-      y: item.valortotal,
-    }));
-    const dividas = data.dividas.map((item) => ({
-      x: item.mes,
-      y: item.valortotal,
-    }));
-    const metas = data.metas.map((item) => ({
-      x: item.mes,
-      y: item.valortotal,
-    }));
-
+    if (!chartRef.current) return;
     const ctx = chartRef.current.getContext("2d");
+    if (!ctx) return;
+
+    const labels = data.aligned?.labels ?? data.rendas.map((item) => item.mes);
+    const r = data.aligned?.rendas ?? data.rendas.map((item) => item.valortotal);
+    const d = data.aligned?.dividas ?? data.dividas.map((item) => item.valortotal);
+    const m = data.aligned?.metas ?? data.metas.map((item) => item.valortotal);
 
     if (chartInstanceRef.current) {
       chartInstanceRef.current.destroy();
@@ -29,57 +43,63 @@ export default function ChartGraficLine({ data, anos, meses }) {
     chartInstanceRef.current = new Chart(ctx, {
       type: "line",
       data: {
-        labels: data.rendas.map((item) => item.mes),
+        labels,
         datasets: [
           {
-            label: "Rendas",
-            backgroundColor: "#5ABB8C",
-            borderColor: "#5ABB8C",
-            data: rendas,
-            fill: false,
-            tension: 0.2,
+            label: "Entradas",
+            borderColor: "rgb(16, 185, 129)",
+            backgroundColor: "rgba(16, 185, 129, 0.1)",
+            data: r,
+            fill: true,
+            tension: 0.25,
+            pointRadius: 3,
           },
           {
-            label: "Dívidas",
-            backgroundColor: "#BF5252",
-            borderColor: "#BF5252",
-            data: dividas,
-            fill: false,
-            tension: 0.2,
+            label: "Dívidas / gastos",
+            borderColor: "rgb(239, 68, 68)",
+            backgroundColor: "rgba(239, 68, 68, 0.05)",
+            data: d,
+            fill: true,
+            tension: 0.25,
+            pointRadius: 3,
           },
           {
-            label: "Metas",
-            backgroundColor: "#138DB4",
-            borderColor: "#138DB4",
-            data: metas,
-            fill: false,
-            tension: 0.2,
+            label: "Objetivos (valor)",
+            borderColor: "rgb(59, 130, 246)",
+            backgroundColor: "rgba(59, 130, 246, 0.05)",
+            data: m,
+            fill: true,
+            tension: 0.25,
+            pointRadius: 3,
           },
         ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        interaction: {
+          mode: "index",
+          intersect: false,
+        },
         scales: {
           x: {
             title: {
               display: true,
-              text: "Mês",
+              text: "Período",
               color: "#374151",
             },
             ticks: {
               color: "#6B7280",
+              maxRotation: 45,
             },
             grid: {
               display: false,
-              color: "rgba(33, 37, 41, 0.1)",
             },
-            display: true,
           },
           y: {
             title: {
               display: true,
-              text: "Total",
+              text: "Valor (R$)",
               color: "#374151",
             },
             ticks: {
@@ -87,7 +107,7 @@ export default function ChartGraficLine({ data, anos, meses }) {
               color: "#6B7280",
             },
             grid: {
-              color: "rgba(33, 37, 41, 0.07)",
+              color: "rgba(15, 23, 42, 0.06)",
             },
           },
         },
@@ -96,15 +116,14 @@ export default function ChartGraficLine({ data, anos, meses }) {
             position: "bottom",
             labels: {
               color: "#374151",
+              usePointStyle: true,
             },
           },
           tooltip: {
-            mode: "index",
-            intersect: false,
             callbacks: {
-              label: (context: any) => {
-                const value = context.raw ? context.raw.y : 0;
-                return `${formatCurrency(+value)}`;
+              label: (context) => {
+                const v = context.parsed.y ?? 0;
+                return `${context.dataset.label}: ${formatCurrency(+v)}`;
               },
             },
           },
@@ -117,10 +136,10 @@ export default function ChartGraficLine({ data, anos, meses }) {
         chartInstanceRef.current.destroy();
       }
     };
-  }, [data]);
+  }, [data, anos, meses]);
 
   return (
-    <div className="relative w-full h-96">
+    <div className="relative w-full h-80 md:h-96">
       <canvas ref={chartRef} />
     </div>
   );

@@ -13,7 +13,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{
 export function ButtonPages({loading, children, bg ,color ,...rest}: ButtonProps){
     return(
         <button
-        style={{ backgroundColor: bg ? bg : '#599E52', color: color ? color : '#FFF' }}
+        style={{ backgroundColor: bg ? bg : '#10b981', color: color ? color : '#FFF' }}
         className={styles.btn}
         disabled={loading}
         {...rest}

@@ -2,18 +2,18 @@ import { MdContentPaste } from "react-icons/md";
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center m-8">
-      <div className="inline-block relative">
+    <div className="m-8 flex flex-col items-center justify-center">
+      <div className="relative inline-block">
         <MdContentPaste
-          className="text-gray-300 text-6xl"
+          className="text-slate-700"
           style={{ fontSize: "120px" }}
         />
         <MdContentPaste
-          className="text-gray-400 absolute -top-4 -right-4"
+          className="absolute -right-4 -top-4 text-slate-500"
           style={{ fontSize: "80px" }}
         />
       </div>
-      <span className="mt-4 text-gray-500 text-lg font-medium">
+      <span className="mt-4 text-lg font-medium text-slate-500">
         Nenhum dado encontrado
       </span>
     </div>

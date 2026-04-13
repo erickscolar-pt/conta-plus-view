@@ -1,38 +1,41 @@
-import HeaderAviso from "@/component/headeraviso";
-import Head from "next/head";
+import PublicDocLayout from "@/component/layout/PublicDocLayout";
 
 export default function PoliticaDeCookies() {
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <Head>
-        <title>Política de Cookies</title>
-      </Head>
-      <HeaderAviso />
-      <div className="max-w-4xl mt-4 mx-auto bg-white p-8 shadow-lg rounded">
-        <h1 className="text -3xl font-bold mb-6">Política de Cookies</h1>
-        <p>
-          Usamos cookies e tecnologias semelhantes para melhorar a sua
-          experiência em nosso site. Esta Política de Cookies explica o que são
-          cookies, como os usamos e suas opções em relação a eles.
-        </p>
-        <h2 className="text-2xl font-bold mt-6">O que são Cookies?</h2>
-        <p>
-          Cookies são pequenos arquivos de texto armazenados no seu dispositivo
-          quando você visita nosso site. Eles nos ajudam a entender como você
-          usa nosso site e melhorar sua experiência.
-        </p>
-        <h2 className="text-2xl font-bold mt-6">Como Usamos Cookies</h2>
-        <ul className="list-disc list-inside">
-          <li>Para lembrar suas preferências</li>
-          <li>Para análise e melhoria do site</li>
-          <li>Para fins de marketing</li>
-        </ul>
-        <h2 className="text-2xl font-bold mt-6">Suas Opções</h2>
-        <p>
-          Você pode gerenciar e desativar cookies nas configurações do seu
-          navegador. No entanto, isso pode afetar a funcionalidade do site.
-        </p>
+    <PublicDocLayout title="Política de Cookies">
+      <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">Política de Cookies</h1>
+      <p className="mb-8 max-w-3xl text-slate-300">
+        Utilizamos cookies e tecnologias semelhantes para melhorar a sua experiência, analisar
+        o uso da plataforma e oferecer conteúdos mais relevantes.
+      </p>
+
+      <div className="grid gap-4">
+        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
+          <h2 className="text-xl font-semibold text-slate-100">O que são cookies?</h2>
+          <p className="mt-2 text-slate-300">
+            Cookies são pequenos arquivos de texto armazenados no seu dispositivo para lembrar
+            preferências e melhorar sua navegação.
+          </p>
+        </section>
+
+        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
+          <h2 className="text-xl font-semibold text-slate-100">Como usamos cookies</h2>
+          <ul className="mt-2 list-inside list-disc space-y-1 text-slate-300 marker:text-emerald-300">
+            <li>Salvar preferências de uso</li>
+            <li>Analisar comportamento de navegação e desempenho</li>
+            <li>Suportar comunicações e campanhas relevantes</li>
+          </ul>
+        </section>
+
+        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
+          <h2 className="text-xl font-semibold text-slate-100">Suas opções</h2>
+          <p className="mt-2 text-slate-300">
+            Você pode aceitar, recusar ou remover cookies a qualquer momento pelas configurações
+            do seu navegador.
+          </p>
+        </section>
       </div>
-    </div>
+    </PublicDocLayout>
   );
 }
+

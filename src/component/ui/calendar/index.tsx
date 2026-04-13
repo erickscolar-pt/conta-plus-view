@@ -47,8 +47,8 @@ export default function Calendar({
                     <button
                         className={`flex-1 sm:flex-none px-4 py-2 rounded-lg shadow-sm text-sm font-medium transition-colors ${
                             selectedType === 'day'
-                                ? 'bg-teal-500 text-white'
-                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                ? 'bg-emerald-500 text-white shadow-emerald-500/20'
+                                : 'bg-white/10 text-slate-300 hover:bg-white/15'
                         }`}
                         onClick={() => handleSelectType('day')}
                         type="button"
@@ -58,8 +58,8 @@ export default function Calendar({
                     <button
                         className={`flex-1 sm:flex-none px-4 py-2 rounded-lg shadow-sm text-sm font-medium transition-colors ${
                             selectedType === 'month'
-                                ? 'bg-teal-500 text-white'
-                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                ? 'bg-emerald-500 text-white shadow-emerald-500/20'
+                                : 'bg-white/10 text-slate-300 hover:bg-white/15'
                         }`}
                         onClick={() => handleSelectType('month')}
                         type="button"
@@ -73,12 +73,12 @@ export default function Calendar({
                     type={selectedType === 'day' ? 'date' : 'month'}
                     value={selectedDate}
                     onChange={handleDateChange}
-                    className="w-full pl-10 pr-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    className="w-full rounded-xl border border-white/10 bg-slate-950/80 py-2.5 pl-4 pr-4 text-sm text-slate-100 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 [color-scheme:dark]"
                 />
             </div>
             {!hideButton && (
                 <button
-                    className="w-full sm:w-auto px-6 py-2 bg-teal-500 text-white rounded-lg shadow-sm hover:bg-teal-600"
+                    className="w-full rounded-xl px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:opacity-90 sm:w-auto"
                     style={{ background: colorButton }}
                     onClick={handleSelectDate}
                     type="button"

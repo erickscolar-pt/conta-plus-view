@@ -57,5 +57,5 @@ export function middleware(req: NextRequest) {
 
 // Configuração de rotas
 export const config = {
-  matcher: ['/dashboard/:path*', '/ganhos', '/metas', '/gastos', '/perfil'],
+  matcher: ['/dashboard/:path*', '/movimentacoes', '/ganhos', '/metas', '/gastos', '/perfil'],
 };
