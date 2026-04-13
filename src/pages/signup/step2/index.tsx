@@ -1,29 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaArrowRight, FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
+import Router from "next/router";
 import { toast } from "react-toastify";
 import SignupLayout from "@/component/layout/SignupLayout";
 
 interface Step2Props {
-  userData: {
+  userData?: {
     nome: string;
     email: string;
     username: string;
   };
-  handleSignUp: (senha: string) => Promise<void>;
-  loading: boolean;
-  prevStep: () => void;
+  handleSignUp?: (senha: string) => Promise<void>;
+  loading?: boolean;
+  prevStep?: () => void;
 }
 
+const emptyUser = { nome: "", email: "", username: "" };
+
 export default function Step2({
-  userData,
-  handleSignUp,
-  loading,
-  prevStep,
+  userData = emptyUser,
+  handleSignUp = async () => {},
+  loading = false,
+  prevStep = () => {},
 }: Step2Props) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  /** Rota /signup/step2 sem fluxo: volta para o cadastro (evita crash no SSG e visita direta) */
+  useEffect(() => {
+    if (!userData.username?.trim()) {
+      void Router.replace("/signup");
+    }
+  }, [userData.username]);
 
   const isPasswordValid = (pwd: string): boolean => {
     const passwordRegex =
@@ -45,7 +55,7 @@ export default function Step2({
       });
       return;
     }
-    await handleSignUp(password);
+    await handleSignUp?.(password);
   };
 
   return (
