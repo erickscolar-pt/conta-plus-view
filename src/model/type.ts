@@ -28,6 +28,9 @@ export interface Dividas {
 export interface Objetivos {
   id: number;
   nome_objetivo: string;
+  categoria?: string;
+  /** Se false, o valor da meta não entra no saldo líquido (não desconta das entradas). */
+  desconta_entrada?: boolean;
   valor: number;
   meta_valor_vinculo: number;
   data_inclusao: string;

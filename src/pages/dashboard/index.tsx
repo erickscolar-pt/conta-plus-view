@@ -33,6 +33,8 @@ export interface DashboardSummary {
   totalEntradas: number;
   totalSaidasDividas: number;
   totalObjetivos: number;
+  /** Soma das metas com desconta_entrada = true (afeta o saldo). */
+  totalObjetivosDescontamEntrada?: number;
   saldoPeriodo: number;
   periodoInicio: string;
   periodoFim: string;
@@ -45,6 +47,8 @@ export interface DashboardTransaction {
   date: string;
   value: number;
   type: "renda" | "divida" | "meta";
+  categoria?: string;
+  descontaEntrada?: boolean;
 }
 
 export interface DashboardData {
@@ -241,7 +245,10 @@ export default function Dashboard({
       entradas: summary?.totalEntradas ?? tr,
       saidas: summary?.totalSaidasDividas ?? td,
       objetivos: summary?.totalObjetivos ?? tm,
-      saldo: summary?.saldoPeriodo ?? tr - td,
+      metasDescontamSaldo: summary?.totalObjetivosDescontamEntrada,
+      saldo:
+        summary?.saldoPeriodo ??
+        tr - td - (summary?.totalObjetivosDescontamEntrada ?? 0),
     };
   }, [graficoBarra, summary]);
 
@@ -456,14 +463,18 @@ export default function Dashboard({
                 />
                 <MetricCard
                   title="Objetivos (valor)"
-                  subtitle="Metas financeiras no período"
+                  subtitle={
+                    totals.metasDescontamSaldo != null
+                      ? `No período · ${formatCurrency(totals.metasDescontamSaldo)} descontam do saldo`
+                      : "Metas financeiras no período"
+                  }
                   value={formatCurrency(totals.objetivos)}
                   icon={FaBullseye}
                   variant="goal"
                 />
                 <MetricCard
                   title="Saldo do período"
-                  subtitle="Entradas − dívidas/gastos"
+                  subtitle="Entradas − dívidas/gastos − metas que descontam"
                   value={formatCurrency(totals.saldo)}
                   icon={FaScaleBalanced}
                   variant="balance"
@@ -687,8 +698,18 @@ export default function Dashboard({
                                   )
                                 : "—"}
                             </td>
-                            <td className="max-w-[200px] truncate px-4 py-3 text-slate-100 sm:max-w-xs sm:px-6">
-                              {row.description}
+                            <td className="max-w-[220px] px-4 py-3 text-slate-100 sm:max-w-md sm:px-6">
+                              <div className="truncate font-medium">{row.description}</div>
+                              {row.type === "meta" && row.categoria ? (
+                                <div className="mt-0.5 truncate text-xs text-slate-500">
+                                  Categoria: {row.categoria}
+                                </div>
+                              ) : null}
+                              {row.type === "meta" && row.descontaEntrada === false ? (
+                                <div className="mt-0.5 text-xs text-amber-200/90">
+                                  Não desconta do saldo
+                                </div>
+                              ) : null}
                             </td>
                             <td className="px-4 py-3 sm:px-6">
                               <span
