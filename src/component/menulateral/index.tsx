@@ -3,7 +3,8 @@ import Router, { useRouter } from "next/router";
 import { AuthContexts } from "@/contexts/AuthContexts";
 import Modal from "../ui/modal";
 import { ButtonPages } from "../ui/buttonPages";
-import { setupAPIClient } from "@/services/api";
+import { getErrorMessage, setupAPIClient } from "@/services/api";
+import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import {
@@ -48,7 +49,7 @@ export default function MenuLateral() {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "modelo.xlsx");
+      link.setAttribute("download", "modelo-conta-plus.xlsx");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -56,6 +57,10 @@ export default function MenuLateral() {
       setLoadingDownloadExcel(false);
     } catch (error) {
       setLoadingDownloadExcel(false);
+      toast.error(
+        getErrorMessage((error as AxiosError).response?.data) ||
+          "Não foi possível baixar o modelo.",
+      );
     }
   };
 
@@ -80,13 +85,26 @@ export default function MenuLateral() {
         fileInputRef.current.type = "text";
         fileInputRef.current.type = "file";
       }
-      if (response.data.error) {
-        toast.warn(response.data.error, { autoClose: false, delay: 10 });
-        return;
-      }
-      toast.success("Arquivo enviado com sucesso!");
+      const data = response.data as {
+        message?: string;
+        counts?: {
+          rendas?: number;
+          dividas?: number;
+          metas?: number;
+        };
+      };
+      const c = data.counts;
+      const detail =
+        c != null
+          ? ` (${c.rendas ?? 0} entrada(s) registradas, ${c.dividas ?? 0} saída(s), ${c.metas ?? 0} meta(s)).`
+          : "";
+      toast.success((data.message ?? "Importação concluída.") + detail);
     } catch (error) {
-      toast.success("Erro ao enviar o arquivo. Tente novamente.");
+      toast.error(
+        getErrorMessage((error as AxiosError).response?.data) ||
+          "Erro ao enviar o arquivo. Tente novamente.",
+        { autoClose: 9000 },
+      );
     } finally {
       setLoadingSendFileExcel(false);
       setSelectedFile(null);
@@ -198,11 +216,13 @@ export default function MenuLateral() {
               Importar planilha
             </h2>
             <p className="mt-1 text-sm text-slate-400">
-              Baixe o modelo, preencha e envie o arquivo .xlsx.
+              Use o arquivo <span className="text-slate-300">modelo-conta-plus.xlsx</span> com as
+              abas Salário, Dívidas, Metas e Extrato (extrato bancário). A primeira linha é o
+              cabeçalho.
             </p>
           </div>
           <ButtonPages loading={loadingDownloadExcel} onClick={downloadExcel}>
-            Baixar modelo de planilha
+            Baixar modelo-conta-plus.xlsx
           </ButtonPages>
           <div className="flex flex-col gap-3">
             <label className="block text-sm font-medium text-slate-400" htmlFor="file_input">

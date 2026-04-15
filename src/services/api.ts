@@ -5,10 +5,15 @@ import Router from 'next/router'
 import { destroyCookie } from 'nookies'
 
 function getErrorMessage(data: unknown): string {
-  if (data && typeof data === 'object' && 'message' in data) {
-    const msg = (data as { message: string | string[] }).message
-    if (Array.isArray(msg)) return msg.join(' ')
-    if (typeof msg === 'string') return msg
+  if (data && typeof data === 'object') {
+    if ('message' in data) {
+      const msg = (data as { message: string | string[] }).message
+      if (Array.isArray(msg)) return msg.join(' ')
+      if (typeof msg === 'string') return msg
+    }
+    if ('error' in data && typeof (data as { error: unknown }).error === 'string') {
+      return (data as { error: string }).error
+    }
   }
   return 'Ocorreu um erro na requisição.'
 }
