@@ -24,14 +24,16 @@ export default function Manual() {
         </section>
 
         <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
-          <h2 className="text-xl font-semibold text-slate-100">Importação Excel e extrato</h2>
+          <h2 className="text-xl font-semibold text-slate-100">Importação de arquivos e extrato</h2>
           <p className="mt-2 text-slate-300">
             Você pode lançar vários registros de uma vez com o arquivo oficial{" "}
-            <strong className="text-slate-200">modelo-conta-plus.xlsx</strong>.
+            <strong className="text-slate-200">modelo-conta-plus.xlsx</strong> ou enviar arquivos
+            bancários em <strong className="text-slate-200">CSV</strong> e{" "}
+            <strong className="text-slate-200">OFX</strong>.
           </p>
           <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
             <li>
-              <strong>Onde baixar:</strong> menu lateral (logado) em Importar planilha, ou a página{" "}
+              <strong>Onde baixar:</strong> menu lateral (logado) em Importar arquivo, ou a página{" "}
               <Link href="/importreport" className="text-emerald-400 underline hover:text-emerald-300">
                 Importação de relatórios
               </Link>
@@ -42,9 +44,9 @@ export default function Manual() {
               categoria) e Extrato (créditos e débitos como no banco).
             </li>
             <li>
-              <strong>Extrato bancário:</strong> exporte o extrato do seu banco (CSV/Excel),
-              copie colunas para a aba Extrato: Data, descrição, valor, se é entrada ou saída, e
-              o tipo do gasto nas saídas. Veja o passo a passo detalhado na página de importação.
+              <strong>Extrato bancário:</strong> exporte o extrato do seu banco em CSV ou OFX e
+              envie direto, ou copie para a aba Extrato do modelo se quiser revisar antes. Veja o
+              passo a passo detalhado na página de importação.
             </li>
             <li>
               <strong>Validação:</strong> datas em dd/mm/aaaa, valores em real, tipos de saída

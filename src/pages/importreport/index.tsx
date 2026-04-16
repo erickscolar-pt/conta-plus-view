@@ -42,9 +42,9 @@ export default function ImportReport() {
         Importação de Relatórios
       </h1>
       <p className="mb-8 max-w-3xl text-slate-300">
-        Use o arquivo Excel oficial do Conta+ para lançar entradas, saídas, metas e
-        movimentações de extrato banco com validação clara e mensagens de erro
-        objetivas.
+        Use o modelo Excel oficial do Conta+ ou envie arquivos bancários em CSV/OFX para
+        lançar entradas, saídas, metas e movimentações de extrato com validação clara e
+        mensagens de erro objetivas.
       </p>
 
       <div className="grid gap-4">
@@ -65,7 +65,7 @@ export default function ImportReport() {
               substituir pelos seus dados.
             </li>
             <li>
-              No app, abra <strong>Importar planilha</strong> no menu, envie o arquivo e
+              No app, abra <strong>Importar arquivo</strong> no menu, envie o arquivo e
               confira a mensagem de sucesso com o resumo de lançamentos importados.
             </li>
           </ol>
@@ -99,26 +99,27 @@ export default function ImportReport() {
 
         <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
           <h2 className="text-xl font-semibold text-slate-100">
-            Extrato do banco (CSV ou Excel)
+            Extrato do banco (CSV, OFX ou Excel)
           </h2>
           <p className="mt-2 text-slate-300">
-            Muitos bancos exportam OFX, CSV ou XLSX com nomes de colunas diferentes. O caminho
-            mais seguro é:
+            Você pode importar de dois jeitos: diretamente com CSV/OFX do banco, ou padronizando
+            no modelo Excel. Se o CSV vier com colunas comuns de data, histórico/descrição e
+            valor, o sistema tenta mapear automaticamente.
           </p>
           <ol className="mt-2 list-inside list-decimal space-y-2 text-slate-300 marker:text-emerald-300">
-            <li>Exporte o extrato no Excel ou abra o CSV no Excel/LibreOffice.</li>
+            <li>Para <strong>OFX</strong>, basta exportar do banco e enviar o arquivo direto.</li>
             <li>
-              Copie as colunas para a aba <strong>Extrato</strong> do nosso modelo, na ordem:{" "}
-              <strong>Data | Descrição | Valor | Movimento | Tipo saída</strong>.
+              Para <strong>CSV</strong>, você pode enviar o arquivo direto; o sistema tenta mapear
+              colunas comuns como Data, Descrição/Histórico, Valor, Crédito e Débito.
             </li>
             <li>
-              Preencha <strong>Movimento</strong> como &quot;Entrada&quot; para créditos e
-              &quot;Saída&quot; para débitos. Em saídas, use <strong>Tipo saída</strong> com um
-              nome curto (ex.: Alimentação, Transporte, Boletos).
+              Se preferir controle total, copie os dados para a aba <strong>Extrato</strong> do
+              modelo na ordem <strong>Data | Descrição | Valor | Movimento | Tipo saída</strong>.
             </li>
             <li>
-              Datas no formato <strong>dd/mm/aaaa</strong> ou célula de data do Excel são
-              aceitas. Valores podem usar formato brasileiro (1.234,56).
+              Datas em <strong>dd/mm/aaaa</strong>, ISO (<strong>aaaa-mm-dd</strong>) e células de
+              data do Excel são aceitas. Valores aceitam formato brasileiro (
+              <strong>1.234,56</strong>).
             </li>
           </ol>
         </section>
@@ -132,7 +133,8 @@ export default function ImportReport() {
             <li>Status em Dívidas: apenas &quot;Pago&quot; ou &quot;Não Pago&quot;.</li>
             <li>Parcela: número inteiro maior ou igual a 1.</li>
             <li>
-              Se algo estiver incorreto, a importação falha com mensagem indicando aba e linha.
+              Se algo estiver incorreto, a importação falha com mensagem indicando aba e linha; em
+              CSV/OFX, a mensagem aponta a linha do arquivo.
             </li>
           </ul>
         </section>

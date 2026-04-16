@@ -78,7 +78,7 @@ export default function MenuLateral() {
     formData.append("file", selectedFile);
 
     try {
-      const response = await apiClient.post(`/files/import-excel`, formData);
+      const response = await apiClient.post(`/files/import-file`, formData);
       setSelectedFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = null;
@@ -213,12 +213,12 @@ export default function MenuLateral() {
         <div className="flex w-full flex-col gap-5 text-slate-100">
           <div>
             <h2 className="text-lg font-semibold text-slate-50">
-              Importar planilha
+              Importar arquivo
             </h2>
             <p className="mt-1 text-sm text-slate-400">
-              Use o arquivo <span className="text-slate-300">modelo-conta-plus.xlsx</span> com as
-              abas Salário, Dívidas, Metas e Extrato (extrato bancário). A primeira linha é o
-              cabeçalho.
+              Envie um arquivo <span className="text-slate-300">.xlsx, .xls, .csv ou .ofx</span>.
+              Para planilha, use o modelo oficial; para extrato bancário, você também pode enviar
+              CSV ou OFX direto.
             </p>
           </div>
           <ButtonPages loading={loadingDownloadExcel} onClick={downloadExcel}>
@@ -226,11 +226,11 @@ export default function MenuLateral() {
           </ButtonPages>
           <div className="flex flex-col gap-3">
             <label className="block text-sm font-medium text-slate-400" htmlFor="file_input">
-              Arquivo (.xlsx)
+              Arquivo (.xlsx, .xls, .csv ou .ofx)
             </label>
             <input
               type="file"
-              accept=".xlsx"
+              accept=".xlsx,.xls,.csv,.ofx"
               id="file_input"
               onChange={handleFileChange}
               disabled={loadingSendFileExcel}
@@ -242,7 +242,7 @@ export default function MenuLateral() {
                 loading={loadingSendFileExcel}
                 onClick={handleSendFile}
               >
-                Enviar planilha
+                Enviar arquivo
               </ButtonPages>
             )}
           </div>
