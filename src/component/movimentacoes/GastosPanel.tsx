@@ -2,7 +2,7 @@ import { Table } from "@/component/ui/table";
 import { getErrorMessage, setupAPIClient } from "@/services/api";
 import { AxiosError } from "axios";
 import { formatCurrency, formatDate } from "@/helper";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Modal from "@/component/ui/modal";
 import {
   modalInfo,
@@ -21,6 +21,12 @@ import NotFound from "@/component/notfound";
 import { Toggle } from "@/component/ui/toggle";
 import { Dividas, ITipoDivida, Rendas, Usuario } from "@/model/type";
 import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
+import MovimentacoesListControls from "@/component/movimentacoes/MovimentacoesListControls";
+import { TruncatedCell } from "@/component/ui/TruncatedCell";
+import GastosMobileCards from "@/component/movimentacoes/GastosMobileCards";
+
+const filterSelectClass =
+  "min-w-[9rem] rounded-lg border border-white/10 bg-slate-950/80 px-2 py-1.5 text-sm text-slate-100 focus:border-emerald-500/40 focus:outline-none focus:ring-2 focus:ring-emerald-500/20";
 
 export interface GastosPanelProps {
   dividas: Dividas[];
@@ -72,6 +78,70 @@ export default function GastosPanel({
   const [filterType, setFilterType] = useState<"day" | "month">("day");
   const [debtTypes, setDebtTypes] = useState<ITipoDivida[]>(tipodivida ?? []);
   const [newDebtTypeName, setNewDebtTypeName] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(1);
+  const [paymentFilter, setPaymentFilter] = useState<"all" | "paid" | "unpaid">(
+    "all",
+  );
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+
+  const filteredDividas = useMemo(() => {
+    let list = [...dividas];
+    if (paymentFilter === "paid") {
+      list = list.filter((d) => d.payment === true);
+    } else if (paymentFilter === "unpaid") {
+      list = list.filter((d) => !d.payment);
+    }
+    if (categoryFilter !== "all") {
+      const cid = Number(categoryFilter);
+      list = list.filter((d) => d.tipo_divida_id === cid);
+    }
+    const q = searchQuery.trim().toLowerCase();
+    if (q) {
+      list = list.filter((d) => {
+        const cat =
+          debtTypes
+            .find((t) => t.id === d.tipo_divida_id)
+            ?.nome?.toLowerCase() ?? "";
+        return (
+          (d.nome_divida || "").toLowerCase().includes(q) ||
+          (d.username || "").toLowerCase().includes(q) ||
+          cat.includes(q) ||
+          String(d.valor ?? "").includes(q) ||
+          String(d.quantoVouPagar ?? "").includes(q) ||
+          formatDate(d.data_inclusao).toLowerCase().includes(q)
+        );
+      });
+    }
+    return list;
+  }, [
+    dividas,
+    searchQuery,
+    paymentFilter,
+    categoryFilter,
+    debtTypes,
+  ]);
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredDividas.length / pageSize) || 1,
+  );
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery, pageSize, dividas, paymentFilter, categoryFilter]);
+
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [page, totalPages]);
+
+  const safePage = Math.min(Math.max(1, page), totalPages);
+
+  const paginatedDividas = useMemo(() => {
+    const start = (safePage - 1) * pageSize;
+    return filteredDividas.slice(start, start + pageSize);
+  }, [filteredDividas, safePage, pageSize]);
 
   const total = dividas.reduce(
     (acc: number, divida: Dividas) => acc + (divida.quantoVouPagar || 0),
@@ -89,14 +159,41 @@ export default function GastosPanel({
 
   const getTipoDivida = (tipoDividaId: number) => {
     const tipoDivida = debtTypes.find((tipo) => tipo.id === tipoDividaId);
-    return tipoDivida ? tipoDivida.nome : "Tipo não encontrado";
+    return tipoDivida ? tipoDivida.nome : "Categoria não encontrada";
   };
 
   const columns = [
-    { title: "Conta", key: "nome_divida" },
+    {
+      title: "Conta",
+      key: "nome_divida",
+      headerClassName: "min-w-0 max-w-[10rem] sm:max-w-[14rem] md:max-w-[18rem]",
+      cellClassName: "min-w-0 max-w-[10rem] sm:max-w-[14rem] md:max-w-[18rem]",
+      render: (d: Dividas) => (
+        <TruncatedCell text={d.nome_divida} className="max-w-full" />
+      ),
+    },
     { title: "Valor do boleto", key: "valor", formatter: formatCurrency },
-    { title: "Tipo", key: "tipo_divida_id", formatter: getTipoDivida },
-    { title: "Vou dividir com", key: "username" },
+    {
+      title: "Categoria",
+      key: "tipo_divida_id",
+      headerClassName: "w-[7.5rem] max-w-[9rem]",
+      cellClassName: "w-[7.5rem] max-w-[9rem]",
+      render: (d: Dividas) => (
+        <TruncatedCell
+          text={getTipoDivida(d.tipo_divida_id ?? 0)}
+          className="max-w-full"
+        />
+      ),
+    },
+    {
+      title: "Vou dividir com",
+      key: "username",
+      headerClassName: "max-w-[7rem]",
+      cellClassName: "max-w-[7rem]",
+      render: (d: Dividas) => (
+        <TruncatedCell text={d.username} className="max-w-full" />
+      ),
+    },
     {
       title: "Quanto meu parceiro(a) paga",
       key: "valor_debito_vinculo",
@@ -206,7 +303,7 @@ export default function GastosPanel({
 
     setIsModalEdit(false);
     if (+tipoDividaEditSelected === 0) {
-      toast.warning("Selecione o tipo de divida!");
+      toast.warning("Selecione a categoria.");
       setLoading(false);
       return;
     }
@@ -255,13 +352,13 @@ export default function GastosPanel({
     }
     if (debtTypes.length === 0) {
       toast.warning(
-        "Não há tipos de dívida cadastrados no sistema. É necessário ao menos um tipo para lançar saídas.",
+        "Não há categorias de saída cadastradas. Cadastre ao menos uma categoria para lançar gastos.",
       );
       setLoading(false);
       return;
     }
     if (!tipoDividaSelected || +tipoDividaSelected === 0) {
-      toast.warning("Selecione o tipo de dívida.");
+      toast.warning("Selecione a categoria.");
       setLoading(false);
       return;
     }
@@ -405,7 +502,7 @@ export default function GastosPanel({
   async function createDebtType() {
     const nome = newDebtTypeName.trim();
     if (nome.length < 2) {
-      toast.warning("Informe um nome de tipo com ao menos 2 caracteres.");
+      toast.warning("Informe um nome de categoria com ao menos 2 caracteres.");
       return;
     }
 
@@ -425,12 +522,12 @@ export default function GastosPanel({
         setTipoDividaEditSelected(created.id);
       }
       setNewDebtTypeName("");
-      toast.success("Tipo cadastrado com sucesso.");
+      toast.success("Categoria cadastrada com sucesso.");
     } catch (e: unknown) {
       const msg =
         e instanceof AxiosError
           ? getErrorMessage(e.response?.data)
-          : "Não foi possível cadastrar o tipo de dívida.";
+          : "Não foi possível cadastrar a categoria.";
       toast.error(msg);
     } finally {
       setLoading(false);
@@ -490,9 +587,9 @@ export default function GastosPanel({
           </button>
         </header>
         <div
-          className={`rounded-2xl border border-white/10 bg-white/5 shadow-md backdrop-blur-sm ${embedded ? "p-4 sm:p-6" : "p-2 sm:p-4 md:p-6"}`}
+          className={`min-w-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-md backdrop-blur-sm ${embedded ? "p-4 sm:p-6" : "p-2 sm:p-4 md:p-6"}`}
         >
-              <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-6 gap-4">
+              <div className="mb-4 flex flex-col items-stretch justify-between gap-4 sm:flex-row sm:items-center">
                 <Calendar
                   textButton="Filtrar"
                   type={filterType}
@@ -500,9 +597,84 @@ export default function GastosPanel({
                   onDateSelect={filterDividasByDate}
                 />
               </div>
-              <div className="w-full">
-                {dividas.length > 0 ? (
-                  <Table columns={columns} data={dividas} color="#C07C7C" />
+              <MovimentacoesListControls
+                searchPlaceholder="Buscar por conta, categoria, parceiro ou data…"
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                pageSize={pageSize}
+                onPageSizeChange={setPageSize}
+                page={safePage}
+                onPageChange={setPage}
+                totalItems={filteredDividas.length}
+                itemLabel="saídas"
+                extraFilters={
+                  <>
+                    <label className="flex flex-col gap-1 text-sm text-slate-400 sm:flex-row sm:items-center sm:gap-2">
+                      <span className="whitespace-nowrap">Pagamento</span>
+                      <select
+                        value={paymentFilter}
+                        onChange={(e) =>
+                          setPaymentFilter(
+                            e.target.value as "all" | "paid" | "unpaid",
+                          )
+                        }
+                        className={filterSelectClass}
+                      >
+                        <option value="all">Todos</option>
+                        <option value="paid">Pagos</option>
+                        <option value="unpaid">Em aberto</option>
+                      </select>
+                    </label>
+                    <label className="flex flex-col gap-1 text-sm text-slate-400 sm:flex-row sm:items-center sm:gap-2">
+                      <span className="whitespace-nowrap">Categoria</span>
+                      <select
+                        value={categoryFilter}
+                        onChange={(e) => setCategoryFilter(e.target.value)}
+                        className={filterSelectClass}
+                      >
+                        <option value="all">Todas</option>
+                        {debtTypes.map((t) => (
+                          <option key={t.id} value={String(t.id)}>
+                            {t.nome}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  </>
+                }
+              />
+              {(searchQuery.trim() ||
+                paymentFilter !== "all" ||
+                categoryFilter !== "all") &&
+              filteredDividas.length < dividas.length ? (
+                <p className="mb-3 text-xs text-slate-500">
+                  Os totais no rodapé consideram todas as saídas do período, não só os filtros da tabela.
+                </p>
+              ) : null}
+              <div className="w-full min-w-0">
+                {filteredDividas.length > 0 ? (
+                  <>
+                    <GastosMobileCards
+                      items={paginatedDividas}
+                      getTipoNome={getTipoDivida}
+                      onTogglePaid={handleTogglePaid}
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                    />
+                    <div className="hidden md:block">
+                      <Table
+                        columns={columns}
+                        data={paginatedDividas}
+                        color="#C07C7C"
+                        minWidthClassName="min-w-[1100px]"
+                        rowKey={(d) => d.id}
+                      />
+                    </div>
+                  </>
+                ) : dividas.length > 0 ? (
+                  <p className="py-10 text-center text-sm text-slate-400">
+                    Nenhuma saída corresponde aos filtros ou à pesquisa.
+                  </p>
                 ) : (
                   <NotFound />
                 )}
@@ -606,13 +778,13 @@ export default function GastosPanel({
           {debtTypes.length > 0 && (
             <div className={modalInset}>
               <label className="block">
-                <span className={modalLabel}>Tipo</span>
+                <span className={modalLabel}>Categoria</span>
                 <select
                   value={tipoDividaEditSelected}
                   onChange={handleChangeEditTipoDivida}
                   className={modalSelect}
                 >
-                  <option value={0}>Selecione o tipo</option>
+                  <option value={0}>Selecione a categoria</option>
                   {debtTypes.map((tipo) => (
                     <option key={tipo.id} value={tipo.id}>
                       {tipo.nome}
@@ -633,7 +805,7 @@ export default function GastosPanel({
                   onClick={createDebtType}
                   className="inline-flex items-center justify-center rounded-xl bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 shadow-lg shadow-slate-900/20 transition hover:bg-slate-600"
                 >
-                  Cadastrar tipo
+                  Cadastrar categoria
                 </button>
               </div>
             </div>
@@ -729,13 +901,13 @@ export default function GastosPanel({
           )}
           <div className={modalInset}>
             <label className="block">
-              <span className={modalLabel}>Tipo</span>
+              <span className={modalLabel}>Categoria</span>
               <select
                 value={tipoDividaSelected}
                 onChange={handleChangeTipoDivida}
                 className={modalSelect}
               >
-                <option value={0}>Selecione o tipo</option>
+                <option value={0}>Selecione a categoria</option>
                 {debtTypes.map((tipo) => (
                   <option key={tipo.id} value={tipo.id}>
                     {tipo.nome}
@@ -756,7 +928,7 @@ export default function GastosPanel({
                 onClick={createDebtType}
                 className="inline-flex items-center justify-center rounded-xl bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 shadow-lg shadow-slate-900/20 transition hover:bg-slate-600"
               >
-                Cadastrar tipo
+                Cadastrar categoria
               </button>
             </div>
           </div>

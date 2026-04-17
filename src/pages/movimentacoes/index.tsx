@@ -92,8 +92,8 @@ export default function Movimentacoes({
         <title>Movimentações | Conta+</title>
       </Head>
       <LoggedLayout usuario={usuario}>
-        <main className="relative flex-1 overflow-y-auto px-3 py-4 sm:px-6 md:px-10 md:py-8">
-            <div className="mx-auto max-w-7xl space-y-6">
+        <main className="relative min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-3 py-4 sm:px-6 md:px-10 md:py-8">
+            <div className="mx-auto max-w-7xl min-w-0 space-y-6">
               <div>
                 <h1 className="text-2xl font-semibold tracking-tight text-slate-50 md:text-3xl">
                   Movimentações
@@ -147,7 +147,7 @@ export default function Movimentacoes({
               <div
                 className="inline-flex rounded-2xl border border-white/10 bg-white/5 p-1 shadow-sm backdrop-blur-sm"
                 role="tablist"
-                aria-label="Tipo de movimentação"
+                aria-label="Alternar entre entradas e saídas"
               >
                 <button
                   type="button"

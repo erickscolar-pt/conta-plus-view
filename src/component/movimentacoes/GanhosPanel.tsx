@@ -2,7 +2,7 @@ import { Table } from "@/component/ui/table";
 import { getErrorMessage, setupAPIClient } from "@/services/api";
 import { AxiosError } from "axios";
 import { formatCurrency, formatDate } from "@/helper";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Modal from "@/component/ui/modal";
 import {
   modalInput,
@@ -17,6 +17,9 @@ import InputMoney from "@/component/ui/inputMoney";
 import NotFound from "@/component/notfound";
 import { Rendas, Usuario } from "@/model/type";
 import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
+import MovimentacoesListControls from "@/component/movimentacoes/MovimentacoesListControls";
+import { TruncatedCell } from "@/component/ui/TruncatedCell";
+import GanhosMobileCards from "@/component/movimentacoes/GanhosMobileCards";
 
 /** Valor para input type=date (yyyy-mm-dd) a partir da data salva na API */
 function dateToInputValue(iso: string | undefined): string {
@@ -70,6 +73,41 @@ export default function GanhosPanel({
   const [rendas, setRendas] = useState<Rendas[]>(initialRendas);
   const [filterDate, setFilterDate] = useState("");
   const [filterType, setFilterType] = useState<"day" | "month">("day");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(1);
+
+  const filteredRendas = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return rendas;
+    return rendas.filter((r) => {
+      const nome = (r.nome_renda || "").toLowerCase();
+      const valorStr = String(r.valor ?? "");
+      const dataStr = formatDate(r.data_inclusao).toLowerCase();
+      return (
+        nome.includes(q) ||
+        valorStr.includes(q) ||
+        dataStr.includes(q)
+      );
+    });
+  }, [rendas, searchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredRendas.length / pageSize) || 1);
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery, pageSize, rendas]);
+
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [page, totalPages]);
+
+  const safePage = Math.min(Math.max(1, page), totalPages);
+
+  const paginatedRendas = useMemo(() => {
+    const start = (safePage - 1) * pageSize;
+    return filteredRendas.slice(start, start + pageSize);
+  }, [filteredRendas, safePage, pageSize]);
 
   const total = rendas.reduce(
     (acc: number, renda: Rendas) => acc + (renda.valor || 0),
@@ -83,7 +121,15 @@ export default function GanhosPanel({
 
   const columns = [
     { title: "Valor", key: "valor", formatter: formatCurrency },
-    { title: "Recebido de", key: "nome_renda" },
+    {
+      title: "Recebido de",
+      key: "nome_renda",
+      headerClassName: "min-w-0 max-w-[10rem] sm:max-w-[14rem] md:max-w-[18rem]",
+      cellClassName: "min-w-0 max-w-[10rem] sm:max-w-[14rem] md:max-w-[18rem]",
+      render: (r: Rendas) => (
+        <TruncatedCell text={r.nome_renda} className="max-w-full" />
+      ),
+    },
     { title: "Pago dia", key: "data_inclusao", formatter: formatDate },
     {
       title: "Ações",
@@ -289,18 +335,51 @@ export default function GanhosPanel({
         </header>
 
         <div
-          className={`rounded-2xl border border-white/10 bg-white/5 shadow-md backdrop-blur-sm ${embedded ? "p-4 sm:p-6" : "p-2 sm:p-4 md:p-6"}`}
+          className={`min-w-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-md backdrop-blur-sm ${embedded ? "p-4 sm:p-6" : "p-2 sm:p-4 md:p-6"}`}
         >
-          <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+          <div className="mb-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <Calendar
               type={filterType}
               onDateSelect={filterRendasByDate}
               textButton="Filtrar"
             />
           </div>
-          <div className="w-full overflow-x-auto">
-            {rendas.length > 0 ? (
-              <Table columns={columns} data={rendas} />
+          <MovimentacoesListControls
+            searchPlaceholder="Buscar por descrição, valor ou data…"
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            pageSize={pageSize}
+            onPageSizeChange={setPageSize}
+            page={safePage}
+            onPageChange={setPage}
+            totalItems={filteredRendas.length}
+            itemLabel="entradas"
+          />
+          {searchQuery.trim() && filteredRendas.length < rendas.length ? (
+            <p className="mb-3 text-xs text-slate-500">
+              Os totais no rodapé consideram todas as entradas do período, não só o resultado da busca.
+            </p>
+          ) : null}
+          <div className="w-full min-w-0">
+            {filteredRendas.length > 0 ? (
+              <>
+                <GanhosMobileCards
+                  items={paginatedRendas}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                />
+                <div className="hidden md:block overflow-x-auto">
+                  <Table
+                    columns={columns}
+                    data={paginatedRendas}
+                    rowKey={(r) => r.id}
+                  />
+                </div>
+              </>
+            ) : rendas.length > 0 ? (
+              <p className="py-10 text-center text-sm text-slate-400">
+                Nenhuma entrada corresponde à pesquisa.
+              </p>
             ) : (
               <NotFound />
             )}
