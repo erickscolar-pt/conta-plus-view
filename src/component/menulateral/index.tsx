@@ -216,9 +216,10 @@ export default function MenuLateral() {
               Importar arquivo
             </h2>
             <p className="mt-1 text-sm text-slate-400">
-              Envie um arquivo <span className="text-slate-300">.xlsx, .xls, .csv ou .ofx</span>.
+              Envie um arquivo{" "}
+              <span className="text-slate-300">.xlsx, .xls, .csv, .ofx ou .pdf</span>.
               Para planilha, use o modelo oficial; para extrato bancário, você também pode enviar
-              CSV ou OFX direto.
+              CSV, OFX ou PDF com texto (extratos só com imagem não são lidos).
             </p>
           </div>
           <ButtonPages loading={loadingDownloadExcel} onClick={downloadExcel}>
@@ -226,11 +227,11 @@ export default function MenuLateral() {
           </ButtonPages>
           <div className="flex flex-col gap-3">
             <label className="block text-sm font-medium text-slate-400" htmlFor="file_input">
-              Arquivo (.xlsx, .xls, .csv ou .ofx)
+              Arquivo (.xlsx, .xls, .csv, .ofx ou .pdf)
             </label>
             <input
               type="file"
-              accept=".xlsx,.xls,.csv,.ofx"
+              accept=".xlsx,.xls,.csv,.ofx,.pdf"
               id="file_input"
               onChange={handleFileChange}
               disabled={loadingSendFileExcel}

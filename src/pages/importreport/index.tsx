@@ -42,9 +42,9 @@ export default function ImportReport() {
         Importação de Relatórios
       </h1>
       <p className="mb-8 max-w-3xl text-slate-300">
-        Use o modelo Excel oficial do Conta+ ou envie arquivos bancários em CSV/OFX para
-        lançar entradas, saídas, metas e movimentações de extrato com validação clara e
-        mensagens de erro objetivas.
+        Use o modelo Excel oficial do Conta+ ou envie arquivos bancários em CSV, OFX ou PDF
+        (com texto selecionável) para lançar entradas, saídas, metas e movimentações de
+        extrato com validação clara e mensagens de erro objetivas.
       </p>
 
       <div className="grid gap-4">
@@ -99,18 +99,25 @@ export default function ImportReport() {
 
         <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
           <h2 className="text-xl font-semibold text-slate-100">
-            Extrato do banco (CSV, OFX ou Excel)
+            Extrato do banco (CSV, OFX, PDF ou Excel)
           </h2>
           <p className="mt-2 text-slate-300">
-            Você pode importar de dois jeitos: diretamente com CSV/OFX do banco, ou padronizando
-            no modelo Excel. Se o CSV vier com colunas comuns de data, histórico/descrição e
-            valor, o sistema tenta mapear automaticamente.
+            Você pode importar de dois jeitos: diretamente com CSV, OFX ou PDF do banco, ou
+            padronizando no modelo Excel. Se o CSV vier com colunas comuns de data,
+            histórico/descrição e valor, o sistema tenta mapear automaticamente. O PDF precisa
+            ter texto selecionável (não funciona com extrato escaneado); o layout varia entre
+            bancos, então em caso de falha use OFX ou CSV exportados pelo internet banking.
           </p>
           <ol className="mt-2 list-inside list-decimal space-y-2 text-slate-300 marker:text-emerald-300">
             <li>Para <strong>OFX</strong>, basta exportar do banco e enviar o arquivo direto.</li>
             <li>
               Para <strong>CSV</strong>, você pode enviar o arquivo direto; o sistema tenta mapear
               colunas comuns como Data, Descrição/Histórico, Valor, Crédito e Débito.
+            </li>
+            <li>
+              Para <strong>PDF</strong>, use o arquivo gerado pelo banco (com texto). A leitura é
+              heurística: cada linha deve trazer data no formato dd/mm/aaaa e valor em formato
+              brasileiro; não é necessário enviar um arquivo de exemplo para o sistema funcionar.
             </li>
             <li>
               Se preferir controle total, copie os dados para a aba <strong>Extrato</strong> do
