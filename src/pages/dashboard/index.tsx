@@ -667,7 +667,7 @@ export default function Dashboard({
                         <th className="px-4 py-3 font-medium sm:px-6">
                           Descrição
                         </th>
-                        <th className="px-4 py-3 font-medium sm:px-6">Tipo</th>
+                        <th className="px-4 py-3 font-medium sm:px-6">Natureza</th>
                         <th className="px-4 py-3 text-right font-medium sm:px-6">
                           Valor
                         </th>
