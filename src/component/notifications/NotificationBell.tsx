@@ -132,7 +132,7 @@ export default function NotificationBell() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative z-[45]">
       <button
         ref={btnRef}
         type="button"
@@ -140,12 +140,12 @@ export default function NotificationBell() {
           setOpen((o) => !o);
           if (!open) fetchNotifications();
         }}
-        className="relative rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-slate-100"
+        className="relative rounded-xl p-2 text-slate-100 ring-1 ring-white/15 transition hover:bg-white/15 hover:ring-white/25"
         title="Notificações"
         aria-expanded={open}
         aria-haspopup="true"
       >
-        <MdNotificationsNone className="h-6 w-6" aria-hidden />
+        <MdNotificationsNone className="h-6 w-6 text-slate-100" aria-hidden />
         {badge > 0 ? (
           <span className="absolute right-1 top-1 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
             {badge > 9 ? "9+" : badge}
@@ -154,12 +154,19 @@ export default function NotificationBell() {
       </button>
 
       {open ? (
-        <div
-          ref={panelRef}
-          className="absolute right-0 top-full z-50 mt-2 w-[min(100vw-2rem,22rem)] rounded-2xl border border-white/10 bg-slate-900/98 shadow-2xl ring-1 ring-white/5 backdrop-blur-xl"
-        >
-          <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-            <span className="text-sm font-semibold text-slate-100">
+        <>
+          <button
+            type="button"
+            aria-label="Fechar notificações"
+            className="fixed inset-x-0 bottom-0 top-16 z-[48] bg-slate-950/80 sm:hidden"
+            onClick={() => setOpen(false)}
+          />
+          <div
+            ref={panelRef}
+            className="fixed left-3 right-3 top-[4.25rem] z-[50] max-h-[min(78vh,560px)] overflow-hidden rounded-2xl border border-white/20 bg-slate-900 shadow-2xl sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:max-h-none sm:w-[min(100vw-2rem,22rem)]"
+          >
+          <div className="flex items-center justify-between border-b border-white/15 bg-slate-900 px-4 py-3">
+            <span className="text-sm font-semibold text-white">
               Notificações
             </span>
             {visible.length > 0 ? (
@@ -175,30 +182,30 @@ export default function NotificationBell() {
 
           <div className="max-h-[min(70vh,420px)] overflow-y-auto">
             {loading ? (
-              <p className="px-4 py-8 text-center text-sm text-slate-500">
+              <p className="px-4 py-8 text-center text-sm text-slate-300">
                 Carregando…
               </p>
             ) : visible.length === 0 ? (
-              <p className="px-4 py-8 text-center text-sm text-slate-500">
+              <p className="px-4 py-8 text-center text-sm text-slate-200">
                 Nenhuma notificação no momento.
               </p>
             ) : (
-              <ul className="divide-y divide-white/5 py-1">
+              <ul className="divide-y divide-white/10 py-1">
                 {visible.map((n) => (
                   <li
                     key={n.id}
-                    className={`border-l-4 ${severityBorder(n.severity)} px-3 py-3`}
+                    className={`border-l-4 ${severityBorder(n.severity)} bg-slate-900/95 px-3 py-3`}
                   >
                     <div className="flex gap-2">
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-slate-100">
+                        <p className="text-sm font-medium text-white">
                           {n.title}
                         </p>
-                        <p className="mt-0.5 text-xs leading-relaxed text-slate-400">
+                        <p className="mt-0.5 text-xs leading-relaxed text-slate-300">
                           {n.message}
                         </p>
                         {n.amount != null && n.amount > 0 ? (
-                          <p className="mt-1 text-xs font-semibold tabular-nums text-slate-300">
+                          <p className="mt-1 text-xs font-semibold tabular-nums text-slate-200">
                             {formatCurrency(n.amount)}
                           </p>
                         ) : null}
@@ -214,7 +221,7 @@ export default function NotificationBell() {
                       </div>
                       <button
                         type="button"
-                        className="shrink-0 rounded-lg p-1 text-slate-500 hover:bg-white/10 hover:text-slate-300"
+                        className="shrink-0 rounded-lg p-1 text-slate-400 hover:bg-white/15 hover:text-white"
                         title="Dispensar"
                         onClick={() => dismissOne(n.id)}
                       >
@@ -227,11 +234,12 @@ export default function NotificationBell() {
             )}
           </div>
 
-          <p className="border-t border-white/10 px-4 py-2 text-[11px] text-slate-500">
+          <p className="border-t border-white/15 bg-slate-900 px-4 py-2.5 text-[11px] leading-snug text-slate-300">
             Dívidas, convites aceitos (quem te vinculou e quem você vinculou) e dica se
             ainda não há parceiros.
           </p>
         </div>
+        </>
       ) : null}
     </div>
   );

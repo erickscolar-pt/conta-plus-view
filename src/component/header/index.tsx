@@ -11,7 +11,7 @@ const LOGO_HEIGHT = 56;
 
 export default function Header({ usuario }: { usuario?: unknown }) {
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-slate-950/80 px-3 backdrop-blur-xl sm:px-6 md:px-10">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-white/10 bg-slate-950/95 px-3 backdrop-blur-xl sm:px-6 md:px-10">
       <Link
         href="/dashboard"
         className="group flex min-w-0 items-center gap-2.5 rounded-xl py-1.5 pl-0.5 pr-2 transition hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 sm:gap-3"
