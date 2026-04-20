@@ -69,3 +69,26 @@ export interface ITipoDivida {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface MarketItem {
+  id: number;
+  barcode?: string | null;
+  nome: string;
+  quantidade: number;
+  preco_unitario: number;
+  subtotal: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface MarketSession {
+  id: number;
+  nome: string;
+  status: "open" | "closed";
+  created_at: string;
+  updated_at: string;
+  finalized_at?: string | null;
+  finalized_divida_id?: number | null;
+  total: number;
+  items: MarketItem[];
+}

@@ -14,6 +14,7 @@ import {
   MdPerson,
   MdLogout,
   MdImportExport,
+  MdShoppingCart,
 } from "react-icons/md";
 
 export default function MenuLateral() {
@@ -188,6 +189,14 @@ export default function MenuLateral() {
             title="Perfil"
           >
             <MdPerson size={24} />
+          </button>
+          <button
+            type="button"
+            className={navBtn(path === "/mercado")}
+            onClick={() => Router.push("/mercado")}
+            title="Calculadora de mercado"
+          >
+            <MdShoppingCart size={24} />
           </button>
           <button
             type="button"
