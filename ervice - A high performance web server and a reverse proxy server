@@ -1,0 +1,19 @@
+[0;1;32m●[0m nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (]8;;file://srv1549454/usr/lib/systemd/system/nginx.service/usr/lib/systemd/system/nginx.service]8;;; [0;1;32menabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;32mactive (running)[0m since Mon 2026-04-13 18:07:44 UTC; 1s ago
+       Docs: ]8;;man:nginx(8)man:nginx(8)]8;;
+    Process: 93664 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+    Process: 93665 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+   Main PID: 93667 (nginx)
+      Tasks: 3 (limit: 9483)
+     Memory: 2.9M (peak: 3.4M)
+        CPU: 47ms
+     CGroup: /system.slice/nginx.service
+             ├─[0;38;5;245m93667 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"[0m
+             ├─[0;38;5;245m93668 "nginx: worker process"[0m
+             └─[0;38;5;245m93670 "nginx: worker process"[0m
+
+Apr 13 18:07:44 srv1549454 systemd[1]: Starting nginx.service - A high performance web server and a reverse proxy server...
+Apr 13 18:07:44 srv1549454 nginx[93664]: 2026/04/13 18:07:44 [warn] 93664#93664: server name "/etc/ssl/cloudflare/contaplus-origin.pem" has suspicious symbols in /etc/nginx/sites-enabled/contaplus.app.br.conf:12
+Apr 13 18:07:44 srv1549454 nginx[93665]: 2026/04/13 18:07:44 [warn] 93665#93665: server name "/etc/ssl/cloudflare/contaplus-origin.pem" has suspicious symbols in /etc/nginx/sites-enabled/contaplus.app.br.conf:12
+Apr 13 18:07:44 srv1549454 systemd[1]: Started nginx.service - A high performance web server and a reverse proxy server.
