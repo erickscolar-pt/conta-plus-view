@@ -1,10 +1,10 @@
 import { jwtDecode } from 'jwt-decode';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
-import { parseCookies, destroyCookie } from 'nookies';
+import { clearAuthCookie, parseRequestCookies } from './cookies';
 
 export function canSSRAuth<P>(fn: GetServerSideProps<P>) {
   return async (ctx: GetServerSidePropsContext): Promise<GetServerSidePropsResult<P>> => {
-    const cookies = parseCookies(ctx);
+    const cookies = parseRequestCookies(ctx);
     const token = cookies['@nextauth.token'];
 
     if (!token) {
@@ -22,7 +22,7 @@ export function canSSRAuth<P>(fn: GetServerSideProps<P>) {
 
       if (decodedToken.exp < currentTime) {
         console.error('Token expirado, redirecionando para login');
-        destroyCookie(ctx, '@nextauth.token'); // Remove o token
+        clearAuthCookie(ctx);
         return {
           redirect: {
             destination: '/',
@@ -34,7 +34,7 @@ export function canSSRAuth<P>(fn: GetServerSideProps<P>) {
       return await fn(ctx);
     } catch (error) {
       console.error('Erro ao validar token, redirecionando para login:', error);
-      destroyCookie(ctx, '@nextauth.token');
+      clearAuthCookie(ctx);
       return {
         redirect: {
           destination: '/',

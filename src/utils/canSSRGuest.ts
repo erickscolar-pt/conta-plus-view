@@ -1,11 +1,11 @@
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
-import { parseCookies, destroyCookie } from 'nookies';
 import { AuthTokenError } from '../services/errors/AuthTokenError';
 import { api } from '@/services/apiCliente';
+import { clearAuthCookie, parseRequestCookies } from './cookies';
 
 export function canSSRGuest<P>(fn: GetServerSideProps<P>) {
     return async (ctx: GetServerSidePropsContext): Promise<GetServerSidePropsResult<P>> => {
-        const cookies = parseCookies(ctx);
+        const cookies = parseRequestCookies(ctx);
         const token = cookies['@nextauth.token'];
 
         if (token) {
@@ -18,7 +18,7 @@ export function canSSRGuest<P>(fn: GetServerSideProps<P>) {
                 };
             } catch (err) {
                 if (err instanceof AuthTokenError) {
-                    destroyCookie(ctx, '@nextauth.token');
+                    clearAuthCookie(ctx);
                     return await fn(ctx);
                 }
             }

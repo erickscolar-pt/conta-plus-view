@@ -1,16 +1,16 @@
 import { createContext, ReactNode, useState } from 'react';
 import { AxiosError } from 'axios';
+import axios from 'axios';
 import { api } from '../services/apiCliente';
 import { getErrorMessage } from '../services/api';
 import { toast } from 'react-toastify';
-import { destroyCookie, setCookie } from 'nookies';
 import Router from 'next/router';
 
 type AuthContextData = {
   usuario: UsuarioProps;
   isAuthenticated: boolean;
   signIn: (credentials: SignInProps) => Promise<void>;
-  signOut: () => void;
+  signOut: () => Promise<void>;
   signUp: (credentials: SignUpProps) => Promise<{ data: unknown }>
 }
 
@@ -42,9 +42,9 @@ type AuthProviderProps = {
 
 export const AuthContexts = createContext({} as AuthContextData);
 
-export function signOut() {
+export async function signOut() {
   try {
-    destroyCookie(undefined, '@nextauth.token');
+    await axios.post('/api/auth/logout');
     sessionStorage.removeItem('id');
     sessionStorage.removeItem('nivel');
     Router.push('/');
@@ -60,8 +60,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   async function signIn({ username, password }: SignInProps) {
     try {
-      const response = await api.post('/auth/signin', { username, password });
-      const { id, name, token, role } = response.data;
+      const response = await axios.post('/api/auth/signin', { username, password });
+      const { id, name, role } = response.data;
 
       if (window) {
         sessionStorage.setItem('id', id);
@@ -69,18 +69,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       setUsuario({ id, name, username, role });
 
-      api.defaults.headers['Authorization'] = `Bearer ${token}`;
-      setCookie(undefined, '@nextauth.token', token, {
-        maxAge: 60 * 60 * 24 * 30,
-        path: '/',
-        sameSite: 'lax',
-        secure:
-          typeof window !== 'undefined' &&
-          window.location.protocol === 'https:',
-      });
       toast.success('Bem vindo!');
-      /* Navegação completa: garante que o cookie vá no pedido ao SSR (canSSRAuth + middleware).
-         Router.push após setCookie costuma fazer o GSSP rodar sem o token → redirect para /. */
+      /* Navegação completa: garante que o cookie httpOnly vá no pedido ao SSR. */
       if (typeof window !== 'undefined') {
         window.location.assign('/movimentacoes');
       } else {

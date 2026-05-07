@@ -1,38 +1,134 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Conta Plus Web
 
-## Getting Started
+Frontend web do Conta Plus, construído com Next.js Pages Router. Ele consome a API do backend, usa sessão via cookie `httpOnly` e publica a interface principal em `https://contaplus.app.br`.
 
-First, run the development server:
+## Stack
+
+- Next.js 14
+- React 18
+- Sass + Tailwind configurado
+- Axios
+- Chart.js / React Google Charts
+- PM2 em produção
+
+## Ambiente
+
+Crie o `.env` a partir do exemplo:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-Open page: http://localhost:3001/ganhos
+Variáveis:
 
+- `NEXT_PUBLIC_API_URL`: URL base da API backend.
+- `NEXT_PUBLIC_MEASUREMENT_ID`: Google Analytics, quando usado.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Exemplo local:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```env
+NEXT_PUBLIC_API_URL="http://localhost:3008"
+NEXT_PUBLIC_MEASUREMENT_ID=""
+```
 
-## Learn More
+Exemplo produção:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+NEXT_PUBLIC_API_URL="https://api.contaplus.app.br"
+NEXT_PUBLIC_MEASUREMENT_ID="G-XXXXXXXXXX"
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Sessão E API
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+O login não grava JWT pelo JavaScript do browser. O fluxo atual é:
 
-## Deploy on Vercel
+- `POST /api/auth/signin`: rota server-side do Next chama o backend e grava o cookie `@nextauth.token` como `httpOnly`.
+- `POST /api/auth/logout`: limpa o cookie de autenticação.
+- `/api/backend/*`: proxy server-side do Next para chamadas feitas pelo browser. Ele lê o cookie `httpOnly` e injeta `Authorization: Bearer`.
+- SSR continua podendo chamar o backend diretamente, lendo o cookie no servidor.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Esse desenho reduz exposição do JWT no browser e mantém as telas existentes usando o mesmo cliente Axios.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Rodando Localmente
+
+```bash
+npm install
+npm run dev
+```
+
+Aplicação local:
+
+```text
+http://localhost:3000
+```
+
+Se a porta 3000 já estiver ocupada, o Next pode subir em outra porta. Ajuste `CORS_ORIGINS` no backend para incluir a porta usada.
+
+## Qualidade
+
+```bash
+npm run build
+```
+
+O build atual passa. Ainda existem warnings conhecidos de lint sobre hooks e links internos; eles devem ser tratados em um item próprio.
+
+## Produção
+
+A produção atual usa clone do projeto no servidor, build local, PM2 para manter o processo ativo, Nginx como reverse proxy e Cloudflare apontando `contaplus.app.br`.
+
+Fluxo sugerido para atualizar:
+
+```bash
+cd /caminho/conta-plus-view
+git pull origin main
+npm install
+npm run build
+pm2 restart conta-plus-view
+pm2 save
+```
+
+Primeira execução com PM2:
+
+```bash
+pm2 start npm --name conta-plus-view -- run start
+pm2 save
+```
+
+Verificações úteis:
+
+```bash
+pm2 status
+pm2 logs conta-plus-view
+curl http://localhost:3000
+```
+
+O Nginx deve encaminhar `https://contaplus.app.br` para a porta onde o Next está rodando. O Cloudflare cuida do DNS e da camada pública do domínio.
+
+## Checklist De Deploy
+
+- `NEXT_PUBLIC_API_URL` aponta para a API pública correta.
+- Backend permite a origem web em `CORS_ORIGINS`.
+- Build do frontend passou antes do restart.
+- PM2 está com processo online.
+- Login foi testado depois do deploy, validando cookie `httpOnly` e proxy `/api/backend/*`.
+
+## Versionamento
+
+Cada item fechado gera:
+
+1. Bump de versão em `package.json` e `package-lock.json`.
+2. Commit com a mudança.
+3. Tag anotada no formato `vX.Y.Z`.
+4. Push da branch `main`.
+5. Push da tag.
+
+Exemplo:
+
+```bash
+npm version 2.0.3 --no-git-tag-version
+git add -A
+git commit -m "chore: release web v2.0.3 docs"
+git tag -a v2.0.3 -m "Web v2.0.3"
+git push origin main
+git push origin v2.0.3
+```

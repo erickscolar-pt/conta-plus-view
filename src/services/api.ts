@@ -1,8 +1,7 @@
 import axios, { AxiosError } from 'axios'
-import { parseCookies } from 'nookies'
 import { AuthTokenError } from './errors/AuthTokenError'
 import Router from 'next/router'
-import { destroyCookie } from 'nookies'
+import { parseRequestCookies } from '@/utils/cookies'
 
 function getErrorMessage(data: unknown): string {
   if (data && typeof data === 'object') {
@@ -19,13 +18,16 @@ function getErrorMessage(data: unknown): string {
 }
 
 export function setupAPIClient(ctx = undefined) {
-  const cookies = parseCookies(ctx)
+  const cookies = parseRequestCookies(ctx)
+  const isBrowser = typeof window !== 'undefined'
 
   const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL,
-    headers: {
-      Authorization: `Bearer ${cookies['@nextauth.token']}`,
-    },
+    baseURL: isBrowser ? '/api/backend' : process.env.NEXT_PUBLIC_API_URL,
+    headers: isBrowser
+      ? undefined
+      : {
+          Authorization: `Bearer ${cookies['@nextauth.token']}`,
+        },
   })
 
   api.interceptors.response.use(
@@ -34,7 +36,7 @@ export function setupAPIClient(ctx = undefined) {
       const status = error.response?.status
       if (status === 401) {
         if (typeof window !== 'undefined') {
-          destroyCookie(undefined, '@nextauth.token')
+          axios.post('/api/auth/logout').catch(() => undefined)
           Router.push('/login')
         } else {
           return Promise.reject(new AuthTokenError())
