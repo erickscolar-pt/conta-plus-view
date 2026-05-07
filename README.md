@@ -4,7 +4,7 @@ Frontend web do Conta Plus, construído com Next.js Pages Router. Ele consome a 
 
 ## Stack
 
-- Next.js 14
+- Next.js 15
 - React 18
 - Sass + Tailwind configurado
 - Axios
@@ -82,10 +82,12 @@ Fluxo sugerido para atualizar:
 cd /caminho/conta-plus-view
 git pull origin main
 npm install
-npm run build
+npm run build:deploy
 pm2 restart conta-plus-view
 pm2 save
 ```
+
+**Importante:** depois de remover dependências (por exemplo `nookies`) ou mudar rotas/API, use sempre `npm run build:deploy` (ou apague manualmente `.next` antes do `next build`). Se o diretório `.next` for antigo, o servidor pode tentar carregar módulos que não existem mais no `package.json`.
 
 Primeira execução com PM2:
 
@@ -103,6 +105,25 @@ curl http://localhost:3000
 ```
 
 O Nginx deve encaminhar `https://contaplus.app.br` para a porta onde o Next está rodando. O Cloudflare cuida do DNS e da camada pública do domínio.
+
+## Resolução de problemas
+
+### `Cannot find module 'nookies'`
+
+O código atual não usa mais `nookies`. Esse erro quase sempre significa que o servidor está rodando um build antigo em `.next`.
+
+No servidor:
+
+```bash
+cd /opt/fontes/conta-plus-view   # ou o caminho do seu clone
+git pull origin main
+npm install
+rm -rf .next
+npm run build
+pm2 restart conta-plus-view
+```
+
+Ou, a partir desta versão, use `npm run build:deploy`, que remove `.next` antes do `next build`.
 
 ## Checklist De Deploy
 

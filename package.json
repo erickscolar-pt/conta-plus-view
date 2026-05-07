@@ -1,8 +1,10 @@
 {
   "name": "conta-plus-view",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "private": true,
   "scripts": {
+    "prebuild:clean": "node -e \"try{require('fs').rmSync('.next',{recursive:true,force:true})}catch(e){if(e.code!=='ENOENT')throw e}\"",
+    "build:deploy": "npm run prebuild:clean && next build",
     "build": "next build",
     "start": "next start",
     "dev": "next dev",
