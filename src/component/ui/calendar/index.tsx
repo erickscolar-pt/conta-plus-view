@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { MdCalendarMonth, MdToday } from "react-icons/md";
 
 interface CalendarProps {
-  onDateSelect: (date: Date, type?: "day" | "month") => void;
+  onDateSelect: (date: Date, type: "day" | "month") => void;
   type?: "day" | "month";
   hideType?: boolean;
   hideButton?: boolean;

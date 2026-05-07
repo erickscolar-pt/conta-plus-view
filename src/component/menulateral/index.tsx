@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useRef } from "react";
+import { useEffect, useState, useContext, useRef, type ChangeEvent } from "react";
 import Router, { useRouter } from "next/router";
 import { AuthContexts } from "@/contexts/AuthContexts";
 import Modal from "../ui/modal";
@@ -25,12 +25,12 @@ export default function MenuLateral() {
   const [loadingSendFileExcel, setLoadingSendFileExcel] = useState(false);
   const [isModalExcel, setIsModalExcel] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (window) {
-      setId(parseInt(sessionStorage.getItem("id")));
-    }
+    if (typeof window === "undefined") return;
+    const raw = sessionStorage.getItem("id");
+    setId(parseInt(raw ?? "0", 10));
   }, []);
 
   const handleCloseExcel = () => {
@@ -65,7 +65,7 @@ export default function MenuLateral() {
     }
   };
 
-  const handleFileChange = (event) => {
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     setSelectedFile(file || null);
   };
@@ -82,7 +82,7 @@ export default function MenuLateral() {
       const response = await apiClient.post(`/files/import-file`, formData);
       setSelectedFile(null);
       if (fileInputRef.current) {
-        fileInputRef.current.value = null;
+        fileInputRef.current.value = '';
         fileInputRef.current.type = "text";
         fileInputRef.current.type = "file";
       }
@@ -110,7 +110,7 @@ export default function MenuLateral() {
       setLoadingSendFileExcel(false);
       setSelectedFile(null);
       if (fileInputRef.current) {
-        fileInputRef.current.value = null;
+        fileInputRef.current.value = '';
         fileInputRef.current.type = "text";
         fileInputRef.current.type = "file";
       }

@@ -352,7 +352,10 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
             <InputMoney value={valor} onChange={(v) => setValor(v)} />
           </label>
           <span className={modalMuted}>
-            Data de inclusão: {formatDate(modalObjetivos?.data_inclusao)}
+            Data de inclusão:{' '}
+            {modalObjetivos?.data_inclusao
+              ? formatDate(modalObjetivos.data_inclusao)
+              : '—'}
           </span>
           <ButtonPages
             bg="#059669"

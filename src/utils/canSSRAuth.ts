@@ -2,7 +2,9 @@ import { jwtDecode } from 'jwt-decode';
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { clearAuthCookie, parseRequestCookies } from './cookies';
 
-export function canSSRAuth<P>(fn: GetServerSideProps<P>) {
+export function canSSRAuth<P extends { [key: string]: any } = { [key: string]: any }>(
+  fn: (ctx: GetServerSidePropsContext) => Promise<GetServerSidePropsResult<P>>,
+): GetServerSideProps<P> {
   return async (ctx: GetServerSidePropsContext): Promise<GetServerSidePropsResult<P>> => {
     const cookies = parseRequestCookies(ctx);
     const token = cookies['@nextauth.token'];

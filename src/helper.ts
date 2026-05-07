@@ -16,16 +16,16 @@ export function formatVinculoUsername(renda: Rendas) {
     return '-';
 }
 
-export function formatarMoeda(valor) {
+export function formatarMoeda(valor: number) {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
-export function validateEmail(email) {
+export function validateEmail(email: string) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 };
 
-export function isValidUsername (username) {
+export function isValidUsername(username: string) {
     const regex = /^[a-zA-Z0-9_-]+$/;
     return regex.test(username);
 };

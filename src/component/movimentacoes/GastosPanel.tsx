@@ -2,7 +2,7 @@ import { Table } from "@/component/ui/table";
 import { getErrorMessage, setupAPIClient } from "@/services/api";
 import { AxiosError } from "axios";
 import { formatCurrency, formatDate } from "@/helper";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent } from "react";
 import Modal from "@/component/ui/modal";
 import {
   modalInfo,
@@ -39,10 +39,10 @@ export interface GastosPanelProps {
 interface RequestData {
   nome_divida: string;
   valor: number;
-  valor_debito_vinculo?: number;
+  valor_debito_vinculo?: number | null;
   data_inclusao?: Date;
-  vinculo_id?: number;
-  ref_debt?: number;
+  vinculo_id?: number | null;
+  ref_debt?: number | null;
   installments?: number;
   tipoDividaId: number;
 }
@@ -212,7 +212,7 @@ export default function GastosPanel({
       render: (divida: Dividas) => (
         <Toggle
           key={divida.id}
-          checked={divida.payment}
+          checked={divida.payment ?? false}
           onChange={(e) => handleTogglePaid(divida.id, e.target.checked)}
         />
       ),
@@ -272,8 +272,8 @@ export default function GastosPanel({
     if (divida.vinculo) {
       setSelectedValueEdit(JSON.stringify(divida.vinculo.id));
     }
-    setTipoDividaEditSelected(divida.tipo_divida_id);
-    setRefDebt(divida.ref_debt);
+    setTipoDividaEditSelected(divida.tipo_divida_id ?? 0);
+    setRefDebt(divida.ref_debt ?? 0);
     setModalDividas(divida);
     setEditValorDebt(divida.valor_debito_vinculo);
     setNomeDivida(divida.nome_divida);
@@ -435,8 +435,9 @@ export default function GastosPanel({
         setRendas(responserendas.data);
         setDividas(response.data);
       }
-    } catch (error) {
-      console.error("Erro ao buscar as Dividas:", error.message);
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      console.error("Erro ao buscar as Dividas:", msg);
       setDividas([]);
       setRendas([]);
     }
@@ -463,30 +464,31 @@ export default function GastosPanel({
       } else {
         setDividas(initialDividas);
       }
-    } catch (error) {
-      console.error("Erro ao buscar as Dividas:", error.message);
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      console.error("Erro ao buscar as Dividas:", msg);
       setDividas([]);
     }
   };
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedValue(event.target.value);
   };
 
-  const handleChangeEdit = (event) => {
+  const handleChangeEdit = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedValueEdit(event.target.value);
   };
 
-  function handleCreateValor(novoValor) {
+  function handleCreateValor(novoValor: number) {
     setCreateValor(novoValor);
   }
 
-  const handleChangeTipoDivida = (event) => {
+  const handleChangeTipoDivida = (event: ChangeEvent<HTMLSelectElement>) => {
     setTipoDividaSelected(event.target.value);
   };
 
-  const handleChangeEditTipoDivida = (event) => {
-    setTipoDividaEditSelected(event.target.value);
+  const handleChangeEditTipoDivida = (event: ChangeEvent<HTMLSelectElement>) => {
+    setTipoDividaEditSelected(Number(event.target.value));
   };
 
   async function refreshDebtTypes() {
@@ -811,12 +813,18 @@ export default function GastosPanel({
             </div>
           )}
           <span className={modalMuted}>
-            Vencimento: {formatDate(modalDividas?.data_inclusao)}
+            Vencimento:{' '}
+            {modalDividas?.data_inclusao
+              ? formatDate(modalDividas.data_inclusao)
+              : '—'}
           </span>
           <ButtonPages
             bg="#dc2626"
             loading={loading}
-            onClick={() => saveEdit(modalDividas?.id)}
+            onClick={() => {
+              if (modalDividas?.id == null) return;
+              void saveEdit(modalDividas.id);
+            }}
           >
             Salvar
           </ButtonPages>

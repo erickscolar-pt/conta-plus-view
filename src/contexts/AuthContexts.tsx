@@ -7,12 +7,12 @@ import { toast } from 'react-toastify';
 import Router from 'next/router';
 
 type AuthContextData = {
-  usuario: UsuarioProps;
+  usuario: UsuarioProps | undefined;
   isAuthenticated: boolean;
   signIn: (credentials: SignInProps) => Promise<void>;
   signOut: () => Promise<void>;
-  signUp: (credentials: SignUpProps) => Promise<{ data: unknown }>
-}
+  signUp: (credentials: SignUpProps) => Promise<{ data: unknown }>;
+};
 
 type UsuarioProps = {
   id: number;

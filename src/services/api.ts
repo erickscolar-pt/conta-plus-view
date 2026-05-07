@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios'
+import type { GetServerSidePropsContext } from 'next'
 import { AuthTokenError } from './errors/AuthTokenError'
 import Router from 'next/router'
 import { parseRequestCookies } from '@/utils/cookies'
@@ -17,7 +18,7 @@ function getErrorMessage(data: unknown): string {
   return 'Ocorreu um erro na requisição.'
 }
 
-export function setupAPIClient(ctx = undefined) {
+export function setupAPIClient(ctx?: GetServerSidePropsContext) {
   const cookies = parseRequestCookies(ctx)
   const isBrowser = typeof window !== 'undefined'
 
