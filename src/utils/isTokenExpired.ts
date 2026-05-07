@@ -1,8 +1,8 @@
 import { jwtDecode } from 'jwt-decode';
-import { parseCookies } from 'nookies';
+import { parseRequestCookies } from './cookies';
 // Função para verificar se o token JWT está expirado
 export function isTokenExpired(): boolean {
-  const cookies = parseCookies();
+  const cookies = parseRequestCookies();
   const token = cookies['@nextauth.token'];
 
   if (!token) {

@@ -1,5 +1,4 @@
 import { AppProps } from "next/app";
-import { Inter } from "next/font/google";
 import "../../styles/globals.scss";
 import Head from "next/head";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,14 +7,9 @@ import { AuthProvider } from "../contexts/AuthContexts";
 import GoogleAnalytics from "@/component/GoogleAnalytics";
 import AvisosDeAtualizacao from "@/component/avisosdeatualizacao";
 
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-});
-
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <div className={`${inter.className} min-h-screen font-sans antialiased`}>
+    <div className="min-h-screen font-sans antialiased">
       <Head>
         <title>Conta+</title>
         <meta

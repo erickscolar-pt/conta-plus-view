@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios'
-import { parseCookies } from 'nookies'
 import { AuthTokenError } from './errors/AuthTokenError'
 import Router from 'next/router'
+import { parseRequestCookies } from '@/utils/cookies'
 
 function getErrorMessage(data: unknown): string {
   if (data && typeof data === 'object') {
@@ -18,7 +18,7 @@ function getErrorMessage(data: unknown): string {
 }
 
 export function setupAPIClient(ctx = undefined) {
-  const cookies = parseCookies(ctx)
+  const cookies = parseRequestCookies(ctx)
   const isBrowser = typeof window !== 'undefined'
 
   const api = axios.create({
