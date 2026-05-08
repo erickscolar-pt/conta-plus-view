@@ -2,7 +2,7 @@ import { Table } from "@/component/ui/table";
 import { getErrorMessage, setupAPIClient } from "@/services/api";
 import { AxiosError } from "axios";
 import { formatCurrency, formatDate } from "@/helper";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Modal from "@/component/ui/modal";
 import {
   modalInput,
@@ -248,7 +248,7 @@ export default function GanhosPanel({
   };
   const handleCloseCreate = () => setIsModalCreate(false);
 
-  const fetchRendas = async () => {
+  const fetchRendas = useCallback(async () => {
     const apiClient = setupAPIClient();
     try {
       if (filterDate !== "") {
@@ -263,20 +263,17 @@ export default function GanhosPanel({
     } catch {
       setRendas([]);
     }
-  };
+  }, [filterDate, filterType]);
 
   const filterRendasByDate = async (date: Date, type: "day" | "month") => {
-    const apiClient = setupAPIClient();
     try {
       if (date && type) {
         const formattedDate = date.toISOString().split("T")[0] + "T03:00:00Z";
         setFilterDate(formattedDate);
         setFilterType(type);
-        const response = await apiClient.get(
-          `/rendas/${formattedDate}/${type}`,
-        );
-        setRendas(response.data);
       } else {
+        setFilterDate("");
+        setFilterType("day");
         setRendas(initialRendas);
       }
     } catch {
@@ -285,8 +282,8 @@ export default function GanhosPanel({
   };
 
   useEffect(() => {
-    fetchRendas();
-  }, []);
+    void fetchRendas();
+  }, [fetchRendas]);
 
   const btnClass = embedded
     ? "inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400"

@@ -1,7 +1,7 @@
 import LoggedLayout from "@/component/layout/LoggedLayout";
 import { canSSRAuth } from "@/utils/canSSRAuth";
 import { setupAPIClient } from "@/services/api";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import ChartGrafic from "@/component/chartgrafic";
 import NotFound from "@/component/notfound";
@@ -172,38 +172,7 @@ export default function Dashboard({
     );
   };
 
-  useEffect(() => {
-    if (!router.isReady || initializedFromQuery.current) return;
-    initializedFromQuery.current = true;
-
-    const qp = Array.isArray(router.query.preset)
-      ? router.query.preset[0]
-      : router.query.preset;
-    const qs = Array.isArray(router.query.start)
-      ? router.query.start[0]
-      : router.query.start;
-    const qe = Array.isArray(router.query.end)
-      ? router.query.end[0]
-      : router.query.end;
-
-    if (qp) {
-      const { start, end } = presetRange(qp);
-      setPreset(qp);
-      setDateStart(start);
-      setDateEnd(end);
-      handleFetch(start, end);
-      return;
-    }
-
-    if (qs && qe) {
-      setPreset("custom");
-      setDateStart(qs);
-      setDateEnd(qe);
-      handleFetch(qs, qe);
-    }
-  }, [router.isReady]);
-
-  const handleFetch = async (start: string, end: string) => {
+  const handleFetch = useCallback(async (start: string, end: string) => {
     setLoading(true);
     try {
       const apiClient = setupAPIClient();
@@ -216,7 +185,48 @@ export default function Dashboard({
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (!router.isReady || initializedFromQuery.current) return;
+
+    const qp = Array.isArray(router.query.preset)
+      ? router.query.preset[0]
+      : router.query.preset;
+    const qs = Array.isArray(router.query.start)
+      ? router.query.start[0]
+      : router.query.start;
+    const qe = Array.isArray(router.query.end)
+      ? router.query.end[0]
+      : router.query.end;
+
+    if (qp) {
+      initializedFromQuery.current = true;
+      const { start, end } = presetRange(qp);
+      setPreset(qp);
+      setDateStart(start);
+      setDateEnd(end);
+      void handleFetch(start, end);
+      return;
+    }
+
+    if (qs && qe) {
+      initializedFromQuery.current = true;
+      setPreset("custom");
+      setDateStart(qs);
+      setDateEnd(qe);
+      void handleFetch(qs, qe);
+      return;
+    }
+
+    initializedFromQuery.current = true;
+  }, [
+    router.isReady,
+    router.query.preset,
+    router.query.start,
+    router.query.end,
+    handleFetch,
+  ]);
 
   const applyPreset = async (p: string) => {
     setPreset(p);
@@ -255,10 +265,22 @@ export default function Dashboard({
   const anosText = 0;
   const mesesText = 0;
 
-  const transactions = graficoBarra?.transactions ?? [];
-  const byType = graficoBarra?.insights?.byType ?? [];
-  const paidVsOpenByType = graficoBarra?.insights?.paidVsOpenByType ?? [];
-  const cumulativeBalance = graficoBarra?.insights?.cumulativeBalance ?? [];
+  const transactions = useMemo(
+    () => graficoBarra?.transactions ?? [],
+    [graficoBarra],
+  );
+  const byType = useMemo(
+    () => graficoBarra?.insights?.byType ?? [],
+    [graficoBarra],
+  );
+  const paidVsOpenByType = useMemo(
+    () => graficoBarra?.insights?.paidVsOpenByType ?? [],
+    [graficoBarra],
+  );
+  const cumulativeBalance = useMemo(
+    () => graficoBarra?.insights?.cumulativeBalance ?? [],
+    [graficoBarra],
+  );
   const selectedDebtTotal =
     selectedDebtType === "all"
       ? totals.saidas

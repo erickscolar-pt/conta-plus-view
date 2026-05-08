@@ -3,7 +3,7 @@ import { canSSRAuth } from "@/utils/canSSRAuth";
 import { Table } from "@/component/ui/table";
 import { getErrorMessage, setupAPIClient } from "@/services/api";
 import { formatCurrency, formatDate } from "@/helper";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Modal from "@/component/ui/modal";
 import Calendar from "@/component/ui/calendar";
 import { toast } from "react-toastify";
@@ -214,7 +214,7 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
   const handleCloseEdit = () => setIsModalEdit(false);
   const handleCloseCreate = () => setIsModalCreate(false);
 
-  const fetchObjetivos = async () => {
+  const fetchObjetivos = useCallback(async () => {
     const apiClient = setupAPIClient();
     try {
       if (filterDate !== "") {
@@ -229,20 +229,17 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
     } catch {
       setObjetivos([]);
     }
-  };
+  }, [filterDate, filterType]);
 
   const filterObjetivosByDate = async (date: Date, type: "day" | "month") => {
-    const apiClient = setupAPIClient();
     try {
       if (date && type) {
         const formattedDate = date.toISOString().split("T")[0] + "T03:00:00Z";
         setFilterDate(formattedDate);
         setFilterType(type);
-        const response = await apiClient.get(
-          `/objetivos/${formattedDate}/${type}`,
-        );
-        setObjetivos(response.data);
       } else {
+        setFilterDate("");
+        setFilterType("day");
         setObjetivos(initialObjetivos);
       }
     } catch {
@@ -251,8 +248,8 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
   };
 
   useEffect(() => {
-    fetchObjetivos();
-  }, []);
+    void fetchObjetivos();
+  }, [fetchObjetivos]);
 
   return (
     <>

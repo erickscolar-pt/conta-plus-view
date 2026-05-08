@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Link from "next/link";
 import { FaArrowRight, FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Router from "next/router";
@@ -146,19 +147,19 @@ export default function Step1({
           />
           <span className="text-sm text-slate-300">
             Eu aceito os{" "}
-            <a
+            <Link
               href="/termosdeuso"
               className="font-medium text-emerald-400 underline underline-offset-2 hover:text-emerald-300"
             >
               termos de uso
-            </a>{" "}
+            </Link>{" "}
             e a{" "}
-            <a
+            <Link
               href="/politicadeprivacidade"
               className="font-medium text-emerald-400 underline underline-offset-2 hover:text-emerald-300"
             >
               política de privacidade
-            </a>
+            </Link>
             .
           </span>
         </label>

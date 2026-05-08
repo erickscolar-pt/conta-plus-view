@@ -2,7 +2,7 @@ import { Table } from "@/component/ui/table";
 import { getErrorMessage, setupAPIClient } from "@/services/api";
 import { AxiosError } from "axios";
 import { formatCurrency, formatDate } from "@/helper";
-import { useEffect, useMemo, useState, type ChangeEvent } from "react";
+import { useCallback, useEffect, useMemo, useState, type ChangeEvent } from "react";
 import Modal from "@/component/ui/modal";
 import {
   modalInfo,
@@ -416,7 +416,7 @@ export default function GastosPanel({
     setIsModalCreate(false);
   };
 
-  const fetchDividas = async () => {
+  const fetchDividas = useCallback(async () => {
     const apiClient = setupAPIClient();
     try {
       if (filterDate !== "") {
@@ -441,28 +441,19 @@ export default function GastosPanel({
       setDividas([]);
       setRendas([]);
     }
-  };
+  }, [filterDate, filterType]);
 
   const filterDividasByDate = async (date: Date, type: "day" | "month") => {
-    const apiClient = setupAPIClient();
     try {
       if (date && type) {
         const formattedDate = date.toISOString().split("T")[0] + "T03:00:00Z";
-
         setFilterDate(formattedDate);
         setFilterType(type);
-
-        const response = await apiClient.get(
-          `/dividas/${formattedDate}/${type}`
-        );
-        const responseRendas = await apiClient.get(
-          `/rendas/${formattedDate}/month`
-        );
-
-        setDividas(response.data);
-        setRendas(responseRendas.data);
       } else {
+        setFilterDate("");
+        setFilterType("day");
         setDividas(initialDividas);
+        setRendas(initialRendas);
       }
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : String(error);
@@ -491,7 +482,7 @@ export default function GastosPanel({
     setTipoDividaEditSelected(Number(event.target.value));
   };
 
-  async function refreshDebtTypes() {
+  const refreshDebtTypes = useCallback(async () => {
     try {
       const apiClient = setupAPIClient();
       const response = await apiClient.get("/dividas/types");
@@ -499,7 +490,7 @@ export default function GastosPanel({
     } catch {
       // mantém lista existente
     }
-  }
+  }, []);
 
   async function createDebtType() {
     const nome = newDebtTypeName.trim();
@@ -541,9 +532,9 @@ export default function GastosPanel({
   }, [tipodivida]);
 
   useEffect(() => {
-    fetchDividas();
-    refreshDebtTypes();
-  }, []);
+    void fetchDividas();
+    void refreshDebtTypes();
+  }, [fetchDividas, refreshDebtTypes]);
 
   const createBtnClass = embedded
     ? "inline-flex items-center gap-2 rounded-xl bg-red-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-red-500/25 transition hover:bg-red-400"

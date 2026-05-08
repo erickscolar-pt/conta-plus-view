@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 export default function CookieConsent() {
   const [consent, setConsent] = useState(false);
@@ -23,9 +24,9 @@ export default function CookieConsent() {
     <div className="fixed bottom-0 left-0 w-full bg-gray-800 text-white p-4 z-50 flex flex-col md:flex-row items-center justify-between">
       <div className="mb-2 md:mb-0">
         Este site utiliza cookies para melhorar a experiência do usuário. Ao continuar navegando, você concorda com a nossa{' '}
-        <a href="/politicadecookies" className="underline text-blue-400">
+        <Link href="/politicadecookies" className="underline text-blue-400">
           Política de Cookies
-        </a>.
+        </Link>.
       </div>
       <button
         onClick={handleAccept}
