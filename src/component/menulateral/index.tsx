@@ -15,6 +15,7 @@ import {
   MdLogout,
   MdImportExport,
   MdShoppingCart,
+  MdAutoAwesome,
 } from "react-icons/md";
 
 export default function MenuLateral() {
@@ -197,6 +198,14 @@ export default function MenuLateral() {
             title="Calculadora de mercado"
           >
             <MdShoppingCart size={24} />
+          </button>
+          <button
+            type="button"
+            className={navBtn(path === "/ai" || path.startsWith("/ai/"))}
+            onClick={() => Router.push("/ai")}
+            title="Conta+ AI"
+          >
+            <MdAutoAwesome size={24} />
           </button>
           <button
             type="button"
