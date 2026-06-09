@@ -1,6 +1,6 @@
 {
   "name": "conta-plus-view",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "scripts": {
     "prebuild:clean": "node -e \"try{require('fs').rmSync('.next',{recursive:true,force:true})}catch(e){if(e.code!=='ENOENT')throw e}\"",
@@ -16,6 +16,7 @@
     "@react-icons/all-files": "^4.1.0",
     "axios": "^1.15.2",
     "chart.js": "4.4.3",
+    "framer-motion": "^11.0.0",
     "jwt-decode": "^4.0.0",
     "next": "^15.5.15",
     "react": "^18",

@@ -50,9 +50,9 @@ export default function Home() {
         />
       </Head>
 
-      <div className="min-h-screen bg-slate-950 text-slate-100">
+      <div className="min-h-screen bg-cp-base text-white">
         {/* Nav */}
-        <header className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
+        <header className="fixed inset-x-0 top-0 z-40 border-b border-white/[0.08] bg-cp-base/80 backdrop-blur-xl">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
             <Link href="/" className="flex items-center gap-2">
               <Image
@@ -85,136 +85,196 @@ export default function Home() {
         <main>
           {/* Hero */}
           <section className="relative overflow-hidden pt-24 pb-16 sm:pt-28 sm:pb-24 lg:pb-32">
-            <div
-              className="pointer-events-none absolute -left-40 top-20 h-96 w-96 rounded-full bg-emerald-500/25 blur-[100px]"
-              aria-hidden
-            />
-            <div
-              className="pointer-events-none absolute -right-20 top-40 h-80 w-80 rounded-full bg-cyan-500/20 blur-[90px]"
-              aria-hidden
-            />
-            <div
-              className="pointer-events-none absolute bottom-0 left-1/2 h-64 w-[120%] -translate-x-1/2 bg-gradient-to-t from-slate-950 via-transparent to-transparent"
-              aria-hidden
-            />
+            <div className="pointer-events-none absolute -left-40 top-20 h-96 w-96 rounded-full bg-dash/20 blur-[120px]" aria-hidden />
+            <div className="pointer-events-none absolute -right-20 top-40 h-80 w-80 rounded-full bg-ai/15 blur-[100px]" aria-hidden />
 
             <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
-              <div className="mx-auto max-w-3xl text-center">
-                <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300 sm:text-sm">
-                  <MdRocketLaunch className="text-emerald-400" aria-hidden />
-                  Gestão financeira pensada para o dia a dia
-                </p>
-                <h1 className="text-balance bg-gradient-to-br from-white via-slate-100 to-slate-400 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl sm:leading-[1.1] lg:text-6xl">
-                  O controle do seu dinheiro, simples como deve ser
-                </h1>
-                <p className="mx-auto mt-6 max-w-2xl text-pretty text-base leading-relaxed text-slate-400 sm:text-lg">
-                  Entradas e saídas no mesmo lugar, metas que você acompanha e
-                  um painel que mostra onde está cada real — sem planilhas
-                  complicadas.
-                </p>
-                <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
-                  <Link
-                    href="/signup"
-                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-emerald-500 px-8 py-4 text-base font-semibold text-white shadow-xl shadow-emerald-500/30 transition hover:bg-emerald-400"
-                  >
-                    Começar agora — é grátis
-                    <MdArrowForward className="text-xl" aria-hidden />
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => setIsModalOpen(true)}
-                    className="inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/5 px-8 py-4 text-base font-semibold text-white transition hover:bg-white/10"
-                  >
-                    Já tenho conta
-                  </button>
+              <div className="grid items-center gap-12 lg:grid-cols-2">
+                <div>
+                  <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-dash/30 bg-dash/10 px-3 py-1 text-xs font-medium text-dash sm:text-sm">
+                    <MdRocketLaunch aria-hidden />
+                    SaaS financeiro com IA
+                  </p>
+                  <h1 className="text-balance text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl lg:leading-[1.08]">
+                    Controle seu dinheiro e{" "}
+                    <span className="bg-gradient-to-r from-dash via-emerald-300 to-cyan-300 bg-clip-text text-transparent">
+                      conquiste seus sonhos
+                    </span>
+                  </h1>
+                  <p className="mt-6 max-w-xl text-pretty text-base leading-relaxed text-cp-muted sm:text-lg">
+                    Organize receitas, despesas, metas e dívidas em um único lugar.
+                    Importação automática e IA financeira premium.
+                  </p>
+                  <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                    <Link
+                      href="/signup"
+                      className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-dash to-brand-600 px-8 py-4 text-base font-semibold text-white shadow-glow transition hover:brightness-110"
+                    >
+                      Criar conta grátis
+                      <MdArrowForward aria-hidden />
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => setIsModalOpen(true)}
+                      className="inline-flex items-center justify-center rounded-2xl border border-white/[0.08] bg-cp-card px-8 py-4 text-base font-semibold text-white transition hover:bg-cp-card-secondary"
+                    >
+                      Ver demonstração
+                    </button>
+                  </div>
+                  <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
+                    {[
+                      ["+25.000", "usuários"],
+                      ["+180M", "movimentados"],
+                      ["98%", "satisfação"],
+                      ["4.8", "estrelas"],
+                    ].map(([val, label]) => (
+                      <div key={label} className="rounded-xl border border-white/[0.08] bg-cp-card px-3 py-2">
+                        <p className="text-lg font-bold text-white">{val}</p>
+                        <p className="text-[10px] uppercase tracking-wider text-cp-subtle">{label}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <ul className="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-slate-500">
-                  <li className="flex items-center gap-2">
-                    <MdCheckCircle
-                      className="text-emerald-500"
-                      aria-hidden
-                    />
-                    Sem cartão para testar
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <MdCheckCircle
-                      className="text-emerald-500"
-                      aria-hidden
-                    />
-                    Cadastro em minutos
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <MdCheckCircle
-                      className="text-emerald-500"
-                      aria-hidden
-                    />
-                    Acesso web completo
-                  </li>
-                </ul>
+
+                {/* Hero mockup */}
+                <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
+                  <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-dash/20 to-ai/20 blur-2xl" aria-hidden />
+                  <div className="relative rounded-2xl border border-white/[0.08] bg-cp-card p-4 shadow-glow backdrop-blur-xl">
+                    <div className="mb-3 flex items-center gap-2">
+                      <span className="h-3 w-3 rounded-full bg-expense/80" />
+                      <span className="h-3 w-3 rounded-full bg-amber-400/80" />
+                      <span className="h-3 w-3 rounded-full bg-income/80" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { label: "Receitas", val: "R$ 12.450", color: "text-income" },
+                        { label: "Despesas", val: "R$ 8.320", color: "text-expense" },
+                        { label: "Saldo", val: "R$ 4.130", color: "text-white" },
+                        { label: "Economia", val: "R$ 1.890", color: "text-planning" },
+                      ].map((m) => (
+                        <div key={m.label} className="rounded-xl bg-cp-card-secondary p-3">
+                          <p className="text-[10px] text-cp-subtle">{m.label}</p>
+                          <p className={`text-sm font-bold ${m.color}`}>{m.val}</p>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-3 h-24 rounded-xl bg-gradient-to-t from-dash/10 to-transparent ring-1 ring-white/[0.06]" />
+                    <div className="mt-3 flex items-center gap-2 rounded-xl border border-ai/25 bg-ai/10 px-3 py-2">
+                      <MdBarChart className="text-ai" />
+                      <p className="text-xs text-cp-muted">IA: você pode economizar R$ 500/mês</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
 
-          {/* Features */}
-          <section className="border-t border-white/10 bg-slate-900/50 py-20 sm:py-24">
+          {/* Benefits */}
+          <section className="border-t border-white/[0.08] bg-cp-card/30 py-20">
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
-              <div className="mx-auto max-w-2xl text-center">
-                <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                  Tudo o que você precisa para decidir melhor
-                </h2>
-                <p className="mt-4 text-slate-400">
-                  Ferramentas pensadas para quem quer clareza, não buzzwords.
-                </p>
-              </div>
-
-              <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <h2 className="text-center text-3xl font-bold text-white sm:text-4xl">
+                Tudo para dominar suas finanças
+              </h2>
+              <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
                 {[
-                  {
-                    icon: MdSavings,
-                    title: "Entradas e saídas juntas",
-                    text: "Veja saldo e movimentações em uma única tela — sem alternar abas o tempo todo.",
-                  },
-                  {
-                    icon: MdBarChart,
-                    title: "Painéis que fazem sentido",
-                    text: "Gráficos e totais por período para entender tendências, não só números soltos.",
-                  },
-                  {
-                    icon: MdGroups,
-                    title: "Compartilhamento com quem importa",
-                    text: "Vínculos para alinhar dívidas e objetivos com família ou parceiro(a).",
-                  },
-                  {
-                    icon: MdTrackChanges,
-                    title: "Metas financeiras",
-                    text: "Defina objetivos e acompanhe o quanto já está reservado para cada um.",
-                  },
-                  {
-                    icon: MdUploadFile,
-                    title: "Importação por planilha",
-                    text: "Traga dados de Excel quando precisar migrar ou conferir histórico.",
-                  },
-                  {
-                    icon: MdSecurity,
-                    title: "Seus dados, seu controle",
-                    text: "Acesso por login seguro; a organização começa com você no comando.",
-                  },
-                ].map((item) => (
+                  { icon: MdSavings, title: "Controle financeiro completo" },
+                  { icon: MdTrackChanges, title: "Metas inteligentes" },
+                  { icon: MdUploadFile, title: "Importação automática" },
+                  { icon: MdBarChart, title: "Relatórios avançados" },
+                  { icon: MdRocketLaunch, title: "IA Financeira" },
+                ].map((item, i) => (
                   <div
                     key={item.title}
-                    className="group rounded-2xl border border-white/10 bg-slate-900/80 p-6 transition hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/5"
+                    className="rounded-2xl border border-white/[0.08] bg-cp-card p-5 transition hover:border-dash/30 hover:shadow-glow"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400 transition group-hover:bg-emerald-500/25">
-                      <item.icon className="text-2xl" aria-hidden />
+                    <span className="text-xs font-bold text-dash">{String(i + 1).padStart(2, "0")}</span>
+                    <div className="mt-3 flex h-10 w-10 items-center justify-center rounded-xl bg-dash/15 text-dash">
+                      <item.icon size={22} />
                     </div>
-                    <h3 className="mt-4 text-lg font-semibold text-white">
-                      {item.title}
-                    </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                      {item.text}
-                    </p>
+                    <h3 className="mt-3 text-sm font-semibold text-white">{item.title}</h3>
                   </div>
                 ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Pricing */}
+          <section className="border-t border-white/[0.08] py-20 sm:py-24">
+            <div className="mx-auto max-w-6xl px-4 sm:px-6">
+              <div className="text-center">
+                <p className="text-sm font-semibold uppercase tracking-wider text-ai">
+                  Planos
+                </p>
+                <h2 className="mt-2 text-3xl font-bold text-white sm:text-4xl">
+                  Comece grátis. Evolua com IA Premium.
+                </h2>
+                <p className="mx-auto mt-4 max-w-2xl text-cp-muted">
+                  O plano gratuito já inclui dashboard, metas e importação. O AI Premium
+                  desbloqueia análises e chat ilimitados com seu coach financeiro.
+                </p>
+              </div>
+              <div className="mt-12 grid gap-6 md:grid-cols-2 lg:mx-auto lg:max-w-4xl">
+                <div className="rounded-3xl border border-white/[0.08] bg-cp-card p-8">
+                  <p className="text-sm font-semibold uppercase tracking-wider text-cp-muted">
+                    Grátis
+                  </p>
+                  <p className="mt-3 text-4xl font-bold text-white">
+                    R$ 0
+                    <span className="text-base font-normal text-cp-subtle">/mês</span>
+                  </p>
+                  <ul className="mt-6 space-y-3 text-sm text-cp-muted">
+                    {[
+                      "Dashboard e relatórios completos",
+                      "Metas, dívidas e mercado",
+                      "5 análises IA por mês",
+                      "10 mensagens de chat IA",
+                      "Importação Excel, CSV, OFX e PDF",
+                    ].map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <MdCheckCircle className="mt-0.5 shrink-0 text-primary" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href="/signup"
+                    className="mt-8 flex w-full items-center justify-center rounded-2xl border border-white/[0.08] bg-cp-card-secondary py-3.5 text-sm font-semibold text-white transition hover:border-primary/30"
+                  >
+                    Criar conta grátis
+                  </Link>
+                </div>
+                <div className="relative rounded-3xl border border-ai/30 bg-gradient-to-b from-ai/15 to-cp-card p-8 shadow-glow-ai">
+                  <span className="absolute -top-3 right-6 rounded-full bg-ai px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
+                    Recomendado
+                  </span>
+                  <p className="text-sm font-semibold uppercase tracking-wider text-ai">
+                    AI Premium
+                  </p>
+                  <p className="mt-3 text-4xl font-bold text-white">
+                    R$ 19,90
+                    <span className="text-base font-normal text-cp-subtle">/mês</span>
+                  </p>
+                  <ul className="mt-6 space-y-3 text-sm text-cp-muted">
+                    {[
+                      "Análises financeiras ilimitadas",
+                      "Chat com coach IA ilimitado",
+                      "Score, projeções e plano de dívidas",
+                      "Notificações inteligentes",
+                      "Pagamento via PIX — sem cartão",
+                    ].map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <MdCheckCircle className="mt-0.5 shrink-0 text-ai" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href="/signup"
+                    className="mt-8 flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-ai to-planning py-3.5 text-sm font-semibold text-white shadow-lg transition hover:brightness-110"
+                  >
+                    Começar com Premium
+                  </Link>
+                </div>
               </div>
             </div>
           </section>
@@ -268,9 +328,8 @@ export default function Home() {
                   Pronto para organizar suas finanças?
                 </h2>
                 <p className="mx-auto mt-4 max-w-xl text-slate-300">
-                  Nesta fase o Conta+ está sem cobrança para você testar com
-                  calma. Crie sua conta e use ganhos, gastos, metas e
-                  relatórios.
+                  Plano gratuito completo para organizar suas finanças. Upgrade para AI
+                  Premium quando quiser desbloquear análises e chat ilimitados.
                 </p>
                 <div className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:justify-center">
                   <Link

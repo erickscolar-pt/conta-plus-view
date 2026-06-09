@@ -141,7 +141,7 @@ export default function MercadoPage({ usuario, tipodivida }: Props) {
 
             <form
               onSubmit={createSession}
-              className="rounded-2xl border border-white/10 bg-white/5 p-4"
+              className="cp-card p-4"
             >
               <label className="mb-2 block text-sm text-slate-300">Nova lista</label>
               <div className="flex flex-col gap-3 md:flex-row">
@@ -162,7 +162,7 @@ export default function MercadoPage({ usuario, tipodivida }: Props) {
             </form>
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-              <section className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <section className="cp-card p-4">
                 <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-300">
                   Listas
                 </h2>

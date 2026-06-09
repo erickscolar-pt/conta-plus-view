@@ -8,27 +8,24 @@ type LoggedLayoutProps = {
   children: ReactNode;
 };
 
-/**
- * Shell das telas autenticadas — alinhado à landing (fundo escuro, brilhos, vidro).
- */
 export default function LoggedLayout({ usuario, children }: LoggedLayoutProps) {
   return (
-    <div className="relative flex min-h-screen flex-col bg-slate-950 text-slate-100 md:flex-row">
+    <div className="relative flex min-h-screen bg-cp-base text-white">
       <div
-        className="pointer-events-none fixed -left-40 top-20 h-96 w-96 rounded-full bg-emerald-500/20 blur-[100px]"
+        className="pointer-events-none fixed -left-32 top-0 h-[420px] w-[420px] rounded-full bg-dash/10 blur-[120px]"
         aria-hidden
       />
       <div
-        className="pointer-events-none fixed -right-20 top-40 h-80 w-80 rounded-full bg-cyan-500/15 blur-[90px]"
+        className="pointer-events-none fixed -right-32 top-1/4 h-[360px] w-[360px] rounded-full bg-ai/10 blur-[100px]"
         aria-hidden
       />
       <div
-        className="pointer-events-none fixed bottom-0 left-1/2 h-64 w-[120%] -translate-x-1/2 bg-gradient-to-t from-slate-950 via-transparent to-transparent md:left-24 md:w-full md:translate-x-0"
+        className="pointer-events-none fixed bottom-0 left-1/2 h-48 w-full max-w-4xl -translate-x-1/2 bg-gradient-to-t from-cp-base to-transparent"
         aria-hidden
       />
 
       <MenuLateral />
-      <div className="relative z-10 flex min-w-0 flex-1 flex-col pb-20 md:ml-20 md:pb-8">
+      <div className="relative z-10 flex min-w-0 flex-1 flex-col pb-24 lg:ml-64 lg:pb-0">
         <Header usuario={usuario} />
         {children}
       </div>

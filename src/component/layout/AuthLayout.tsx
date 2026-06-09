@@ -4,35 +4,30 @@ import Link from "next/link";
 import { ReactNode } from "react";
 import imgLogo from "../../../public/logo_login.png";
 
-type SignupLayoutProps = {
+type AuthLayoutProps = {
   title: string;
   description?: string;
-  step: number;
-  totalSteps: number;
   children: ReactNode;
-  /** Oculta o rodapé "Já tem conta?" (ex.: tela de sucesso) */
-  hideFooter?: boolean;
+  footer?: ReactNode;
 };
 
-export default function SignupLayout({
+export default function AuthLayout({
   title,
   description,
-  step,
-  totalSteps,
   children,
-  hideFooter = false,
-}: SignupLayoutProps) {
+  footer,
+}: AuthLayoutProps) {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-cp-base text-slate-100">
+    <div className="relative min-h-screen overflow-hidden bg-cp-base text-white">
       <Head>
         <title>{title}</title>
       </Head>
       <div
-        className="pointer-events-none fixed -left-32 top-20 h-80 w-80 rounded-full bg-emerald-500/20 blur-[90px]"
+        className="pointer-events-none fixed -left-32 top-20 h-80 w-80 rounded-full bg-primary/20 blur-[90px]"
         aria-hidden
       />
       <div
-        className="pointer-events-none fixed -right-24 top-24 h-72 w-72 rounded-full bg-cyan-500/20 blur-[80px]"
+        className="pointer-events-none fixed -right-24 top-24 h-72 w-72 rounded-full bg-ai/15 blur-[80px]"
         aria-hidden
       />
 
@@ -48,9 +43,12 @@ export default function SignupLayout({
               priority
             />
           </Link>
-          <span className="text-xs font-medium text-slate-400">
-            Etapa {step} de {totalSteps}
-          </span>
+          <Link
+            href="/signup"
+            className="text-xs font-medium text-cp-muted transition hover:text-primary"
+          >
+            Criar conta
+          </Link>
         </div>
       </header>
 
@@ -60,25 +58,23 @@ export default function SignupLayout({
             {title}
           </h1>
           {description ? (
-            <p className="mt-2 text-sm text-slate-400 sm:text-base">{description}</p>
+            <p className="mt-2 text-sm text-cp-muted sm:text-base">{description}</p>
           ) : null}
         </div>
 
-        <div className="cp-card p-6 sm:p-8">
-          {children}
-        </div>
+        <div className="cp-card p-6 sm:p-8">{children}</div>
 
-        {!hideFooter ? (
-          <p className="mt-6 text-center text-sm text-slate-500">
-            Já tem conta?{" "}
+        {footer ?? (
+          <p className="mt-6 text-center text-sm text-cp-subtle">
+            Não tem conta?{" "}
             <Link
-              href="/"
-              className="font-medium text-emerald-400 transition hover:text-emerald-300"
+              href="/signup"
+              className="font-medium text-primary transition hover:text-primary-hover"
             >
-              Entrar
+              Criar conta grátis
             </Link>
           </p>
-        ) : null}
+        )}
       </main>
     </div>
   );

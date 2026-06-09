@@ -1,47 +1,85 @@
 import Head from "next/head";
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import LoggedLayout from "@/component/layout/LoggedLayout";
 import { canSSRAuth } from "@/utils/canSSRAuth";
 import { setupAPIClient } from "@/services/api";
 import { Usuario } from "@/model/type";
-import AiScoreCard, { AiCoachCard, AiCreditsBadge } from "@/component/ai/AiScoreCard";
 import AiChat from "@/component/ai/AiChat";
-import {
-  fetchAiCredits,
-  runCoach,
-  runDiagnostic,
-  runProjection,
-  runScore,
-  runDebtPlan,
-} from "@/services/ai";
-import type {
-  AiCreditsStatus,
-  CoachResponse,
-  DiagnosticResponse,
-  ScoreResponse,
-} from "@/types/ai";
-import { getErrorMessage } from "@/services/api";
-import { AxiosError } from "axios";
+import PremiumCard from "@/component/ui/PremiumCard";
+import { AiCreditsBadge } from "@/component/ai/AiScoreCard";
+import { fetchAiCredits, fetchAiNotifications, runCoach } from "@/services/ai";
+import type { AiCreditsStatus, AiNotificationItem, CoachResponse } from "@/types/ai";
+import { formatCurrency } from "@/helper";
+import type { DashboardData } from "@/pages/dashboard/index";
 import { toast } from "react-toastify";
-import { FaWandMagicSparkles, FaChartLine, FaScaleBalanced } from "react-icons/fa6";
+import { FaWandMagicSparkles } from "react-icons/fa6";
+import {
+  MdAutoAwesome,
+  MdSavings,
+  MdTrendingDown,
+  MdAccountBalance,
+  MdLightbulb,
+} from "react-icons/md";
 
-type Props = { usuario: Usuario };
+type Props = {
+  usuario: Usuario;
+  dashboardSnapshot: DashboardData | null;
+};
 
-export default function AiPage({ usuario }: Props) {
+function buildInsightsFromDashboard(data: DashboardData | null): string[] {
+  if (!data) {
+    return ["Adicione movimentações para receber insights personalizados."];
+  }
+  const insights: string[] = [];
+  const commitment = data.insights?.debtCommitment ?? 0;
+  if (commitment > 0) {
+    insights.push(
+      `Suas despesas fixas representam cerca de ${Math.round(commitment)}% da renda no período.`,
+    );
+  }
+  const byType = data.insights?.byType ?? [];
+  if (byType.length > 0) {
+    const top = [...byType].sort((a, b) => b.total - a.total)[0];
+    insights.push(
+      `Maior categoria de gasto: ${top.tipo} (${formatCurrency(top.total)}).`,
+    );
+  }
+  const saldo = data.summary?.saldoPeriodo ?? 0;
+  if (saldo > 0) {
+    insights.push(`Saldo positivo no período: ${formatCurrency(saldo)}.`);
+  } else if (saldo < 0) {
+    insights.push(
+      `Atenção: saldo negativo de ${formatCurrency(Math.abs(saldo))} no período analisado.`,
+    );
+  }
+  return insights.length
+    ? insights.slice(0, 4)
+    : ["Adicione movimentações para receber insights personalizados."];
+}
+
+const QUICK_PROMPTS = [
+  { label: "Analisar meu mês", icon: MdAutoAwesome, message: "Analise minhas finanças deste mês e resuma os pontos principais." },
+  { label: "Como economizar?", icon: MdSavings, message: "Com base no meu perfil financeiro, como posso economizar mais?" },
+  { label: "Estou gastando demais?", icon: MdTrendingDown, message: "Estou gastando demais? Compare com padrões saudáveis." },
+  { label: "Quanto posso investir?", icon: MdAccountBalance, message: "Quanto posso investir com segurança este mês?" },
+  { label: "Criar plano financeiro", icon: MdLightbulb, message: "Crie um plano financeiro personalizado para os próximos 3 meses." },
+];
+
+export default function AiPage({ usuario, dashboardSnapshot }: Props) {
   const [credits, setCredits] = useState<AiCreditsStatus | null>(null);
-  const [score, setScore] = useState<ScoreResponse | null>(null);
+  const [chatSeed, setChatSeed] = useState<string | undefined>();
+  const [insights, setInsights] = useState<string[]>(() =>
+    buildInsightsFromDashboard(dashboardSnapshot),
+  );
+  const [notifications, setNotifications] = useState<AiNotificationItem[]>([]);
+  const [coachLoading, setCoachLoading] = useState(false);
   const [coach, setCoach] = useState<CoachResponse | null>(null);
-  const [diagnostic, setDiagnostic] = useState<DiagnosticResponse | null>(null);
-  const [projection, setProjection] = useState<Record<string, unknown> | null>(null);
-  const [loadingScore, setLoadingScore] = useState(false);
-  const [loadingCoach, setLoadingCoach] = useState(false);
-  const [loadingDiag, setLoadingDiag] = useState(false);
-  const [loadingProj, setLoadingProj] = useState(false);
 
   const refreshCredits = useCallback(async () => {
     try {
-      const c = await fetchAiCredits();
-      setCredits(c);
+      setCredits(await fetchAiCredits());
     } catch {
       /* ignore */
     }
@@ -49,140 +87,132 @@ export default function AiPage({ usuario }: Props) {
 
   useEffect(() => {
     void refreshCredits();
+    void fetchAiNotifications()
+      .then((items) => setNotifications(items as AiNotificationItem[]))
+      .catch(() => undefined);
   }, [refreshCredits]);
 
-  async function handleAnalysis<T>(
-    fn: () => Promise<T>,
-    setData: (d: T) => void,
-    setLoading: (v: boolean) => void,
-    label: string,
-  ) {
-    setLoading(true);
+  async function handleCoachAnalysis() {
+    setCoachLoading(true);
     try {
-      const data = await fn();
-      setData(data as T);
-      void refreshCredits();
-      toast.success(`${label} concluída.`);
-    } catch (error) {
-      const status = (error as AxiosError).response?.status;
-      if (status === 402) {
-        toast.warning("Limite mensal atingido. Assine o Conta+ AI Premium.");
-      } else {
-        toast.error(getErrorMessage((error as AxiosError).response?.data) || "Erro na análise.");
-      }
+      const result = await runCoach();
+      setCoach(result);
+      const fromCoach = [
+        result.resumo,
+        ...result.problemas.slice(0, 2),
+        ...result.recomendacoes.slice(0, 1),
+      ].filter(Boolean);
+      if (fromCoach.length) setInsights(fromCoach.slice(0, 4));
+      await refreshCredits();
+      toast.success("Análise gerada com sucesso.");
+    } catch {
+      toast.error("Não foi possível gerar a análise. Verifique seus créditos.");
     } finally {
-      setLoading(false);
+      setCoachLoading(false);
     }
   }
+
+  const notificationInsights = notifications
+    .filter((n) => !n.read)
+    .slice(0, 3)
+    .map((n) => n.message);
+  const displayInsights =
+    notificationInsights.length > 0 ? notificationInsights : insights;
 
   return (
     <>
       <Head>
-        <title>Conta+ AI | Conta+</title>
+        <title>IA Financeira | Conta+</title>
       </Head>
       <LoggedLayout usuario={usuario}>
-        <main className="relative flex-1 overflow-y-auto px-3 py-6 sm:px-6 md:px-10 md:py-8">
-          <div className="mx-auto max-w-6xl space-y-6">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <div className="mb-1 flex items-center gap-2 text-emerald-400">
-                  <FaWandMagicSparkles />
-                  <span className="text-xs font-semibold uppercase tracking-wider">
-                    Conta+ AI Premium
-                  </span>
+        <main className="relative flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-6xl flex-col gap-6 lg:flex-row">
+            <div className="flex min-w-0 flex-1 flex-col gap-4">
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <div className="mb-1 flex items-center gap-2 text-ai">
+                      <FaWandMagicSparkles />
+                      <span className="text-xs font-semibold uppercase tracking-wider">
+                        IA Financeira
+                      </span>
+                    </div>
+                    <h2 className="text-2xl font-bold text-white md:text-3xl">
+                      Seu consultor financeiro inteligente
+                    </h2>
+                    <p className="mt-1 text-sm text-cp-muted">
+                      Pergunte qualquer coisa sobre seu dinheiro — respostas com seus dados reais.
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-end gap-2">
+                    <AiCreditsBadge credits={credits} />
+                    {credits && !credits.premium && (
+                      <Link
+                        href="/planos"
+                        className="rounded-lg bg-ai/20 px-3 py-1.5 text-xs font-medium text-ai ring-1 ring-ai/30 hover:bg-ai/30"
+                      >
+                        Assinar Premium
+                      </Link>
+                    )}
+                  </div>
                 </div>
-                <h1 className="text-2xl font-bold text-white md:text-3xl">
-                  Seu coach financeiro inteligente
-                </h1>
-                <p className="mt-1 text-sm text-slate-400">
-                  Análises personalizadas com base nas suas movimentações reais.
-                </p>
+              </motion.div>
+
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {QUICK_PROMPTS.map(({ label, icon: Icon, message }) => (
+                  <button
+                    key={label}
+                    type="button"
+                    onClick={() => setChatSeed(message)}
+                    className="flex items-center gap-2 rounded-xl border border-white/[0.08] bg-cp-card p-3 text-left text-sm text-cp-muted transition hover:border-ai/30 hover:bg-ai/5 hover:text-white"
+                  >
+                    <Icon className="shrink-0 text-ai" size={18} />
+                    {label}
+                  </button>
+                ))}
               </div>
-              <AiCreditsBadge credits={credits} />
+
+              <PremiumCard glow="ai" className="min-h-[420px] flex-1 p-4 sm:p-5">
+                <AiChat seedMessage={chatSeed} onMessageSent={() => void refreshCredits()} />
+              </PremiumCard>
             </div>
 
-            <div className="grid gap-4 lg:grid-cols-3">
-              <div className="lg:col-span-1">
-                <AiScoreCard
-                  score={score}
-                  loading={loadingScore}
-                  onRefresh={() =>
-                    void handleAnalysis(runScore, setScore, setLoadingScore, "Score")
-                  }
-                />
-              </div>
-              <div className="lg:col-span-2">
-                <AiCoachCard data={coach} loading={loadingCoach} />
-              </div>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                {
-                  label: "Finance Coach",
-                  icon: FaWandMagicSparkles,
-                  action: () =>
-                    handleAnalysis(runCoach, setCoach, setLoadingCoach, "Coach"),
-                  loading: loadingCoach,
-                },
-                {
-                  label: "Diagnóstico",
-                  icon: FaScaleBalanced,
-                  action: () =>
-                    handleAnalysis(runDiagnostic, setDiagnostic, setLoadingDiag, "Diagnóstico"),
-                  loading: loadingDiag,
-                },
-                {
-                  label: "Projeções",
-                  icon: FaChartLine,
-                  action: () =>
-                    handleAnalysis(runProjection, setProjection, setLoadingProj, "Projeção"),
-                  loading: loadingProj,
-                },
-                {
-                  label: "Plano de dívidas",
-                  icon: FaScaleBalanced,
-                  action: () =>
-                    handleAnalysis(
-                      runDebtPlan,
-                      () => {},
-                      () => {},
-                      "Plano de dívidas",
-                    ).then(() => toast.info("Veja o resultado no chat ou histórico.")),
-                  loading: false,
-                },
-              ].map(({ label, icon: Icon, action, loading }) => (
-                <button
-                  key={label}
-                  type="button"
-                  onClick={() => void action()}
-                  disabled={loading}
-                  className="flex flex-col items-start gap-2 rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-emerald-500/5 p-4 text-left backdrop-blur-xl transition hover:border-emerald-500/30 disabled:opacity-60"
-                >
-                  <Icon className="text-emerald-400" />
-                  <span className="font-medium text-slate-100">{label}</span>
-                  <span className="text-xs text-slate-500">
-                    {loading ? "Processando..." : "Executar análise"}
-                  </span>
-                </button>
-              ))}
-            </div>
-
-            {diagnostic?.resumo && (
-              <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 text-sm text-slate-300">
-                <strong className="text-amber-200">Diagnóstico: </strong>
-                {diagnostic.resumo}
-              </div>
-            )}
-
-            {projection && (
-              <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-4 text-sm text-slate-300">
-                <strong className="text-cyan-200">Projeção: </strong>
-                Consulte os horizontes calculados nos dados retornados pela IA.
-              </div>
-            )}
-
-            <AiChat />
+            <aside className="w-full shrink-0 space-y-4 lg:w-80">
+              <PremiumCard className="p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <h3 className="text-sm font-semibold text-white">Insights IA</h3>
+                    <p className="mt-1 text-xs text-cp-subtle">
+                      Com base nos seus dados reais
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => void handleCoachAnalysis()}
+                    disabled={coachLoading}
+                    className="shrink-0 rounded-lg bg-ai/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-ai ring-1 ring-ai/30 transition hover:bg-ai/30 disabled:opacity-50"
+                  >
+                    {coachLoading ? "…" : "Atualizar"}
+                  </button>
+                </div>
+                {coach?.economiaPotencial ? (
+                  <p className="mt-3 rounded-xl border border-primary/25 bg-primary/10 px-3 py-2 text-xs text-primary">
+                    Economia potencial estimada:{" "}
+                    {formatCurrency(coach.economiaPotencial)}
+                  </p>
+                ) : null}
+                <ul className="mt-4 space-y-3">
+                  {displayInsights.map((text) => (
+                    <li
+                      key={text}
+                      className="rounded-xl border border-ai/20 bg-ai/5 px-3 py-2.5 text-xs leading-relaxed text-cp-muted"
+                    >
+                      {text}
+                    </li>
+                  ))}
+                </ul>
+              </PremiumCard>
+            </aside>
           </div>
         </main>
       </LoggedLayout>
@@ -194,7 +224,19 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
   const apiClient = setupAPIClient(ctx);
   try {
     const user = await apiClient.get("/user/get");
-    return { props: { usuario: user.data } };
+    const end = new Date();
+    const start = new Date();
+    start.setMonth(end.getMonth() - 3);
+    let dashboardSnapshot = null;
+    try {
+      const dash = await apiClient.post(
+        `/dashboard?initial=${start.toISOString().split("T")[0]}&final=${end.toISOString().split("T")[0]}`,
+      );
+      dashboardSnapshot = dash.data;
+    } catch {
+      /* optional */
+    }
+    return { props: { usuario: user.data, dashboardSnapshot } };
   } catch {
     return { redirect: { destination: "/login", permanent: false } };
   }

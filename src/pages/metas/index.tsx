@@ -24,6 +24,8 @@ import {
   modalMuted,
   modalTitle,
 } from "@/component/ui/modal/modalClasses";
+import GoalProgressCard from "@/component/metas/GoalProgressCard";
+import { motion } from "framer-motion";
 import { AxiosError } from "axios";
 
 interface Metas {
@@ -257,26 +259,36 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
         <title>Metas | Conta+</title>
       </Head>
       <LoggedLayout usuario={usuario}>
-        <main className="relative flex-1 overflow-y-auto p-2 sm:p-4 md:p-8">
+        <main className="relative flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
           <header className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-            <div>
-              <h1 className="text-2xl font-bold text-slate-50 sm:text-3xl">
-                Minhas metas
-              </h1>
-              <p className="text-slate-400">
-                Acompanhe seus objetivos e valores guardados. A categoria não pode repetir um tipo de saída.
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+              <p className="text-sm font-medium uppercase tracking-wider text-goals">Metas</p>
+              <h2 className="mt-1 text-2xl font-bold text-white sm:text-3xl">
+                Seus objetivos financeiros
+              </h2>
+              <p className="mt-1 text-sm text-cp-muted">
+                Acompanhe progresso, valor guardado e quanto falta para conquistar cada meta.
               </p>
-            </div>
+            </motion.div>
             <button
               type="button"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400 sm:w-auto"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-goals to-cyan-500 px-5 py-3 font-semibold text-white shadow-lg transition hover:brightness-110 sm:w-auto"
               onClick={() => setIsModalCreate(true)}
             >
               <MdOutlineSavings size={22} />
-              <span>Criar objetivo</span>
+              <span>Criar meta</span>
             </button>
           </header>
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-2 shadow-md backdrop-blur-sm sm:p-4 md:p-6">
+
+          {objetivos.length > 0 && (
+            <div className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {objetivos.map((obj) => (
+                <GoalProgressCard key={obj.id} goal={obj} onEdit={handleEdit} />
+              ))}
+            </div>
+          )}
+
+          <div className="rounded-2xl border border-white/[0.08] bg-cp-card p-2 sm:p-4 md:p-6">
             <div className="mb-6 flex flex-col items-stretch justify-between gap-4 sm:flex-row sm:items-center">
               <Calendar
                 textButton="Filtrar"

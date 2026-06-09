@@ -1,12 +1,10 @@
 import { FormEvent, useContext, useState } from "react";
-import Head from "next/head";
 import { AuthContexts } from "@/contexts/AuthContexts";
 import { canSSRGuest } from "@/utils/canSSRGuest";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Link from "next/link";
-import imgLogo from "../../../public/logo_login.png";
-import Image from "next/image";
+import AuthLayout from "@/component/layout/AuthLayout";
 
 export default function Login() {
   const { signIn } = useContext(AuthContexts);
@@ -25,104 +23,83 @@ export default function Login() {
     }
 
     setLoading(true);
-
-    let data = {
-      username,
-      password,
-    };
-
-    await signIn(data);
+    await signIn({ username, password });
     setLoading(false);
   }
 
   return (
-    <>
-      <Head>
-        <title>Conta Plus - Login</title>
-      </Head>
-
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary to-dashboard px-4">
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
-          {/* Logo */}
-          <div className="text-center mb-6">
-            <div className="flex justify-center mb-2">
-              <Image width={100} src={imgLogo} alt="" />
-            </div>
-            <p className="text-gray-500 mt-1">
-              Entre para gerenciar suas finanças
-            </p>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleLogin} className="flex flex-col gap-4">
-            <div>
-              <label className="block text-gray-700 text-sm font-medium mb-1">
-                Nome de usuário ou E-mail
-              </label>
-              <input
-                type="text"
-                placeholder="Digite seu usuário ou e-mail"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700 text-sm font-medium mb-1">
-                Senha
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="********"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary outline-none pr-10"
-                />
-                <button
-                  type="button"
-                  className="absolute right-3 top-2.5 text-gray-600"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
-              </div>
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-primary text-white py-2 rounded-lg font-bold hover:opacity-90 transition"
-            >
-              {loading ? "Entrando..." : "Entrar"}
-            </button>
-          </form>
-
-          {/* Divider */}
-          <div className="flex items-center my-6">
-            <div className="flex-grow border-t border-gray-300"></div>
-            <span className="px-3 text-gray-500 text-sm">ou</span>
-            <div className="flex-grow border-t border-gray-300"></div>
-          </div>
-
-          {/* Cadastro */}
-          <p className="text-center text-gray-600 text-sm">
-            Não tem conta?{" "}
-            <Link
-              href="/signup"
-              className="text-primary font-bold hover:underline"
-            >
-              Criar Conta
-            </Link>
-          </p>
+    <AuthLayout
+      title="Entrar na sua conta"
+      description="Use seu e-mail ou nome de usuário cadastrado."
+      footer={
+        <p className="mt-6 text-center text-sm text-cp-subtle">
+          Não tem conta?{" "}
+          <Link
+            href="/signup"
+            className="font-medium text-primary transition hover:text-primary-hover"
+          >
+            Criar conta grátis
+          </Link>
+        </p>
+      }
+    >
+      <form onSubmit={handleLogin} className="flex flex-col gap-5">
+        <div>
+          <label className="mb-2 block text-sm font-medium text-slate-300">
+            E-mail ou nome de usuário
+          </label>
+          <input
+            type="text"
+            placeholder="ex: seu@email.com"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            autoComplete="username"
+            className="w-full rounded-xl border border-white/[0.08] bg-cp-base px-4 py-3 text-white placeholder:text-cp-subtle focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
         </div>
-      </div>
-    </>
+
+        <div>
+          <label className="mb-2 block text-sm font-medium text-slate-300">
+            Senha
+          </label>
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              className="w-full rounded-xl border border-white/[0.08] bg-cp-base py-3 pl-4 pr-12 text-white placeholder:text-cp-subtle focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/30"
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-cp-muted transition hover:text-white"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="mt-1 w-full rounded-xl bg-primary py-3.5 text-sm font-semibold text-cp-base shadow-lg shadow-primary/25 transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {loading ? "Entrando…" : "Entrar"}
+        </button>
+      </form>
+
+      <p className="mt-6 text-center text-xs text-cp-subtle">
+        <Link href="/" className="transition hover:text-cp-muted">
+          ← Voltar para a página inicial
+        </Link>
+      </p>
+    </AuthLayout>
   );
 }
 
-export const getServerSideProps = canSSRGuest(async (ctx) => {
-  return {
-    props: {},
-  };
+export const getServerSideProps = canSSRGuest(async () => {
+  return { props: {} };
 });

@@ -11,9 +11,9 @@ import { toast } from "react-toastify";
 import {
   FaArrowTrendUp,
   FaArrowTrendDown,
-  FaBullseye,
   FaScaleBalanced,
   FaTableList,
+  FaPiggyBank,
 } from "react-icons/fa6";
 import { MdFilterAltOff, MdLink } from "react-icons/md";
 import ChartGraficLine from "@/component/chartgraficline";
@@ -347,26 +347,39 @@ export default function Dashboard({
         ? "Atenção"
         : "Saudável";
 
+  const monthTrend = useMemo(() => {
+    const aligned = graficoBarra?.aligned;
+    if (!aligned?.rendas?.length || aligned.rendas.length < 2) return null;
+    const mid = Math.floor(aligned.rendas.length / 2);
+    const first = aligned.rendas.slice(0, mid).reduce((a, v) => a + v, 0);
+    const second = aligned.rendas.slice(mid).reduce((a, v) => a + v, 0);
+    if (first === 0) return null;
+    return ((second - first) / first) * 100;
+  }, [graficoBarra?.aligned]);
+
+  const economia = Math.max(0, totals.saldo);
+
   return (
     <>
       <Head>
         <title>Visão geral | Conta+</title>
       </Head>
       <LoggedLayout usuario={usuario}>
-        <main className="relative flex-1 overflow-y-auto px-3 py-4 sm:px-6 sm:py-6 md:px-10 md:py-8">
+        <main className="relative flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-7xl space-y-6">
               <header className="space-y-1">
-                <h1 className="text-2xl font-semibold tracking-tight text-slate-50 md:text-3xl">
-                  Visão geral
-                </h1>
-                <p className="max-w-3xl text-sm text-slate-400 md:text-base">
-                  Acompanhe entradas, compromissos e objetivos no período. Em
-                  breve: visão compartilhada com família e parceiros direto
-                  nesta mesma área.
+                <p className="text-sm font-medium uppercase tracking-wider text-dash">
+                  Dashboard executivo
+                </p>
+                <h2 className="text-xl font-bold text-white md:text-2xl">
+                  Visão financeira do período
+                </h2>
+                <p className="max-w-3xl text-sm text-cp-muted">
+                  Receitas, despesas, saldo e evolução — tudo em tempo real.
                 </p>
               </header>
 
-              <section className="rounded-3xl border border-white/10 bg-white/5 p-4 shadow-sm backdrop-blur-sm sm:p-6">
+              <section className="rounded-2xl border border-white/[0.08] bg-cp-card p-4 backdrop-blur-xl sm:p-6">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                   <div>
                     <h2 className="text-sm font-semibold text-slate-100">
@@ -462,44 +475,38 @@ export default function Dashboard({
 
               <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 <MetricCard
-                  title="Entradas no período"
-                  subtitle="Rendas e ganhos registrados"
+                  title="Receitas"
+                  subtitle="Entradas no período"
                   value={formatCurrency(totals.entradas)}
                   icon={FaArrowTrendUp}
                   variant="income"
+                  trend={monthTrend ?? undefined}
+                  trendLabel="Comparado à 1ª metade do período"
                 />
                 <MetricCard
-                  title={
-                    selectedDebtType === "all"
-                      ? "Dívidas e gastos"
-                      : `Dívidas: ${selectedDebtType}`
-                  }
+                  title="Despesas"
                   subtitle={
                     selectedDebtType === "all"
-                      ? "Total no período (cartão, contas…)"
-                      : "Total da categoria selecionada"
+                      ? "Dívidas e gastos"
+                      : `Categoria: ${selectedDebtType}`
                   }
                   value={formatCurrency(selectedDebtTotal)}
                   icon={FaArrowTrendDown}
                   variant="expense"
                 />
                 <MetricCard
-                  title="Objetivos (valor)"
-                  subtitle={
-                    totals.metasDescontamSaldo != null
-                      ? `No período · ${formatCurrency(totals.metasDescontamSaldo)} descontam do saldo`
-                      : "Metas financeiras no período"
-                  }
-                  value={formatCurrency(totals.objetivos)}
-                  icon={FaBullseye}
-                  variant="goal"
-                />
-                <MetricCard
-                  title="Saldo do período"
-                  subtitle="Entradas − dívidas/gastos − metas que descontam"
+                  title="Saldo"
+                  subtitle="Receitas − despesas − metas"
                   value={formatCurrency(totals.saldo)}
                   icon={FaScaleBalanced}
                   variant="balance"
+                />
+                <MetricCard
+                  title="Economia"
+                  subtitle="Saldo positivo acumulado"
+                  value={formatCurrency(economia)}
+                  icon={FaPiggyBank}
+                  variant="savings"
                 />
               </section>
 

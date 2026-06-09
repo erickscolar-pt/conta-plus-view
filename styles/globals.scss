@@ -5,11 +5,16 @@
 html {
   width: 100%;
   min-height: 100%;
-  background: linear-gradient(165deg, #f8fafc 0%, #ecfdf5 45%, #f1f5f9 100%);
+  background: #020617;
+  color: #ffffff;
 }
 
 body {
   min-height: 100vh;
+  background: #020617;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 * {
@@ -26,34 +31,57 @@ body {
 }
 
 :root {
-  --letra-nav: #0f172a;
-  --btn-1: #059669;
-  --btn-2: #047857;
-  --btn-3: #6366f1;
-  --btn-4: #10b981;
-  --roxo: #1e1a34;
-  --verde: #a7f3d0;
-  --white: #fff;
-  --black: #000;
-  --cinza: #e2e8f0;
+  --cp-base: #020617;
+  --cp-card: #071126;
+  --cp-card-secondary: #0b1730;
+  --cp-border: rgba(255, 255, 255, 0.08);
+  --cp-text: #ffffff;
+  --cp-muted: #94a3b8;
+  --cp-subtle: #64748b;
+  --cp-income: #22c55e;
+  --cp-expense: #ef4444;
+  --cp-goals: #06b6d4;
+  --cp-planning: #8b5cf6;
+  --cp-ai: #a855f7;
+  --cp-dash: #10b981;
+  --btn-1: #00d084;
+  --btn-2: #00f59e;
+}
+
+@layer components {
+  .cp-card {
+    @apply rounded-2xl border border-white/[0.08] bg-cp-card backdrop-blur-xl shadow-card;
+  }
+
+  .cp-card-secondary {
+    @apply rounded-2xl border border-white/[0.08] bg-cp-card-secondary backdrop-blur-xl;
+  }
+
+  .cp-glass {
+    @apply border border-white/[0.08] bg-white/[0.03] backdrop-blur-xl;
+  }
+
+  .cp-gradient-text {
+    @apply bg-gradient-to-br from-white via-slate-100 to-slate-400 bg-clip-text text-transparent;
+  }
 }
 
 *::-webkit-scrollbar-track {
   border-radius: 4px;
-  background-color: #f1f5f9;
+  background-color: #071126;
 }
 
 *::-webkit-scrollbar {
   width: 8px;
   height: 8px;
-  background-color: #f1f5f9;
+  background-color: #020617;
 }
 
 *::-webkit-scrollbar-thumb {
   border-radius: 8px;
-  background-color: #cbd5e1;
+  background-color: rgba(148, 163, 184, 0.25);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: #94a3b8;
+  background-color: rgba(148, 163, 184, 0.45);
 }
