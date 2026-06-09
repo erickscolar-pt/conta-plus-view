@@ -12,6 +12,7 @@ import { formatDate, isValidUsername } from "@/helper";
 import { Usuario } from "@/model/type";
 import { MdContentCopy, MdLink, MdPersonRemove, MdSave } from "react-icons/md";
 import { copyTextToClipboard } from "@/utils/copyToClipboard";
+import SubscriptionPlanPanel from "@/component/billing/SubscriptionPlanPanel";
 
 export type PendingInviteSummary = {
   inviterUserId: number;
@@ -190,6 +191,10 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                 Dados da conta e quem pode ver suas movimentações compartilhadas.
               </p>
             </header>
+
+            <section className="rounded-2xl border border-emerald-500/25 bg-gradient-to-br from-emerald-500/10 to-slate-900/40 p-6 shadow-sm ring-1 ring-emerald-500/20 backdrop-blur-sm md:p-8">
+              <SubscriptionPlanPanel usuario={usuario} variant="compact" />
+            </section>
 
             <section className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-sm backdrop-blur-sm md:p-8">
               <h2 className="text-lg font-semibold text-slate-100">Dados pessoais</h2>

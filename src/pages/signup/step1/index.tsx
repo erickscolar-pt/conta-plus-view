@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import { FaArrowRight, FaUser } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
+import { MdEmail, MdPerson } from "react-icons/md";
 import { toast } from "react-toastify";
 import Router from "next/router";
 import { validateEmail } from "@/helper";
 import { setupAPIClient } from "@/services/api";
 import SignupLayout from "@/component/layout/SignupLayout";
+import SignupField, { signupInputClass } from "@/component/signup/SignupField";
 import { reserveUniqueUsername } from "@/utils/generateUsername";
 
 interface Step1Props {
@@ -92,71 +94,61 @@ export default function Step1({
 
   return (
     <SignupLayout
-      title="Criar conta"
-      description="Informe seu nome e e-mail. Geraremos um nome de usuário automaticamente."
+      title="Crie sua conta"
+      description="Leva menos de um minuto. Geramos seu usuário automaticamente — você só precisa de nome e e-mail."
       step={1}
       totalSteps={3}
     >
-      <div className="space-y-5">
-        <div>
-          <label className="mb-2 block text-sm font-medium text-slate-300">
-            Seu nome
-          </label>
+      <div className="space-y-6">
+        <SignupField
+          label="Como devemos te chamar?"
+          hint="Seu nome aparece no dashboard e nas mensagens da IA."
+          icon={<MdPerson size={16} />}
+        >
           <input
             type="text"
-            placeholder="Como devemos te chamar"
+            placeholder="Ex: Maria Silva"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             autoComplete="name"
-            className="w-full rounded-xl border border-white/10 bg-slate-950/50 px-4 py-3 text-slate-100 placeholder:text-slate-500 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+            className={signupInputClass}
           />
-        </div>
+        </SignupField>
 
-        <div>
-          <label className="mb-2 block text-sm font-medium text-slate-300">
-            E-mail
-          </label>
+        <SignupField
+          label="Seu melhor e-mail"
+          hint="Usado para login e recuperação. Também geramos um @usuário único para você."
+          icon={<MdEmail size={16} />}
+        >
           <input
             type="email"
             placeholder="voce@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
-            className="w-full rounded-xl border border-white/10 bg-slate-950/50 px-4 py-3 text-slate-100 placeholder:text-slate-500 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+            className={signupInputClass}
           />
-          <p className="mt-1.5 text-xs text-slate-500">
-            Você usará e-mail ou nome de usuário para entrar.
-          </p>
-        </div>
+        </SignupField>
 
-        <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100/95">
-          <strong className="text-emerald-200">Nome de usuário automático</strong>
-          <p className="mt-1 text-emerald-100/80">
-            Geramos um login único a partir do seu nome (e conferimos se está
-            disponível). Você verá o usuário na próxima etapa antes de criar a
-            senha.
-          </p>
-        </div>
-
-        <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-white/10 bg-slate-950/40 p-4 transition hover:border-white/15">
+        <label className="group flex cursor-pointer items-start gap-3 rounded-xl border border-white/[0.08] bg-cp-base/40 p-4 transition hover:border-primary/25 hover:bg-primary/5">
           <input
             type="checkbox"
             checked={acceptTerms}
             onChange={() => setAcceptTerms(!acceptTerms)}
-            className="mt-0.5 h-4 w-4 rounded border-white/20 bg-slate-900 text-emerald-500 focus:ring-emerald-500/40"
+            className="mt-0.5 h-4 w-4 rounded border-white/20 bg-slate-900 text-primary focus:ring-primary/40"
           />
-          <span className="text-sm text-slate-300">
-            Eu aceito os{" "}
+          <span className="text-sm leading-relaxed text-cp-muted group-hover:text-slate-300">
+            Li e aceito os{" "}
             <Link
               href="/termosdeuso"
-              className="font-medium text-emerald-400 underline underline-offset-2 hover:text-emerald-300"
+              className="font-semibold text-primary underline-offset-2 hover:underline"
             >
               termos de uso
             </Link>{" "}
             e a{" "}
             <Link
               href="/politicadeprivacidade"
-              className="font-medium text-emerald-400 underline underline-offset-2 hover:text-emerald-300"
+              className="font-semibold text-primary underline-offset-2 hover:underline"
             >
               política de privacidade
             </Link>
@@ -168,18 +160,18 @@ export default function Step1({
           <button
             type="button"
             onClick={() => Router.push("/")}
-            className="inline-flex items-center justify-center gap-2 text-sm font-medium text-slate-400 transition hover:text-white"
+            className="text-sm font-medium text-cp-subtle transition hover:text-white"
           >
-            <FaUser className="text-emerald-400" /> Voltar ao início
+            ← Voltar ao início
           </button>
           <button
             type="button"
             onClick={handleNext}
             disabled={busy}
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-dash to-brand-600 px-6 py-3.5 text-sm font-semibold text-white shadow-glow transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {busy ? "Validando..." : "Continuar"}
-            {!busy ? <FaArrowRight className="text-base" /> : null}
+            {!busy ? <FaArrowRight className="text-sm" /> : null}
           </button>
         </div>
       </div>

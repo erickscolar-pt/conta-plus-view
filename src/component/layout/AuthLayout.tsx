@@ -1,8 +1,7 @@
 import Head from "next/head";
-import Image from "next/image";
 import Link from "next/link";
 import { ReactNode } from "react";
-import imgLogo from "../../../public/logo_login.png";
+import BrandLogo from "@/component/brand/BrandLogo";
 
 type AuthLayoutProps = {
   title: string;
@@ -31,18 +30,9 @@ export default function AuthLayout({
         aria-hidden
       />
 
-      <header className="relative z-10 border-b border-white/[0.06] bg-cp-base/80 backdrop-blur-xl">
+      <header className="relative z-10 border-b border-white/[0.06] bg-cp-base/90 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-lg items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="flex items-center gap-2">
-            <Image
-              src={imgLogo}
-              alt="Conta+"
-              width={140}
-              height={40}
-              className="h-9 w-auto sm:h-10"
-              priority
-            />
-          </Link>
+          <BrandLogo size="default" />
           <Link
             href="/signup"
             className="text-xs font-medium text-cp-muted transition hover:text-primary"

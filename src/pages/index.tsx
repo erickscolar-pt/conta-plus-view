@@ -5,8 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { AuthContexts } from "@/contexts/AuthContexts";
-import Image from "next/image";
-import imgLogo from "../../public/logo_login.png";
+import BrandLogo from "@/component/brand/BrandLogo";
 import {
   MdArrowForward,
   MdBarChart,
@@ -54,16 +53,7 @@ export default function Home() {
         {/* Nav */}
         <header className="fixed inset-x-0 top-0 z-40 border-b border-white/[0.08] bg-cp-base/80 backdrop-blur-xl">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-            <Link href="/" className="flex items-center gap-2">
-              <Image
-                src={imgLogo}
-                alt="Conta+"
-                width={140}
-                height={40}
-                className="h-9 w-auto sm:h-10"
-                priority
-              />
-            </Link>
+            <BrandLogo size="default" />
             <div className="flex items-center gap-2 sm:gap-3">
               <button
                 type="button"

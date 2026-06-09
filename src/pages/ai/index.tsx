@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import LoggedLayout from "@/component/layout/LoggedLayout";
@@ -8,6 +7,7 @@ import { setupAPIClient } from "@/services/api";
 import { Usuario } from "@/model/type";
 import AiChat from "@/component/ai/AiChat";
 import PremiumCard from "@/component/ui/PremiumCard";
+import SubscriptionPlanPanel from "@/component/billing/SubscriptionPlanPanel";
 import { AiCreditsBadge } from "@/component/ai/AiScoreCard";
 import { fetchAiCredits, fetchAiNotifications, runCoach } from "@/services/ai";
 import type { AiCreditsStatus, AiNotificationItem, CoachResponse } from "@/types/ai";
@@ -146,14 +146,6 @@ export default function AiPage({ usuario, dashboardSnapshot }: Props) {
                   </div>
                   <div className="flex flex-col items-end gap-2">
                     <AiCreditsBadge credits={credits} />
-                    {credits && !credits.premium && (
-                      <Link
-                        href="/planos"
-                        className="rounded-lg bg-ai/20 px-3 py-1.5 text-xs font-medium text-ai ring-1 ring-ai/30 hover:bg-ai/30"
-                      >
-                        Assinar Premium
-                      </Link>
-                    )}
                   </div>
                 </div>
               </motion.div>
@@ -178,6 +170,10 @@ export default function AiPage({ usuario, dashboardSnapshot }: Props) {
             </div>
 
             <aside className="w-full shrink-0 space-y-4 lg:w-80">
+              <PremiumCard glow="ai" className="p-4">
+                <SubscriptionPlanPanel usuario={usuario} variant="compact" showTitle={false} />
+              </PremiumCard>
+
               <PremiumCard className="p-4">
                 <div className="flex items-start justify-between gap-2">
                   <div>
