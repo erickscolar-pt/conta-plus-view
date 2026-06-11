@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useState } from 'react';
 import { AxiosError } from 'axios';
 import axios from 'axios';
+import Link from 'next/link';
 import { api } from '../services/apiCliente';
 import { getErrorMessage } from '../services/api';
 import { toast } from 'react-toastify';
@@ -78,7 +79,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
     } catch (err) {
       console.error(err);
-      toast.error("Erro ao acessar.");
+      const ax = err as AxiosError<{ message?: string | string[] }>;
+      const msg = ax.response?.data
+        ? getErrorMessage(ax.response.data)
+        : 'Erro ao acessar.';
+      if (msg.toLowerCase().includes('confirme seu e-mail')) {
+        toast.error(
+          <span>
+            {msg}{' '}
+            <Link href="/verificar-email" className="underline">
+              Reenviar confirmação
+            </Link>
+          </span>,
+        );
+      } else {
+        toast.error(msg);
+      }
     }
   }
 

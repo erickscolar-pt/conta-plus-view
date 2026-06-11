@@ -1,40 +1,77 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { jwtDecode } from 'jwt-decode';
 
-export function middleware(req: NextRequest) {
-  const token = req.cookies.get('@nextauth.token');
-  const signInURL = new URL('/login', req.url);
+function isAdminHost(host: string | null) {
+  if (!host) return false;
+  const h = host.split(':')[0].toLowerCase();
+  return h === 'admin.contaplus.app.br' || h.startsWith('admin.');
+}
 
-  // Se o token não existir, redirecionar para login
-  if (!token) {
-    console.warn('Token não encontrado, redirecionando para login... mdl');
-    if(req.nextUrl.pathname === '/login'){
+export function middleware(req: NextRequest) {
+  const host = req.headers.get('host');
+  const adminHost = isAdminHost(host);
+  const pathname = req.nextUrl.pathname;
+
+  if (adminHost) {
+    if (
+      pathname.startsWith('/_next') ||
+      pathname.startsWith('/api') ||
+      pathname.startsWith('/favicon') ||
+      pathname.match(/\.(ico|png|jpg|svg|webp|css|js)$/)
+    ) {
       return NextResponse.next();
     }
-    return NextResponse.redirect(signInURL);
+
+    if (pathname === '/') {
+      return NextResponse.redirect(new URL('/admin/login', req.url));
+    }
+
+    if (
+      !pathname.startsWith('/admin') &&
+      !pathname.startsWith('/verificar-email')
+    ) {
+      return NextResponse.redirect(new URL('/admin', req.url));
+    }
+  }
+
+  const token = req.cookies.get('@nextauth.token');
+  const signInURL = new URL(adminHost ? '/admin/login' : '/login', req.url);
+
+  if (!token) {
+    if (pathname === '/login' || pathname === '/admin/login') {
+      return NextResponse.next();
+    }
+    if (adminHost && pathname.startsWith('/admin')) {
+      if (pathname === '/admin/login') return NextResponse.next();
+      return NextResponse.redirect(signInURL);
+    }
+    if (!adminHost) {
+      return NextResponse.redirect(signInURL);
+    }
+    return NextResponse.next();
   }
 
   try {
-    // Decodificar e verificar expiração
-    const decodedToken: { exp: number } = jwtDecode(token.value);
+    const decodedToken: { exp: number; role?: string } = jwtDecode(token.value);
     const currentTime = Math.floor(Date.now() / 1000);
 
     if (decodedToken.exp < currentTime) {
-      console.log('Token expirado! Redirecionando para login... mdl');
-      const response = NextResponse.redirect(new URL('/login', req.url));
-
-      // Remove o cookie expirado
-      response.cookies.set('@nextauth.token', '', { maxAge: 0 });
+      const response = NextResponse.redirect(signInURL);
+      response.cookies.set('@nextauth.token', '', { maxAge: 0, path: '/' });
       return response;
     }
-  } catch (error) {
-    console.error('Erro ao decodificar o token, redirecionando para login...', error);
-    const response = NextResponse.redirect(new URL('/login', req.url));
-    response.cookies.set('@nextauth.token', '', { maxAge: 0 });
+
+    if (adminHost && pathname.startsWith('/admin') && pathname !== '/admin/login') {
+      if (decodedToken.role !== 'admin') {
+        return NextResponse.redirect(new URL('/admin/login', req.url));
+      }
+    }
+  } catch {
+    const response = NextResponse.redirect(signInURL);
+    response.cookies.set('@nextauth.token', '', { maxAge: 0, path: '/' });
     return response;
   }
 
-  // Verificar se a rota é pública
   const publicRoutes = [
     '/',
     '/login',
@@ -44,31 +81,20 @@ export function middleware(req: NextRequest) {
     '/politicadecookies',
     '/manual',
     '/codigo',
+    '/verificar-email',
+    '/admin/login',
   ];
-  const isPublicRoute = publicRoutes.some((route) => req.nextUrl.pathname.startsWith(route));
+  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
 
   if (isPublicRoute) {
     return NextResponse.next();
   }
 
-  console.log('Acesso permitido à rota:', req.nextUrl.pathname);
   return NextResponse.next();
 }
 
-// Configuração de rotas
 export const config = {
   matcher: [
-    '/dashboard/:path*',
-    '/movimentacoes',
-    '/ganhos',
-    '/metas',
-    '/gastos',
-    '/dividas',
-    '/relatorios',
-    '/importacao',
-    '/perfil',
-    '/mercado',
-    '/ai',
-    '/planos',
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 };

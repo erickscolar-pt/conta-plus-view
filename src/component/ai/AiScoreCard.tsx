@@ -50,7 +50,13 @@ export default function AiScoreCard({ score, loading, onRefresh }: Props) {
 export function AiCreditsBadge({
   credits,
 }: {
-  credits: { analyses: { remaining: number | null }; chat: { remaining: number | null }; premium: boolean } | null;
+  credits: {
+    analyses: { remaining: number | null };
+    chat: { remaining: number | null };
+    premium: boolean;
+    canUseChat?: boolean;
+    canUseAnalysis?: boolean;
+  } | null;
 }) {
   if (!credits) return null;
   if (credits.premium) {
@@ -60,9 +66,19 @@ export function AiCreditsBadge({
       </span>
     );
   }
+  const chatLeft = credits.chat.remaining ?? 0;
+  const analysisLeft = credits.analyses.remaining ?? 0;
+  const exhausted = chatLeft <= 0 && analysisLeft <= 0;
+  if (exhausted) {
+    return (
+      <span className="rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-200">
+        Amostra grátis esgotada · Upgrade
+      </span>
+    );
+  }
   return (
     <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
-      Análises: {credits.analyses.remaining ?? 0} · Chat: {credits.chat.remaining ?? 0}
+      Grátis: {analysisLeft} análises · {chatLeft} mensagens
     </span>
   );
 }

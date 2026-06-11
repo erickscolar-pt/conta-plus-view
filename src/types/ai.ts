@@ -2,6 +2,9 @@ export interface AiCreditsStatus {
   plan: string;
   period: string;
   premium: boolean;
+  aiReady: boolean;
+  canUseChat: boolean;
+  canUseAnalysis: boolean;
   analyses: { limit: number | null; used: number; remaining: number | null };
   chat: { limit: number | null; used: number; remaining: number | null };
 }

@@ -6,6 +6,7 @@ import { canSSRAuth } from "@/utils/canSSRAuth";
 import { setupAPIClient } from "@/services/api";
 import { Usuario } from "@/model/type";
 import AiChat from "@/component/ai/AiChat";
+import AiPremiumUpsell from "@/component/ai/AiPremiumUpsell";
 import PremiumCard from "@/component/ui/PremiumCard";
 import SubscriptionPlanPanel from "@/component/billing/SubscriptionPlanPanel";
 import { AiCreditsBadge } from "@/component/ai/AiScoreCard";
@@ -119,6 +120,18 @@ export default function AiPage({ usuario, dashboardSnapshot }: Props) {
   const displayInsights =
     notificationInsights.length > 0 ? notificationInsights : insights;
 
+  const chatLocked = credits != null && !credits.canUseChat;
+  const analysisLocked = credits != null && !credits.canUseAnalysis;
+  const chatDisabledReason = chatLocked
+    ? credits?.premium
+      ? "Créditos de chat esgotados neste ciclo."
+      : (credits?.chat.remaining ?? 0) <= 0
+        ? "Suas mensagens grátis acabaram. Assine o Premium para chat ilimitado."
+        : !credits?.aiReady
+          ? "IA em configuração no servidor. Tente em instantes."
+          : undefined
+    : undefined;
+
   return (
     <>
       <Head>
@@ -150,13 +163,23 @@ export default function AiPage({ usuario, dashboardSnapshot }: Props) {
                 </div>
               </motion.div>
 
+              {!credits?.premium ? (
+                <AiPremiumUpsell credits={credits} variant="banner" />
+              ) : null}
+
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {QUICK_PROMPTS.map(({ label, icon: Icon, message }) => (
                   <button
                     key={label}
                     type="button"
                     onClick={() => setChatSeed(message)}
-                    className="flex items-center gap-2 rounded-xl border border-white/[0.08] bg-cp-card p-3 text-left text-sm text-cp-muted transition hover:border-ai/30 hover:bg-ai/5 hover:text-white"
+                    disabled={chatLocked}
+                    title={
+                      chatLocked
+                        ? "Assine o Premium ou aguarde novos créditos"
+                        : undefined
+                    }
+                    className="flex items-center gap-2 rounded-xl border border-white/[0.08] bg-cp-card p-3 text-left text-sm text-cp-muted transition hover:border-ai/30 hover:bg-ai/5 hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-white/[0.08] disabled:hover:bg-cp-card disabled:hover:text-cp-muted"
                   >
                     <Icon className="shrink-0 text-ai" size={18} />
                     {label}
@@ -164,8 +187,16 @@ export default function AiPage({ usuario, dashboardSnapshot }: Props) {
                 ))}
               </div>
 
-              <PremiumCard glow="ai" className="min-h-[420px] flex-1 p-4 sm:p-5">
-                <AiChat seedMessage={chatSeed} onMessageSent={() => void refreshCredits()} />
+              <PremiumCard glow="ai" className="relative min-h-[420px] flex-1 p-4 sm:p-5">
+                {chatLocked ? (
+                  <AiPremiumUpsell credits={credits} variant="overlay" />
+                ) : null}
+                <AiChat
+                  seedMessage={chatSeed}
+                  onMessageSent={() => void refreshCredits()}
+                  disabled={chatLocked}
+                  disabledReason={chatDisabledReason}
+                />
               </PremiumCard>
             </div>
 
@@ -185,12 +216,23 @@ export default function AiPage({ usuario, dashboardSnapshot }: Props) {
                   <button
                     type="button"
                     onClick={() => void handleCoachAnalysis()}
-                    disabled={coachLoading}
-                    className="shrink-0 rounded-lg bg-ai/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-ai ring-1 ring-ai/30 transition hover:bg-ai/30 disabled:opacity-50"
+                    disabled={coachLoading || analysisLocked}
+                    title={
+                      analysisLocked
+                        ? "Assine o Premium ou aguarde novos créditos de análise"
+                        : undefined
+                    }
+                    className="shrink-0 rounded-lg bg-ai/20 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-ai ring-1 ring-ai/30 transition hover:bg-ai/30 disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    {coachLoading ? "…" : "Atualizar"}
+                    {coachLoading ? "…" : analysisLocked ? "Premium" : "Atualizar"}
                   </button>
                 </div>
+                {analysisLocked && !coach ? (
+                  <p className="mt-3 rounded-xl border border-ai/20 bg-ai/5 px-3 py-2 text-xs text-cp-muted">
+                    Análises profundas com IA fazem parte do Premium. Veja quanto você
+                    pode economizar — assine em um clique.
+                  </p>
+                ) : null}
                 {coach?.economiaPotencial ? (
                   <p className="mt-3 rounded-xl border border-primary/25 bg-primary/10 px-3 py-2 text-xs text-primary">
                     Economia potencial estimada:{" "}

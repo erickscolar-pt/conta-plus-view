@@ -13,6 +13,7 @@ import { Usuario } from "@/model/type";
 import { MdContentCopy, MdLink, MdPersonRemove, MdSave } from "react-icons/md";
 import { copyTextToClipboard } from "@/utils/copyToClipboard";
 import SubscriptionPlanPanel from "@/component/billing/SubscriptionPlanPanel";
+import CancelAccountPanel from "@/component/account/CancelAccountPanel";
 
 export type PendingInviteSummary = {
   inviterUserId: number;
@@ -476,6 +477,8 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                   </div>
                 ) : null}
               </section>
+
+              <CancelAccountPanel />
             </div>
           </div>
         </main>

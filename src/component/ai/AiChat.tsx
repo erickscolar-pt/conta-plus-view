@@ -9,9 +9,11 @@ type Message = { role: "user" | "assistant"; content: string };
 type Props = {
   seedMessage?: string;
   onMessageSent?: () => void;
+  disabled?: boolean;
+  disabledReason?: string;
 };
 
-export default function AiChat({ seedMessage, onMessageSent }: Props) {
+export default function AiChat({ seedMessage, onMessageSent, disabled, disabledReason }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,7 +32,7 @@ export default function AiChat({ seedMessage, onMessageSent }: Props) {
   }, [seedMessage]);
 
   async function submitMessage(text: string) {
-    if (!text.trim() || loading) return;
+    if (!text.trim() || loading || disabled) return;
 
     setInput("");
     setMessages((m) => [...m, { role: "user", content: text.trim() }]);
@@ -65,7 +67,12 @@ export default function AiChat({ seedMessage, onMessageSent }: Props) {
         </p>
       </div>
       <div className="flex-1 space-y-3 overflow-y-auto py-4">
-        {messages.length === 0 && (
+        {disabled && disabledReason && (
+          <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-200/90">
+            {disabledReason}
+          </p>
+        )}
+        {messages.length === 0 && !disabled && (
           <p className="text-sm text-cp-subtle">
             Ex.: &quot;Quanto posso gastar este mês?&quot; ou use os atalhos acima.
           </p>
@@ -92,14 +99,14 @@ export default function AiChat({ seedMessage, onMessageSent }: Props) {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Digite sua pergunta..."
-            className="flex-1 rounded-xl border border-white/[0.08] bg-cp-base px-3 py-2.5 text-sm text-white outline-none focus:border-ai/40 focus:ring-2 focus:ring-ai/20"
-            disabled={loading}
+            placeholder={disabled ? "Assine o Premium para usar o chat" : "Digite sua pergunta..."}
+            className="flex-1 rounded-xl border border-white/[0.08] bg-cp-base px-3 py-2.5 text-sm text-white outline-none focus:border-ai/40 focus:ring-2 focus:ring-ai/20 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={loading || disabled}
           />
           <button
             type="submit"
-            disabled={loading || !input.trim()}
-            className="rounded-xl bg-gradient-to-r from-ai to-planning px-4 py-2.5 text-sm font-medium text-white shadow-glow-ai transition hover:brightness-110 disabled:opacity-50"
+            disabled={loading || disabled || !input.trim()}
+            className="rounded-xl bg-gradient-to-r from-ai to-planning px-4 py-2.5 text-sm font-medium text-white shadow-glow-ai transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Enviar
           </button>

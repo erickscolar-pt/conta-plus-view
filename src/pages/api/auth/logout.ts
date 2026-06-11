@@ -13,6 +13,7 @@ function serializeExpiredAuthCookie() {
 
   if (process.env.NODE_ENV === 'production') {
     parts.push('Secure');
+    parts.push('Domain=.contaplus.app.br');
   }
 
   return parts.join('; ');

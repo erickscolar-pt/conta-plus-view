@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FaCheckCircle } from "react-icons/fa";
@@ -50,11 +49,11 @@ export default function PaymentPage({ userData }: PaymentsProps) {
         </motion.div>
 
         <h3 className="text-xl font-bold text-white sm:text-2xl">
-          {firstName}, bem-vindo ao Conta+
+          {firstName}, confirme seu e-mail
         </h3>
         <p className="mt-2 text-sm text-cp-muted">
-          Login:{" "}
-          <span className="font-mono font-semibold text-primary">@{userData?.username ?? "—"}</span>
+          Enviamos um link para <strong className="text-white">{userData?.email}</strong>.
+          Só depois da confirmação você poderá entrar.
         </p>
 
         <ul className="mt-8 space-y-3 text-left">
@@ -74,18 +73,18 @@ export default function PaymentPage({ userData }: PaymentsProps) {
           ))}
         </ul>
 
+        <p className="mt-4 text-xs text-cp-subtle">
+          Confirme seu e-mail antes de entrar.{" "}
+          <Link href="/verificar-email" className="text-primary underline underline-offset-2">
+            Reenviar confirmação
+          </Link>
+        </p>
         <Link
           href="/login"
-          className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-dash to-brand-600 px-6 py-3.5 text-sm font-semibold text-white shadow-glow transition hover:brightness-110 sm:w-auto"
+          className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-cp-card-secondary px-6 py-3.5 text-sm font-semibold text-white transition hover:border-primary/30 sm:w-auto"
         >
-          Entrar na minha conta
-          <MdArrowForward size={18} />
+          Ir para login
         </Link>
-
-        <p className="mt-4 text-xs text-cp-subtle">
-          Use seu e-mail ou <span className="font-mono text-cp-muted">@{userData?.username}</span> para
-          fazer login.
-        </p>
       </div>
     </SignupLayout>
   );

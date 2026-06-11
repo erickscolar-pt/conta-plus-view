@@ -10,6 +10,11 @@ function getApiBaseUrl() {
   return url.replace(/\/+$/, '');
 }
 
+function cookieDomain(): string | undefined {
+  if (process.env.NODE_ENV !== 'production') return undefined;
+  return process.env.AUTH_COOKIE_DOMAIN || '.contaplus.app.br';
+}
+
 function serializeAuthCookie(token: string) {
   const parts = [
     `${AUTH_COOKIE}=${encodeURIComponent(token)}`,
@@ -18,6 +23,9 @@ function serializeAuthCookie(token: string) {
     'SameSite=Lax',
     `Max-Age=${60 * 60 * 24}`,
   ];
+
+  const domain = cookieDomain();
+  if (domain) parts.push(`Domain=${domain}`);
 
   if (process.env.NODE_ENV === 'production') {
     parts.push('Secure');
