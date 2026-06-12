@@ -44,10 +44,17 @@ export default function AiChat({ seedMessage, onMessageSent, disabled, disabledR
       setMessages((m) => [...m, { role: "assistant", content: res.reply }]);
       onMessageSent?.();
     } catch (error) {
-      toast.error(
-        getErrorMessage((error as AxiosError).response?.data) ||
-          "Não foi possível enviar a mensagem.",
-      );
+      const status = (error as AxiosError).response?.status;
+      if (status === 402) {
+        toast.error("Créditos esgotados. Assine o Premium para continuar.");
+      } else if (status === 503) {
+        toast.error("IA em configuração. Tente novamente em instantes.");
+      } else {
+        toast.error(
+          getErrorMessage((error as AxiosError).response?.data) ||
+            "Não foi possível enviar a mensagem.",
+        );
+      }
     } finally {
       setLoading(false);
     }

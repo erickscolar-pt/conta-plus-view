@@ -70,6 +70,7 @@ const QUICK_PROMPTS = [
 
 export default function AiPage({ usuario, dashboardSnapshot }: Props) {
   const [credits, setCredits] = useState<AiCreditsStatus | null>(null);
+  const [creditsLoading, setCreditsLoading] = useState(true);
   const [chatSeed, setChatSeed] = useState<string | undefined>();
   const [insights, setInsights] = useState<string[]>(() =>
     buildInsightsFromDashboard(dashboardSnapshot),
@@ -79,10 +80,13 @@ export default function AiPage({ usuario, dashboardSnapshot }: Props) {
   const [coach, setCoach] = useState<CoachResponse | null>(null);
 
   const refreshCredits = useCallback(async () => {
+    setCreditsLoading(true);
     try {
       setCredits(await fetchAiCredits());
     } catch {
-      /* ignore */
+      setCredits(null);
+    } finally {
+      setCreditsLoading(false);
     }
   }, []);
 
@@ -120,16 +124,18 @@ export default function AiPage({ usuario, dashboardSnapshot }: Props) {
   const displayInsights =
     notificationInsights.length > 0 ? notificationInsights : insights;
 
-  const chatLocked = credits != null && !credits.canUseChat;
-  const analysisLocked = credits != null && !credits.canUseAnalysis;
+  const chatLocked = creditsLoading || !credits?.canUseChat;
+  const analysisLocked = creditsLoading || !credits?.canUseAnalysis;
   const chatDisabledReason = chatLocked
-    ? credits?.premium
-      ? "Créditos de chat esgotados neste ciclo."
-      : (credits?.chat.remaining ?? 0) <= 0
-        ? "Suas mensagens grátis acabaram. Assine o Premium para chat ilimitado."
-        : !credits?.aiReady
-          ? "IA em configuração no servidor. Tente em instantes."
-          : undefined
+    ? creditsLoading
+      ? "Verificando seu plano…"
+      : !credits?.aiReady
+        ? "IA em configuração no servidor. Tente em instantes."
+        : credits?.premium
+          ? "Chat indisponível no momento."
+          : (credits?.chat.remaining ?? 0) <= 0
+            ? "Suas mensagens grátis acabaram. Assine o Premium para chat ilimitado."
+            : "Chat indisponível."
     : undefined;
 
   return (
@@ -189,7 +195,7 @@ export default function AiPage({ usuario, dashboardSnapshot }: Props) {
 
               <PremiumCard glow="ai" className="relative min-h-[420px] flex-1 p-4 sm:p-5">
                 {chatLocked ? (
-                  <AiPremiumUpsell credits={credits} variant="overlay" />
+                  <AiPremiumUpsell credits={credits} variant="overlay" loading={creditsLoading} />
                 ) : null}
                 <AiChat
                   seedMessage={chatSeed}

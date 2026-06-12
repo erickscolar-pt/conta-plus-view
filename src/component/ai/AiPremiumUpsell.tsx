@@ -1,10 +1,13 @@
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { FaWandMagicSparkles, FaCheck, FaArrowRight } from "react-icons/fa6";
 import type { AiCreditsStatus } from "@/types/ai";
+import { fetchBillingPlans } from "@/services/ai";
 
 type Props = {
   credits: AiCreditsStatus | null;
   variant?: "banner" | "overlay";
+  loading?: boolean;
   onUpgradeClick?: () => void;
 };
 
@@ -34,20 +37,48 @@ function lockReason(credits: AiCreditsStatus | null): string {
   return "Suas análises grátis acabaram. Upgrade para insights ilimitados.";
 }
 
+function formatBrl(cents: number) {
+  return (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
 export default function AiPremiumUpsell({
   credits,
   variant = "banner",
+  loading = false,
   onUpgradeClick,
 }: Props) {
+  const [premiumPlan, setPremiumPlan] = useState<{
+    price_cents: number;
+    annual_price_cents?: number | null;
+  } | null>(null);
+
+  useEffect(() => {
+    void fetchBillingPlans()
+      .then((plans: Array<{ code: string; price_cents: number; annual_price_cents?: number | null }>) => {
+        const premium = plans.find((p) => p.code === "AI_PREMIUM");
+        if (premium) setPremiumPlan(premium);
+      })
+      .catch(() => undefined);
+  }, []);
+
   const isPremium = credits?.premium;
   const locked =
-    credits &&
-    (!credits.aiReady ||
-      (!credits.canUseChat && !credits.canUseAnalysis));
+    loading ||
+    (credits &&
+      (!credits.aiReady || (!credits.canUseChat && !credits.canUseAnalysis)));
 
   if (isPremium && !locked) return null;
 
-  const title = locked
+  const monthlyLabel = premiumPlan
+    ? formatBrl(premiumPlan.price_cents)
+    : "R$ 19,90";
+  const annualLabel = premiumPlan?.annual_price_cents
+    ? formatBrl(premiumPlan.annual_price_cents)
+    : "R$ 199";
+
+  const title = loading
+    ? "Carregando seu plano…"
+    : locked
     ? "Desbloqueie seu consultor financeiro"
     : "Experimente grátis — depois vá além";
 
@@ -87,10 +118,10 @@ export default function AiPremiumUpsell({
           onClick={onUpgradeClick}
           className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-ai to-planning px-5 py-2.5 text-sm font-semibold text-white shadow-glow-ai transition hover:brightness-110"
         >
-          Assinar por R$ 19,90/mês
+          Assinar por {monthlyLabel}/mês
           <FaArrowRight size={12} />
         </Link>
-        <span className="text-xs text-cp-subtle">ou R$ 199/ano · cancele quando quiser</span>
+        <span className="text-xs text-cp-subtle">ou {annualLabel}/ano · cancele quando quiser</span>
       </div>
     </>
   );
