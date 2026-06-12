@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import MenuLateral from "@/component/menulateral";
 import Header from "@/component/header";
 import { Usuario } from "@/model/type";
@@ -9,6 +9,11 @@ type LoggedLayoutProps = {
 };
 
 export default function LoggedLayout({ usuario, children }: LoggedLayoutProps) {
+  useEffect(() => {
+    document.body.classList.add("logged-mobile-nav");
+    return () => document.body.classList.remove("logged-mobile-nav");
+  }, []);
+
   return (
     <div className="relative flex min-h-screen bg-cp-base text-white">
       <div

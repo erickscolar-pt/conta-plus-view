@@ -59,7 +59,7 @@ export default function SignupLayout({
   const hero = STEP_HERO[step] ?? STEP_HERO[1];
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-cp-base text-slate-100">
+    <div className="relative min-h-screen overflow-x-hidden bg-cp-base text-slate-100">
       <Head>
         <title>{title} | Conta+</title>
       </Head>
@@ -78,7 +78,6 @@ export default function SignupLayout({
       />
 
       <div className="relative z-10 flex min-h-screen flex-col lg:flex-row">
-        {/* Painel esquerdo — escuro, alinhado à plataforma; logo com badge suave */}
         <aside className="relative hidden w-full flex-col justify-between border-r border-white/[0.06] bg-gradient-to-br from-cp-card via-cp-base to-[#0d0a14] px-10 py-10 lg:flex lg:max-w-[46%] xl:max-w-[42%]">
           <div>
             <BrandLogo size="hero" />
@@ -133,14 +132,24 @@ export default function SignupLayout({
         </aside>
 
         <div className="flex flex-1 flex-col bg-cp-base">
-          <header className="flex h-16 items-center justify-between border-b border-white/[0.06] bg-cp-base/90 px-4 backdrop-blur-xl sm:px-8 lg:hidden">
+          <header className="flex h-14 items-center justify-between border-b border-white/[0.06] bg-cp-base/90 px-3 backdrop-blur-xl sm:px-8 lg:hidden">
             <BrandLogo size="compact" />
             <span className="text-xs font-medium text-cp-subtle">
               Etapa {step}/{totalSteps}
             </span>
           </header>
 
-          <main className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center px-4 py-8 sm:px-8 sm:py-12">
+          <main className="mx-auto flex w-full max-w-lg flex-1 flex-col px-3 py-5 pb-28 sm:px-8 sm:py-10 sm:pb-12 lg:justify-center">
+            <div className="mb-5 rounded-2xl border border-white/[0.08] bg-cp-card/60 p-4 lg:hidden">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-dash">
+                {hero.eyebrow}
+              </p>
+              <h1 className="mt-1.5 text-lg font-bold leading-snug text-white">
+                {hero.headline}
+              </h1>
+              <p className="mt-2 text-sm leading-relaxed text-cp-muted">{hero.sub}</p>
+            </div>
+
             {!hideProgress && <SignupProgress step={step} totalSteps={totalSteps} />}
 
             <motion.div
@@ -149,8 +158,8 @@ export default function SignupLayout({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.05 }}
             >
-              <div className="mb-6 lg:mb-8">
-                <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">{title}</h2>
+              <div className="mb-5 lg:mb-8">
+                <h2 className="text-xl font-bold tracking-tight text-white sm:text-3xl">{title}</h2>
                 {description ? (
                   <p className="mt-2 text-sm leading-relaxed text-cp-muted sm:text-base">
                     {description}
@@ -158,13 +167,13 @@ export default function SignupLayout({
                 ) : null}
               </div>
 
-              <div className="rounded-2xl border border-white/[0.08] bg-cp-card/90 p-6 shadow-card backdrop-blur-xl sm:p-8">
+              <div className="rounded-2xl border border-white/[0.08] bg-cp-card/90 p-5 shadow-card backdrop-blur-xl sm:p-8">
                 {children}
               </div>
             </motion.div>
 
             {!hideFooter ? (
-              <p className="mt-8 text-center text-sm text-cp-subtle">
+              <p className="mt-6 text-center text-sm text-cp-subtle sm:mt-8">
                 Já tem conta?{" "}
                 <Link
                   href="/login"

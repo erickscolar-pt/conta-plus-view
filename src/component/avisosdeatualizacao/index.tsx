@@ -40,7 +40,7 @@ export default function AvisosDeAtualizacao() {
     <div
       role="status"
       aria-live="polite"
-      className="fixed inset-x-0 bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] z-[110] px-3 sm:bottom-4 sm:px-6 lg:bottom-4"
+      className="policy-consent-banner fixed inset-x-0 bottom-3 z-[110] px-3 sm:bottom-4 sm:px-6"
     >
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 rounded-2xl border border-emerald-400/25 bg-slate-900/95 p-4 text-slate-100 shadow-2xl shadow-black/40 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-5">
         <p className="text-sm leading-relaxed text-slate-200 sm:text-[15px]">

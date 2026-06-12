@@ -90,11 +90,23 @@ body {
   .Toastify__toast-container {
     left: 1rem !important;
     right: 1rem !important;
-    bottom: calc(5rem + env(safe-area-inset-bottom, 0px)) !important;
+    bottom: calc(6.5rem + env(safe-area-inset-bottom, 0px)) !important;
     width: auto !important;
+  }
+
+  body.logged-mobile-nav .Toastify__toast-container {
+    bottom: calc(10.5rem + env(safe-area-inset-bottom, 0px)) !important;
   }
 
   .Toastify__toast {
     margin-bottom: 0.5rem;
+  }
+
+  .policy-consent-banner {
+    bottom: calc(6.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  body.logged-mobile-nav .policy-consent-banner {
+    bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
   }
 }

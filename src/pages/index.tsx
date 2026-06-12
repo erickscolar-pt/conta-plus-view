@@ -6,7 +6,7 @@ import { FaPix, FaWandMagicSparkles } from "react-icons/fa6";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { AuthContexts } from "@/contexts/AuthContexts";
-import BrandLogo from "@/component/brand/BrandLogo";
+import PublicMarketingHeader from "@/component/layout/PublicMarketingHeader";
 import {
   MdArrowForward,
   MdBarChart,
@@ -17,7 +17,6 @@ import {
   MdUploadFile,
   MdAccountBalanceWallet,
   MdShield,
-  MdMenu,
 } from "react-icons/md";
 
 const FREE_FEATURES = [
@@ -36,6 +35,15 @@ const PREMIUM_FEATURES = [
   "Pagamento via PIX — sem cartão de crédito",
 ];
 
+const COMPARISON_ROWS = [
+  { feature: "Dashboard e relatórios", free: true as const, premium: true as const },
+  { feature: "Metas, dívidas e importação", free: true as const, premium: true as const },
+  { feature: "Consultor IA online (chat)", free: false as const, premium: true as const },
+  { feature: "Análises profundas ilimitadas", free: false as const, premium: true as const },
+  { feature: "Score, projeções e plano de dívidas", free: false as const, premium: true as const },
+  { feature: "Custo", free: "R$ 0" as const, premium: "R$ 19,90/mês" as const },
+];
+
 const FREE_BENEFITS = [
   { icon: MdAccountBalanceWallet, title: "Suas contas em um só lugar", desc: "Receitas, gastos, metas e dívidas organizados sem pagar nada." },
   { icon: MdUploadFile, title: "Importação automática", desc: "Traga extratos e planilhas — pare de digitar tudo na mão." },
@@ -50,7 +58,6 @@ export default function Home() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
@@ -75,111 +82,52 @@ export default function Home() {
         />
       </Head>
 
-      <div className="min-h-screen bg-cp-base text-white">
-        <header className="fixed inset-x-0 top-0 z-40 border-b border-white/[0.08] bg-cp-base/80 backdrop-blur-xl">
-          <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 px-4 sm:h-16 sm:px-6">
-            <BrandLogo size="default" />
-            <nav className="hidden items-center gap-6 text-sm text-cp-muted md:flex">
-              <a href="#gratis" className="transition hover:text-white">Grátis</a>
-              <a href="#consultor-ia" className="transition hover:text-white">Consultor IA</a>
-              <a href="#planos" className="transition hover:text-white">Planos</a>
-            </nav>
-            <div className="flex items-center gap-1.5 sm:gap-3">
-              <button
-                type="button"
-                onClick={() => setIsModalOpen(true)}
-                className="rounded-full px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10 sm:px-4"
-              >
-                Entrar
-              </button>
-              <Link
-                href="/signup"
-                className="hidden rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400 sm:inline-flex sm:px-5"
-              >
-                Criar conta grátis
-              </Link>
-              <button
-                type="button"
-                aria-expanded={mobileNavOpen}
-                aria-label={mobileNavOpen ? "Fechar menu" : "Abrir menu"}
-                onClick={() => setMobileNavOpen((open) => !open)}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-slate-200 md:hidden"
-              >
-                {mobileNavOpen ? <MdClose size={22} /> : <MdMenu size={22} />}
-              </button>
-            </div>
-          </div>
-          {mobileNavOpen && (
-            <nav className="border-t border-white/[0.08] bg-cp-base/95 px-4 py-3 md:hidden">
-              <div className="flex flex-col gap-1">
-                {[
-                  { href: "#gratis", label: "Grátis" },
-                  { href: "#consultor-ia", label: "Consultor IA" },
-                  { href: "#planos", label: "Planos" },
-                ].map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setMobileNavOpen(false)}
-                    className="rounded-lg px-3 py-2.5 text-sm text-cp-muted transition hover:bg-white/5 hover:text-white"
-                  >
-                    {item.label}
-                  </a>
-                ))}
-                <Link
-                  href="/signup"
-                  onClick={() => setMobileNavOpen(false)}
-                  className="mt-2 rounded-lg bg-emerald-500 px-3 py-2.5 text-center text-sm font-semibold text-white"
-                >
-                  Criar conta grátis
-                </Link>
-              </div>
-            </nav>
-          )}
-        </header>
+      <div className="min-h-screen overflow-x-hidden bg-cp-base text-white">
+        <PublicMarketingHeader onLoginClick={() => setIsModalOpen(true)} />
 
-        <main>
+        <main className="pb-24 sm:pb-0">
           {/* Hero */}
-          <section className="relative overflow-hidden pt-24 pb-16 sm:pt-28 sm:pb-24 lg:pb-32">
+          <section className="relative scroll-mt-20 overflow-hidden pt-20 pb-12 sm:pt-28 sm:pb-24 lg:pb-32">
             <div className="pointer-events-none absolute -left-40 top-20 h-96 w-96 rounded-full bg-dash/20 blur-[120px]" aria-hidden />
             <div className="pointer-events-none absolute -right-20 top-40 h-80 w-80 rounded-full bg-ai/15 blur-[100px]" aria-hidden />
 
-            <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
-              <div className="grid items-center gap-12 lg:grid-cols-2">
-                <div>
-                  <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary sm:text-sm">
-                    <MdSavings aria-hidden />
+            <div className="relative mx-auto max-w-6xl px-3 sm:px-6">
+              <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+                <div className="min-w-0">
+                  <p className="mb-3 inline-flex max-w-full items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary sm:mb-4 sm:text-sm">
+                    <MdSavings aria-hidden className="shrink-0" />
                     100% grátis para organizar suas contas
                   </p>
-                  <h1 className="text-balance text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl lg:leading-[1.08]">
+                  <h1 className="text-balance text-3xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl lg:leading-[1.08]">
                     Suas finanças organizadas.{" "}
                     <span className="bg-gradient-to-r from-dash via-emerald-300 to-cyan-300 bg-clip-text text-transparent">
                       De graça.
                     </span>
                   </h1>
-                  <p className="mt-6 max-w-xl text-pretty text-base leading-relaxed text-cp-muted sm:text-lg">
+                  <p className="mt-4 max-w-xl text-pretty text-sm leading-relaxed text-cp-muted sm:mt-6 sm:text-lg">
                     Cadastre receitas, despesas, metas e dívidas sem pagar nada. Quando quiser ir
                     além, o <strong className="font-semibold text-white">Conta+ AI Premium</strong>{" "}
                     coloca um consultor financeiro online para analisar suas contas e responder
                     perguntas com base nos seus dados reais.
                   </p>
-                  <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+                  <div className="mt-6 flex flex-col gap-2.5 sm:mt-10 sm:flex-row sm:gap-3">
                     <Link
                       href="/signup"
-                      className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-dash to-brand-600 px-8 py-4 text-base font-semibold text-white shadow-glow transition hover:brightness-110"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-dash to-brand-600 px-5 py-3.5 text-sm font-semibold text-white shadow-glow transition hover:brightness-110 sm:w-auto sm:px-8 sm:py-4 sm:text-base"
                     >
-                      Organizar minhas contas grátis
+                      <span className="sm:hidden">Começar grátis</span>
+                      <span className="hidden sm:inline">Organizar minhas contas grátis</span>
                       <MdArrowForward aria-hidden />
                     </Link>
                     <a
                       href="#consultor-ia"
-                      className="inline-flex items-center justify-center gap-2 rounded-2xl border border-ai/30 bg-ai/10 px-8 py-4 text-base font-semibold text-white transition hover:bg-ai/20"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-ai/30 bg-ai/10 px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-ai/20 sm:w-auto sm:px-8 sm:py-4 sm:text-base"
                     >
-                      <FaWandMagicSparkles className="text-ai" />
-                      Conhecer consultor IA
+                      <FaWandMagicSparkles className="shrink-0 text-ai" />
+                      Consultor IA
                     </a>
                   </div>
-                  <div className="mt-10 flex flex-wrap gap-3">
+                  <div className="mt-6 flex flex-wrap gap-2 sm:mt-10 sm:gap-3">
                     {[
                       "Sem cartão de crédito",
                       "Plano grátis permanente",
@@ -241,13 +189,13 @@ export default function Home() {
           </section>
 
           {/* Free forever */}
-          <section id="gratis" className="border-t border-white/[0.08] bg-cp-card/30 py-20">
-            <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <section id="gratis" className="scroll-mt-20 border-t border-white/[0.08] bg-cp-card/30 py-12 sm:py-20">
+            <div className="mx-auto max-w-6xl px-3 sm:px-6">
               <div className="mx-auto max-w-3xl text-center">
                 <p className="text-sm font-semibold uppercase tracking-wider text-primary">
                   Sempre grátis
                 </p>
-                <h2 className="mt-2 text-3xl font-bold text-white sm:text-4xl">
+                <h2 className="mt-2 text-2xl font-bold text-white sm:text-4xl">
                   Organize suas contas sem pagar nada
                 </h2>
                 <p className="mt-4 text-cp-muted">
@@ -290,9 +238,9 @@ export default function Home() {
           </section>
 
           {/* AI Consultant */}
-          <section id="consultor-ia" className="border-t border-white/[0.08] py-20 sm:py-24">
-            <div className="mx-auto max-w-6xl px-4 sm:px-6">
-              <div className="grid items-center gap-12 lg:grid-cols-2">
+          <section id="consultor-ia" className="scroll-mt-20 border-t border-white/[0.08] py-12 sm:py-24">
+            <div className="mx-auto max-w-6xl px-3 sm:px-6">
+              <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
                 <div className="order-2 lg:order-1">
                   <div className="rounded-3xl border border-ai/25 bg-gradient-to-br from-ai/15 via-cp-card to-planning/10 p-6 sm:p-8">
                     <div className="space-y-3">
@@ -319,7 +267,7 @@ export default function Home() {
                     <FaWandMagicSparkles />
                     Plano pago · Conta+ AI Premium
                   </p>
-                  <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
+                  <h2 className="mt-3 text-2xl font-bold text-white sm:text-4xl">
                     Consultor financeiro online que conhece suas contas
                   </h2>
                   <p className="mt-4 text-cp-muted leading-relaxed">
@@ -357,13 +305,47 @@ export default function Home() {
           </section>
 
           {/* Comparison */}
-          <section className="border-t border-white/[0.08] bg-cp-card/20 py-16">
-            <div className="mx-auto max-w-4xl px-4 sm:px-6">
-              <h2 className="text-center text-2xl font-bold text-white sm:text-3xl">
+          <section className="border-t border-white/[0.08] bg-cp-card/20 py-12 sm:py-16">
+            <div className="mx-auto max-w-4xl px-3 sm:px-6">
+              <h2 className="text-center text-xl font-bold text-white sm:text-3xl">
                 Grátis para organizar. Premium para decidir melhor.
               </h2>
-              <div className="mt-10 overflow-hidden rounded-2xl border border-white/[0.08]">
-                <table className="w-full text-left text-sm">
+              <div className="mt-6 space-y-3 sm:hidden">
+                {COMPARISON_ROWS.map((row) => (
+                  <div
+                    key={row.feature}
+                    className="rounded-2xl border border-white/[0.08] bg-cp-card/50 p-4"
+                  >
+                    <p className="font-medium text-white">{row.feature}</p>
+                    <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-wide text-primary">Grátis</p>
+                        <div className="mt-1 text-cp-muted">
+                          {row.free === true ? (
+                            <MdCheckCircle className="text-primary" size={20} />
+                          ) : row.free === false ? (
+                            <MdClose className="text-cp-subtle" size={20} />
+                          ) : (
+                            <span className="font-semibold text-white">{row.free}</span>
+                          )}
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-wide text-ai">AI Premium</p>
+                        <div className="mt-1 text-cp-muted">
+                          {row.premium === true ? (
+                            <MdCheckCircle className="text-ai" size={20} />
+                          ) : (
+                            <span className="font-semibold text-white">{row.premium}</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-10 hidden overflow-x-auto rounded-2xl border border-white/[0.08] sm:block">
+                <table className="w-full min-w-[520px] text-left text-sm">
                   <thead>
                     <tr className="border-b border-white/[0.08] bg-cp-card">
                       <th className="p-4 font-medium text-cp-subtle">Recurso</th>
@@ -372,30 +354,23 @@ export default function Home() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/[0.06] bg-cp-card/50">
-                    {[
-                      ["Dashboard e relatórios", true, true],
-                      ["Metas, dívidas e importação", true, true],
-                      ["Consultor IA online (chat)", false, true],
-                      ["Análises profundas ilimitadas", false, true],
-                      ["Score, projeções e plano de dívidas", false, true],
-                      ["Custo", "R$ 0", "R$ 19,90/mês"],
-                    ].map(([feature, free, premium]) => (
-                      <tr key={String(feature)}>
-                        <td className="p-4 text-cp-muted">{feature}</td>
+                    {COMPARISON_ROWS.map((row) => (
+                      <tr key={row.feature}>
+                        <td className="p-4 text-cp-muted">{row.feature}</td>
                         <td className="p-4">
-                          {free === true ? (
+                          {row.free === true ? (
                             <MdCheckCircle className="text-primary" size={20} />
-                          ) : free === false ? (
+                          ) : row.free === false ? (
                             <MdClose className="text-cp-subtle" size={20} />
                           ) : (
-                            <span className="font-semibold text-white">{free}</span>
+                            <span className="font-semibold text-white">{row.free}</span>
                           )}
                         </td>
                         <td className="p-4">
-                          {premium === true ? (
+                          {row.premium === true ? (
                             <MdCheckCircle className="text-ai" size={20} />
                           ) : (
-                            <span className="font-semibold text-white">{premium}</span>
+                            <span className="font-semibold text-white">{row.premium}</span>
                           )}
                         </td>
                       </tr>
@@ -407,11 +382,11 @@ export default function Home() {
           </section>
 
           {/* Pricing */}
-          <section id="planos" className="border-t border-white/[0.08] py-20 sm:py-24">
-            <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <section id="planos" className="scroll-mt-20 border-t border-white/[0.08] py-12 sm:py-24">
+            <div className="mx-auto max-w-6xl px-3 sm:px-6">
               <div className="text-center">
                 <p className="text-sm font-semibold uppercase tracking-wider text-ai">Planos</p>
-                <h2 className="mt-2 text-3xl font-bold text-white sm:text-4xl">
+                <h2 className="mt-2 text-2xl font-bold text-white sm:text-4xl">
                   Comece grátis hoje. Evolua quando fizer sentido.
                 </h2>
                 <p className="mx-auto mt-4 max-w-2xl text-cp-muted">
@@ -419,8 +394,8 @@ export default function Home() {
                   assine o Premium depois, direto pelo app, via PIX.
                 </p>
               </div>
-              <div className="mt-12 grid gap-6 md:grid-cols-2 lg:mx-auto lg:max-w-4xl">
-                <div className="rounded-3xl border border-primary/20 bg-cp-card p-8">
+              <div className="mt-8 grid gap-5 sm:mt-12 sm:gap-6 md:grid-cols-2 lg:mx-auto lg:max-w-4xl">
+                <div className="rounded-3xl border border-primary/20 bg-cp-card p-5 sm:p-8">
                   <p className="text-sm font-semibold uppercase tracking-wider text-primary">
                     Grátis · Para sempre
                   </p>
@@ -446,8 +421,8 @@ export default function Home() {
                     Criar conta grátis
                   </Link>
                 </div>
-                <div className="relative rounded-3xl border border-ai/30 bg-gradient-to-b from-ai/15 to-cp-card p-8 shadow-glow-ai">
-                  <span className="absolute -top-3 right-6 rounded-full bg-ai px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
+                <div className="relative rounded-3xl border border-ai/30 bg-gradient-to-b from-ai/15 to-cp-card p-5 shadow-glow-ai sm:p-8">
+                  <span className="absolute -top-3 right-4 rounded-full bg-ai px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-white sm:right-6 sm:text-xs">
                     Consultor IA
                   </span>
                   <p className="text-sm font-semibold uppercase tracking-wider text-ai">
@@ -484,9 +459,9 @@ export default function Home() {
           </section>
 
           {/* Steps */}
-          <section className="py-20 sm:py-24">
-            <div className="mx-auto max-w-6xl px-4 sm:px-6">
-              <h2 className="text-center text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <section className="py-12 sm:py-24">
+            <div className="mx-auto max-w-6xl px-3 sm:px-6">
+              <h2 className="text-center text-2xl font-bold tracking-tight text-white sm:text-4xl">
                 Três passos para sair do caos financeiro
               </h2>
               <div className="mt-14 grid gap-8 md:grid-cols-3">
@@ -509,7 +484,7 @@ export default function Home() {
                 ].map((s) => (
                   <div
                     key={s.step}
-                    className="relative rounded-2xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent p-8 text-center"
+                    className="relative rounded-2xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent p-5 text-center sm:p-8"
                   >
                     <span className="text-5xl font-black text-emerald-500/20">{s.step}</span>
                     <h3 className="mt-2 text-xl font-semibold text-white">{s.title}</h3>
@@ -521,10 +496,10 @@ export default function Home() {
           </section>
 
           {/* CTA */}
-          <section className="border-t border-white/10 py-20 sm:py-24">
-            <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
-              <div className="rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/20 via-slate-900 to-slate-950 p-10 sm:p-14">
-                <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <section className="border-t border-white/10 py-12 sm:py-24">
+            <div className="mx-auto max-w-4xl px-3 text-center sm:px-6">
+              <div className="rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/20 via-slate-900 to-slate-950 p-6 sm:p-14">
+                <h2 className="text-2xl font-bold tracking-tight text-white sm:text-4xl">
                   Suas contas organizadas começam aqui — de graça
                 </h2>
                 <p className="mx-auto mt-4 max-w-xl text-slate-300">
@@ -551,9 +526,9 @@ export default function Home() {
             </div>
           </section>
 
-          <footer className="border-t border-white/10 py-12">
-            <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-8 px-4 sm:flex-row sm:px-6">
-              <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-500">
+          <footer className="border-t border-white/10 py-10 sm:py-12">
+            <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-3 sm:flex-row sm:gap-8 sm:px-6">
+              <div className="grid w-full grid-cols-2 gap-x-4 gap-y-3 text-sm text-slate-500 sm:flex sm:w-auto sm:flex-wrap sm:justify-center sm:gap-6">
                 <Link href="/termosdeuso" className="transition hover:text-emerald-400">
                   Termos de uso
                 </Link>
@@ -577,8 +552,8 @@ export default function Home() {
 
       <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)} className="relative z-50">
         <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm" aria-hidden />
-        <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900 p-8 shadow-2xl">
+        <div className="fixed inset-0 flex items-end justify-center p-3 sm:items-center sm:p-4">
+          <Dialog.Panel className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-white/10 bg-slate-900 p-5 shadow-2xl sm:p-8">
             <Dialog.Title className="text-xl font-bold text-white">
               Entrar na sua conta
             </Dialog.Title>
