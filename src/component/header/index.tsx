@@ -12,7 +12,14 @@ function firstName(nome?: string) {
   return nome.trim().split(/\s+/)[0];
 }
 
-function formatToday() {
+function formatToday(compact = false) {
+  if (compact) {
+    return new Date().toLocaleDateString("pt-BR", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+    });
+  }
   return new Date().toLocaleDateString("pt-BR", {
     weekday: "long",
     day: "numeric",
@@ -24,35 +31,35 @@ export default function Header({ usuario }: { usuario?: Usuario }) {
   const greeting = firstName(usuario?.nome);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-white/[0.08] bg-cp-base/80 px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-8">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="min-w-0">
+    <header className="sticky top-0 z-30 border-b border-white/[0.08] bg-cp-base/80 px-3 py-3 backdrop-blur-xl sm:px-6 sm:py-4 lg:px-8">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0 flex-1">
           <motion.p
             initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
-            className="text-sm text-cp-muted capitalize"
+            className="truncate text-xs capitalize text-cp-muted sm:text-sm"
           >
-            {formatToday()}
+            <span className="sm:hidden">{formatToday(true)}</span>
+            <span className="hidden sm:inline">{formatToday()}</span>
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.05 }}
-            className="mt-0.5 truncate text-xl font-semibold tracking-tight text-white sm:text-2xl"
+            className="truncate text-lg font-semibold tracking-tight text-white sm:text-2xl"
           >
             Olá, {greeting} 👋
           </motion.h1>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
           <button
             type="button"
             onClick={() => Router.push("/movimentacoes")}
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-dash to-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:brightness-110"
+            className="hidden items-center gap-2 rounded-xl bg-gradient-to-r from-dash to-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:brightness-110 sm:inline-flex"
           >
             <FaPlus className="text-xs" />
-            <span className="hidden sm:inline">Nova movimentação</span>
-            <span className="sm:hidden">Nova</span>
+            Nova movimentação
           </button>
 
           <Link
@@ -66,7 +73,7 @@ export default function Header({ usuario }: { usuario?: Usuario }) {
 
           <button
             type="button"
-            className="flex items-center gap-2 rounded-full border border-white/[0.08] bg-cp-card p-1 pr-3 transition hover:border-dash/30 hover:shadow-glow"
+            className="flex items-center gap-2 rounded-full border border-white/[0.08] bg-cp-card p-1 transition hover:border-dash/30 hover:shadow-glow sm:pr-3"
             onClick={() => Router.push("/perfil")}
             title="Perfil"
           >

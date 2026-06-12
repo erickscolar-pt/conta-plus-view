@@ -77,8 +77,10 @@ export function AiCreditsBadge({
     );
   }
   return (
-    <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
-      Grátis: {analysisLeft} análises · {chatLeft} mensagens
+    <span className="inline-flex max-w-full flex-wrap justify-end gap-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-slate-300 sm:px-3 sm:text-xs">
+      <span className="whitespace-nowrap">Grátis: {analysisLeft} análises</span>
+      <span className="text-cp-subtle">·</span>
+      <span className="whitespace-nowrap">{chatLeft} mensagens</span>
     </span>
   );
 }

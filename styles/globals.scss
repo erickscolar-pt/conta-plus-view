@@ -85,3 +85,16 @@ body {
 *::-webkit-scrollbar-thumb:hover {
   background-color: rgba(148, 163, 184, 0.45);
 }
+
+@media (max-width: 640px) {
+  .Toastify__toast-container {
+    left: 1rem !important;
+    right: 1rem !important;
+    bottom: calc(5rem + env(safe-area-inset-bottom, 0px)) !important;
+    width: auto !important;
+  }
+
+  .Toastify__toast {
+    margin-bottom: 0.5rem;
+  }
+}

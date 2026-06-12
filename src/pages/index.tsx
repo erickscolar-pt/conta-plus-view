@@ -17,6 +17,7 @@ import {
   MdUploadFile,
   MdAccountBalanceWallet,
   MdShield,
+  MdMenu,
 } from "react-icons/md";
 
 const FREE_FEATURES = [
@@ -49,6 +50,7 @@ export default function Home() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
@@ -75,29 +77,65 @@ export default function Home() {
 
       <div className="min-h-screen bg-cp-base text-white">
         <header className="fixed inset-x-0 top-0 z-40 border-b border-white/[0.08] bg-cp-base/80 backdrop-blur-xl">
-          <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+          <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 px-4 sm:h-16 sm:px-6">
             <BrandLogo size="default" />
             <nav className="hidden items-center gap-6 text-sm text-cp-muted md:flex">
               <a href="#gratis" className="transition hover:text-white">Grátis</a>
               <a href="#consultor-ia" className="transition hover:text-white">Consultor IA</a>
               <a href="#planos" className="transition hover:text-white">Planos</a>
             </nav>
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-3">
               <button
                 type="button"
                 onClick={() => setIsModalOpen(true)}
-                className="rounded-full px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10"
+                className="rounded-full px-3 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10 sm:px-4"
               >
                 Entrar
               </button>
               <Link
                 href="/signup"
-                className="rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400 sm:px-5"
+                className="hidden rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400 sm:inline-flex sm:px-5"
               >
                 Criar conta grátis
               </Link>
+              <button
+                type="button"
+                aria-expanded={mobileNavOpen}
+                aria-label={mobileNavOpen ? "Fechar menu" : "Abrir menu"}
+                onClick={() => setMobileNavOpen((open) => !open)}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 text-slate-200 md:hidden"
+              >
+                {mobileNavOpen ? <MdClose size={22} /> : <MdMenu size={22} />}
+              </button>
             </div>
           </div>
+          {mobileNavOpen && (
+            <nav className="border-t border-white/[0.08] bg-cp-base/95 px-4 py-3 md:hidden">
+              <div className="flex flex-col gap-1">
+                {[
+                  { href: "#gratis", label: "Grátis" },
+                  { href: "#consultor-ia", label: "Consultor IA" },
+                  { href: "#planos", label: "Planos" },
+                ].map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileNavOpen(false)}
+                    className="rounded-lg px-3 py-2.5 text-sm text-cp-muted transition hover:bg-white/5 hover:text-white"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+                <Link
+                  href="/signup"
+                  onClick={() => setMobileNavOpen(false)}
+                  className="mt-2 rounded-lg bg-emerald-500 px-3 py-2.5 text-center text-sm font-semibold text-white"
+                >
+                  Criar conta grátis
+                </Link>
+              </div>
+            </nav>
+          )}
         </header>
 
         <main>

@@ -148,22 +148,22 @@ export default function AiPage({ usuario, dashboardSnapshot }: Props) {
           <div className="mx-auto flex max-w-6xl flex-col gap-6 lg:flex-row">
             <div className="flex min-w-0 flex-1 flex-col gap-4">
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
+                <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
+                  <div className="min-w-0">
                     <div className="mb-1 flex items-center gap-2 text-ai">
                       <FaWandMagicSparkles />
                       <span className="text-xs font-semibold uppercase tracking-wider">
                         IA Financeira
                       </span>
                     </div>
-                    <h2 className="text-2xl font-bold text-white md:text-3xl">
+                    <h2 className="text-xl font-bold text-white sm:text-2xl md:text-3xl">
                       Seu consultor financeiro inteligente
                     </h2>
                     <p className="mt-1 text-sm text-cp-muted">
                       Pergunte qualquer coisa sobre seu dinheiro — respostas com seus dados reais.
                     </p>
                   </div>
-                  <div className="flex flex-col items-end gap-2">
+                  <div className="flex shrink-0 flex-wrap items-start gap-2 sm:flex-col sm:items-end">
                     <AiCreditsBadge credits={credits} />
                   </div>
                 </div>
@@ -193,7 +193,7 @@ export default function AiPage({ usuario, dashboardSnapshot }: Props) {
                 ))}
               </div>
 
-              <PremiumCard glow="ai" className="relative min-h-[420px] flex-1 p-4 sm:p-5">
+              <PremiumCard glow="ai" className="relative min-h-[320px] flex-1 p-3 sm:min-h-[420px] sm:p-5">
                 {chatLocked ? (
                   <AiPremiumUpsell credits={credits} variant="overlay" loading={creditsLoading} />
                 ) : null}

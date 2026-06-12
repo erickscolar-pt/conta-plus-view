@@ -66,7 +66,7 @@ export default function AiChat({ seedMessage, onMessageSent, disabled, disabledR
   }
 
   return (
-    <div className="flex h-full min-h-[380px] flex-col">
+    <div className="flex h-full min-h-[280px] flex-col sm:min-h-[380px]">
       <div className="border-b border-white/[0.08] pb-3">
         <h3 className="text-sm font-medium text-white">Chat Financeiro</h3>
         <p className="text-xs text-cp-subtle">
@@ -102,18 +102,18 @@ export default function AiChat({ seedMessage, onMessageSent, disabled, disabledR
         <div ref={bottomRef} />
       </div>
       <form onSubmit={handleSubmit} className="border-t border-white/[0.08] pt-3">
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={disabled ? "Assine o Premium para usar o chat" : "Digite sua pergunta..."}
-            className="flex-1 rounded-xl border border-white/[0.08] bg-cp-base px-3 py-2.5 text-sm text-white outline-none focus:border-ai/40 focus:ring-2 focus:ring-ai/20 disabled:cursor-not-allowed disabled:opacity-50"
+            className="min-w-0 flex-1 rounded-xl border border-white/[0.08] bg-cp-base px-3 py-2.5 text-base text-white outline-none focus:border-ai/40 focus:ring-2 focus:ring-ai/20 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
             disabled={loading || disabled}
           />
           <button
             type="submit"
             disabled={loading || disabled || !input.trim()}
-            className="rounded-xl bg-gradient-to-r from-ai to-planning px-4 py-2.5 text-sm font-medium text-white shadow-glow-ai transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-xl bg-gradient-to-r from-ai to-planning px-4 py-2.5 text-sm font-medium text-white shadow-glow-ai transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
           >
             Enviar
           </button>

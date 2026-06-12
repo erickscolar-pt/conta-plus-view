@@ -25,7 +25,7 @@ export default function LoggedLayout({ usuario, children }: LoggedLayoutProps) {
       />
 
       <MenuLateral />
-      <div className="relative z-10 flex min-w-0 flex-1 flex-col pb-24 lg:ml-64 lg:pb-0">
+      <div className="relative z-10 flex min-w-0 flex-1 flex-col pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] lg:ml-64 lg:pb-0">
         <Header usuario={usuario} />
         {children}
       </div>

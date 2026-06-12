@@ -112,24 +112,26 @@ export default function AiPremiumUpsell({
         ))}
       </ul>
 
-      <div className="mt-5 flex flex-wrap items-center gap-3">
+      <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
         <Link
           href="/planos"
           onClick={onUpgradeClick}
-          className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-ai to-planning px-5 py-2.5 text-sm font-semibold text-white shadow-glow-ai transition hover:brightness-110"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-ai to-planning px-5 py-2.5 text-sm font-semibold text-white shadow-glow-ai transition hover:brightness-110 sm:w-auto"
         >
           Assinar por {monthlyLabel}/mês
           <FaArrowRight size={12} />
         </Link>
-        <span className="text-xs text-cp-subtle">ou {annualLabel}/ano · cancele quando quiser</span>
+        <span className="text-center text-xs text-cp-subtle sm:text-left">
+          ou {annualLabel}/ano · cancele quando quiser
+        </span>
       </div>
     </>
   );
 
   if (variant === "overlay") {
     return (
-      <div className="absolute inset-0 z-10 flex items-end sm:items-center justify-center rounded-2xl bg-cp-base/85 p-4 backdrop-blur-sm">
-        <div className="w-full max-w-md rounded-2xl border border-ai/25 bg-cp-card p-5 shadow-glow-ai ring-1 ring-ai/10">
+      <div className="absolute inset-0 z-10 flex items-end justify-center overflow-y-auto rounded-2xl bg-cp-base/85 p-3 backdrop-blur-sm sm:items-center sm:p-4">
+        <div className="my-auto w-full max-w-md max-h-[min(85vh,520px)] overflow-y-auto rounded-2xl border border-ai/25 bg-cp-card p-4 shadow-glow-ai ring-1 ring-ai/10 sm:p-5">
           {inner}
         </div>
       </div>
