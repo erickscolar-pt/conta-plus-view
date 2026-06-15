@@ -40,7 +40,7 @@ export default function MovimentacoesListControls({
       <div className="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between">
         <div className="relative min-w-0 flex-1 lg:max-w-md">
           <MdSearch
-            className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500"
+            className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-cp-subtle"
             aria-hidden
           />
           <input
@@ -48,18 +48,18 @@ export default function MovimentacoesListControls({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={searchPlaceholder}
-            className="w-full rounded-xl border border-white/10 bg-cp-base/80 py-2.5 pl-10 pr-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-xl border border-white/[0.08] bg-cp-base/80 py-2.5 pl-10 pr-3 text-sm text-white placeholder:text-cp-subtle focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
             autoComplete="off"
           />
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
           {extraFilters}
-          <label className="flex items-center gap-2 text-sm text-slate-400">
+          <label className="flex items-center gap-2 text-sm text-cp-muted">
             <span className="whitespace-nowrap">Itens por página</span>
             <select
               value={pageSize}
               onChange={(e) => onPageSizeChange(Number(e.target.value))}
-              className="rounded-lg border border-white/10 bg-cp-base/80 px-2 py-1.5 text-sm text-slate-100 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="rounded-lg border border-white/[0.08] bg-cp-base/80 px-2 py-1.5 text-sm text-white focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
             >
               {PAGE_SIZE_OPTIONS.map((n) => (
                 <option key={n} value={n}>
@@ -72,14 +72,14 @@ export default function MovimentacoesListControls({
       </div>
 
       {totalItems > 0 ? (
-        <div className="flex flex-col gap-2 border-t border-white/5 pt-3 text-sm text-slate-400 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-2 border-t border-white/[0.06] pt-3 text-sm text-cp-muted sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <p className="tabular-nums">
             Mostrando{" "}
-            <span className="font-medium text-slate-200">
+            <span className="font-medium text-white/90">
               {start}–{end}
             </span>{" "}
             de{" "}
-            <span className="font-medium text-slate-200">{totalItems}</span>{" "}
+            <span className="font-medium text-white/90">{totalItems}</span>{" "}
             {itemLabel}
           </p>
           <div className="flex items-center gap-1">
@@ -87,19 +87,19 @@ export default function MovimentacoesListControls({
               type="button"
               disabled={safePage <= 1}
               onClick={() => onPageChange(safePage - 1)}
-              className="inline-flex items-center rounded-lg border border-white/10 bg-cp-card-secondary/80 px-2 py-1.5 text-slate-200 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex items-center rounded-lg border border-white/[0.08] bg-cp-card-secondary/80 px-2 py-1.5 text-white/90 transition hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
               aria-label="Página anterior"
             >
               <MdChevronLeft className="h-5 w-5" />
             </button>
-            <span className="min-w-[5rem] px-2 text-center tabular-nums text-slate-300">
+            <span className="min-w-[5rem] px-2 text-center tabular-nums text-cp-muted">
               {safePage} / {totalPages}
             </span>
             <button
               type="button"
               disabled={safePage >= totalPages}
               onClick={() => onPageChange(safePage + 1)}
-              className="inline-flex items-center rounded-lg border border-white/10 bg-cp-card-secondary/80 px-2 py-1.5 text-slate-200 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex items-center rounded-lg border border-white/[0.08] bg-cp-card-secondary/80 px-2 py-1.5 text-white/90 transition hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-40"
               aria-label="Próxima página"
             >
               <MdChevronRight className="h-5 w-5" />

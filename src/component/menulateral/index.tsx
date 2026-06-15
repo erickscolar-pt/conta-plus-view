@@ -358,11 +358,11 @@ export default function MenuLateral() {
       )}
 
       <Modal isOpen={isModalExcel} onClose={handleCloseExcel} size="md">
-        <div className="flex w-full flex-col gap-5 text-slate-100">
+        <div className="flex w-full flex-col gap-5 text-white">
           <div>
             <h2 className="text-lg font-semibold text-white">Importar extrato</h2>
             <p className="mt-1 text-sm text-cp-muted">
-              Envie <span className="text-slate-300">.xlsx, .xls, .csv, .ofx ou .pdf</span>.
+              Envie <span className="text-white/80">.xlsx, .xls, .csv, .ofx ou .pdf</span>.
             </p>
           </div>
           <ButtonPages loading={loadingDownloadExcel} onClick={downloadExcel}>
@@ -379,7 +379,7 @@ export default function MenuLateral() {
               onChange={handleFileChange}
               disabled={loadingSendFileExcel}
               ref={fileInputRef}
-              className="block w-full cursor-pointer rounded-xl border border-white/[0.08] bg-cp-base px-3 py-2 text-sm text-slate-300 file:mr-3 file:rounded-lg file:border-0 file:bg-dash/20 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand-200"
+              className="block w-full cursor-pointer rounded-xl border border-white/[0.08] bg-cp-base px-3 py-2 text-sm text-cp-muted file:mr-3 file:rounded-lg file:border-0 file:bg-dash/20 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand-200"
             />
             {selectedFile && (
               <ButtonPages loading={loadingSendFileExcel} onClick={handleSendFile}>

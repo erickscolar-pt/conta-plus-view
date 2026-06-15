@@ -385,10 +385,10 @@ export default function Dashboard({
               <section className="rounded-2xl border border-white/[0.08] bg-cp-card p-4 backdrop-blur-xl sm:p-6">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                   <div>
-                    <h2 className="text-sm font-semibold text-slate-100">
+                    <h2 className="text-sm font-semibold text-white">
                       Período de análise
                     </h2>
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="mt-1 text-xs text-cp-subtle">
                       Atalhos rápidos ou datas personalizadas
                     </p>
                   </div>
@@ -396,7 +396,7 @@ export default function Dashboard({
                     <button
                       type="button"
                       onClick={handleCopyCurrentViewLink}
-                      className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-slate-200 transition hover:bg-white/10 sm:text-sm"
+                      className="inline-flex items-center gap-2 rounded-xl border border-white/[0.08] bg-cp-card px-4 py-2 text-xs font-semibold text-white/90 transition hover:bg-white/[0.06] sm:text-sm"
                     >
                       <MdLink className="h-4 w-4" />
                       Copiar link desta visão
@@ -428,7 +428,7 @@ export default function Dashboard({
                         className={`rounded-full px-3 py-1.5 text-xs font-medium transition sm:text-sm ${
                           preset === id
                             ? "bg-primary text-white shadow-lg shadow-brand-500/25"
-                            : "bg-white/10 text-slate-200 hover:bg-white/15"
+                            : "bg-white/10 text-white/90 hover:bg-white/15"
                         } disabled:opacity-50`}
                       >
                         {label}
@@ -438,7 +438,7 @@ export default function Dashboard({
                 </div>
                 <div className="mt-4 flex flex-col gap-3 border-t border-white/10 pt-4 sm:flex-row sm:items-end">
                   <div className="flex flex-1 flex-col gap-1 sm:max-w-xs">
-                    <label className="text-xs font-medium text-slate-400">
+                    <label className="text-xs font-medium text-cp-muted">
                       Data inicial
                     </label>
                     <input
@@ -448,11 +448,11 @@ export default function Dashboard({
                         setDateStart(e.target.value);
                         setPreset("custom");
                       }}
-                      className="rounded-xl border border-white/10 bg-cp-card-secondary/80 px-3 py-2 text-sm text-slate-100 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      className="rounded-xl border border-white/10 bg-cp-card-secondary/80 px-3 py-2 text-sm text-white shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                     />
                   </div>
                   <div className="flex flex-1 flex-col gap-1 sm:max-w-xs">
-                    <label className="text-xs font-medium text-slate-400">
+                    <label className="text-xs font-medium text-cp-muted">
                       Data final
                     </label>
                     <input
@@ -462,7 +462,7 @@ export default function Dashboard({
                         setDateEnd(e.target.value);
                         setPreset("custom");
                       }}
-                      className="rounded-xl border border-white/10 bg-cp-card-secondary/80 px-3 py-2 text-sm text-slate-100 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                      className="rounded-xl border border-white/10 bg-cp-card-secondary/80 px-3 py-2 text-sm text-white shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                     />
                   </div>
                   <button
@@ -516,7 +516,7 @@ export default function Dashboard({
               {byType.length > 0 && (
                 <section className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-sm backdrop-blur-sm">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-cp-muted">
                       Filtrar por tipo de dívida:
                     </span>
                     <button
@@ -524,8 +524,8 @@ export default function Dashboard({
                       onClick={() => applyDebtTypeFilter("all")}
                       className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
                         selectedDebtType === "all"
-                          ? "bg-emerald-500/25 text-emerald-200"
-                          : "bg-white/10 text-slate-300 hover:bg-white/15"
+                          ? "bg-income/20 text-green-100"
+                          : "bg-white/10 text-cp-muted hover:bg-white/15"
                       }`}
                     >
                       Todas
@@ -538,7 +538,7 @@ export default function Dashboard({
                         className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
                           selectedDebtType === item.tipo
                             ? "bg-red-500/25 text-red-200"
-                            : "bg-white/10 text-slate-300 hover:bg-white/15"
+                            : "bg-white/10 text-cp-muted hover:bg-white/15"
                         }`}
                       >
                         {item.tipo}
@@ -551,10 +551,10 @@ export default function Dashboard({
               <section className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-sm backdrop-blur-sm">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-cp-muted">
                       Comprometimento da renda
                     </p>
-                    <p className="mt-1 text-2xl font-semibold text-slate-100">
+                    <p className="mt-1 text-2xl font-semibold text-white">
                       {debtCommitment.toFixed(1)}%
                     </p>
                   </div>
@@ -564,23 +564,23 @@ export default function Dashboard({
                         ? "bg-red-500/20 text-red-300"
                         : debtCommitment >= 60
                           ? "bg-amber-500/20 text-amber-300"
-                          : "bg-emerald-500/20 text-emerald-300"
+                          : "bg-income/20 text-income"
                     }`}
                   >
                     {debtCommitmentLabel}
                   </span>
                 </div>
-                <p className="mt-2 text-xs text-slate-500">
+                <p className="mt-2 text-xs text-cp-subtle">
                   Percentual do total de saídas sobre entradas no período.
                 </p>
               </section>
 
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <div className="rounded-3xl border border-white/10 bg-white/5 p-4 shadow-card backdrop-blur-sm sm:p-6">
-                  <h3 className="text-base font-semibold text-slate-100">
+                  <h3 className="text-base font-semibold text-white">
                     Comparativo mensal
                   </h3>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-cp-subtle">
                     Entradas vs compromissos vs valor em objetivos
                   </p>
                   <div className="mt-4">
@@ -599,10 +599,10 @@ export default function Dashboard({
                   </div>
                 </div>
                 <div className="rounded-3xl border border-white/10 bg-white/5 p-4 shadow-card backdrop-blur-sm sm:p-6">
-                  <h3 className="text-base font-semibold text-slate-100">
+                  <h3 className="text-base font-semibold text-white">
                     Evolução no tempo
                   </h3>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-cp-subtle">
                     Tendência das mesmas métricas ao longo dos meses
                   </p>
                   <div className="mt-4">
@@ -623,10 +623,10 @@ export default function Dashboard({
               </div>
 
               <div className="rounded-3xl border border-white/10 bg-white/5 p-4 shadow-card backdrop-blur-sm sm:p-6">
-                <h3 className="text-base font-semibold text-slate-100">
+                <h3 className="text-base font-semibold text-white">
                   Saldo acumulado no período
                 </h3>
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-cp-subtle">
                   Evolução diária do saldo (entradas - saídas)
                 </p>
                 <div className="mt-4">
@@ -640,10 +640,10 @@ export default function Dashboard({
 
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 <div className="rounded-3xl border border-white/10 bg-white/5 p-4 shadow-card backdrop-blur-sm sm:p-6">
-                  <h3 className="text-base font-semibold text-slate-100">
+                  <h3 className="text-base font-semibold text-white">
                     Gastos por tipo
                   </h3>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-cp-subtle">
                     Distribuição das saídas por categoria no período
                   </p>
                   <div className="mt-4">
@@ -655,10 +655,10 @@ export default function Dashboard({
                   </div>
                 </div>
                 <div className="rounded-3xl border border-white/10 bg-white/5 p-4 shadow-card backdrop-blur-sm sm:p-6">
-                  <h3 className="text-base font-semibold text-slate-100">
+                  <h3 className="text-base font-semibold text-white">
                     Pago x em aberto
                   </h3>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-cp-subtle">
                     Valor pago e pendente por tipo de dívida
                   </p>
                   <div className="mt-4">
@@ -674,18 +674,18 @@ export default function Dashboard({
               <section className="overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-card backdrop-blur-sm">
                 <div className="flex flex-col gap-1 border-b border-white/10 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
                   <div className="flex items-center gap-2">
-                    <FaTableList className="text-slate-500" />
+                    <FaTableList className="text-cp-subtle" />
                     <div>
-                      <h3 className="text-base font-semibold text-slate-100">
+                      <h3 className="text-base font-semibold text-white">
                         Lançamentos recentes
                       </h3>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-cp-subtle">
                         Últimos registros no período selecionado
                       </p>
                     </div>
                   </div>
                   {summary?.quantidadeLancamentos != null && (
-                    <span className="text-xs text-slate-500">
+                    <span className="text-xs text-cp-subtle">
                       {summary.quantidadeLancamentos} lançamento
                       {summary.quantidadeLancamentos !== 1 ? "s" : ""}
                     </span>
@@ -694,7 +694,7 @@ export default function Dashboard({
                 <div className="overflow-x-auto">
                   <table className="min-w-full text-left text-sm">
                     <thead>
-                      <tr className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wide text-slate-500">
+                      <tr className="border-b border-white/[0.08] bg-cp-base/40 text-xs uppercase tracking-wide text-cp-subtle">
                         <th className="px-4 py-3 font-medium sm:px-6">Data</th>
                         <th className="px-4 py-3 font-medium sm:px-6">
                           Descrição
@@ -710,10 +710,10 @@ export default function Dashboard({
                         <tr>
                           <td
                             colSpan={4}
-                            className="px-6 py-10 text-center text-slate-500"
+                            className="px-6 py-10 text-center text-cp-subtle"
                           >
                             Nenhum lançamento neste período. Cadastre entradas em{" "}
-                            <strong className="text-slate-300">Movimentações</strong>{" "}
+                            <strong className="text-cp-muted">Movimentações</strong>{" "}
                             (aba Entradas ou Saídas).
                           </td>
                         </tr>
@@ -723,17 +723,17 @@ export default function Dashboard({
                             key={`${row.type}-${row.id}`}
                             className="hover:bg-white/5"
                           >
-                            <td className="whitespace-nowrap px-4 py-3 text-slate-400 sm:px-6">
+                            <td className="whitespace-nowrap px-4 py-3 text-cp-muted sm:px-6">
                               {row.date
                                 ? new Date(row.date + "T12:00:00").toLocaleDateString(
                                     "pt-BR",
                                   )
                                 : "—"}
                             </td>
-                            <td className="max-w-[220px] px-4 py-3 text-slate-100 sm:max-w-md sm:px-6">
+                            <td className="max-w-[220px] px-4 py-3 text-white sm:max-w-md sm:px-6">
                               <div className="truncate font-medium">{row.description}</div>
                               {row.type === "meta" && row.categoria ? (
-                                <div className="mt-0.5 truncate text-xs text-slate-500">
+                                <div className="mt-0.5 truncate text-xs text-cp-subtle">
                                   Categoria: {row.categoria}
                                 </div>
                               ) : null}
@@ -747,7 +747,7 @@ export default function Dashboard({
                               <span
                                 className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
                                   row.type === "renda"
-                                    ? "bg-emerald-500/20 text-emerald-300"
+                                    ? "bg-income/20 text-income"
                                     : row.type === "divida"
                                       ? "bg-red-500/20 text-red-300"
                                       : "bg-sky-500/20 text-sky-300"
@@ -756,7 +756,7 @@ export default function Dashboard({
                                 {TYPE_LABEL[row.type]}
                               </span>
                             </td>
-                            <td className="whitespace-nowrap px-4 py-3 text-right font-medium tabular-nums text-slate-100 sm:px-6">
+                            <td className="whitespace-nowrap px-4 py-3 text-right font-medium tabular-nums text-white sm:px-6">
                               {formatCurrency(row.value)}
                             </td>
                           </tr>
