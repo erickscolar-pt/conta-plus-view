@@ -13,6 +13,7 @@ export const PUBLIC_ROUTES = [
   '/esqueci-senha',
   '/redefinir-senha',
   '/importreport',
+  '/instalar-app',
 ] as const;
 
 export function isPublicRoute(pathname: string): boolean {

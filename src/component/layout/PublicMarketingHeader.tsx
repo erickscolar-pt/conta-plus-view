@@ -10,7 +10,7 @@ const NAV_LINKS = [
 ] as const;
 
 type Props = {
-  onLoginClick: () => void;
+  onLoginClick?: () => void;
 };
 
 export default function PublicMarketingHeader({ onLoginClick }: Props) {
@@ -43,13 +43,22 @@ export default function PublicMarketingHeader({ onLoginClick }: Props) {
         </nav>
 
         <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-          <button
-            type="button"
-            onClick={onLoginClick}
-            className="rounded-full px-2.5 py-2 text-xs font-medium text-slate-200 transition hover:bg-white/10 sm:px-4 sm:text-sm"
-          >
-            Entrar
-          </button>
+          {onLoginClick ? (
+            <button
+              type="button"
+              onClick={onLoginClick}
+              className="rounded-full px-2.5 py-2 text-xs font-medium text-slate-200 transition hover:bg-white/10 sm:px-4 sm:text-sm"
+            >
+              Entrar
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              className="rounded-full px-2.5 py-2 text-xs font-medium text-slate-200 transition hover:bg-white/10 sm:px-4 sm:text-sm"
+            >
+              Entrar
+            </Link>
+          )}
           <Link
             href="/signup"
                 className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-brand-500/30 transition hover:bg-primary-hover sm:inline-flex sm:px-5"
@@ -88,16 +97,26 @@ export default function PublicMarketingHeader({ onLoginClick }: Props) {
                   {item.label}
                 </a>
               ))}
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileNavOpen(false);
-                  onLoginClick();
-                }}
-                className="rounded-lg px-3 py-2.5 text-left text-sm text-cp-muted transition hover:bg-white/5 hover:text-white"
-              >
-                Entrar
-              </button>
+              {onLoginClick ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileNavOpen(false);
+                    onLoginClick();
+                  }}
+                  className="rounded-lg px-3 py-2.5 text-left text-sm text-cp-muted transition hover:bg-white/5 hover:text-white"
+                >
+                  Entrar
+                </button>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={() => setMobileNavOpen(false)}
+                  className="rounded-lg px-3 py-2.5 text-sm text-cp-muted transition hover:bg-white/5 hover:text-white"
+                >
+                  Entrar
+                </Link>
+              )}
               <Link
                 href="/signup"
                 onClick={() => setMobileNavOpen(false)}

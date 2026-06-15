@@ -1,10 +1,12 @@
 {
+  "id": "/",
   "name": "Conta+ — Finanças pessoais",
   "short_name": "Conta+",
   "description": "Gestão financeira pessoal: entradas, saídas, metas, dashboard e IA.",
-  "start_url": "/dashboard",
+  "start_url": "/?utm_source=pwa",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "portrait-primary",
   "background_color": "#1A1216",
   "theme_color": "#1A1216",
@@ -12,14 +14,20 @@
   "categories": ["finance", "productivity"],
   "icons": [
     {
-      "src": "/adaptive-icon.png",
-      "sizes": "560x503",
+      "src": "/icon-192.png",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/adaptive-icon.png",
-      "sizes": "560x503",
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     }

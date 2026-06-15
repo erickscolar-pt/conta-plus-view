@@ -23,6 +23,7 @@ import {
   MdClose,
   MdPerson,
   MdStar,
+  MdInstallMobile,
 } from "react-icons/md";
 
 const NAV_ITEMS = [
@@ -325,6 +326,14 @@ export default function MenuLateral() {
               })}
             </div>
             <div className="mt-3 space-y-1 border-t border-white/[0.08] pt-3">
+              <button
+                type="button"
+                onClick={() => navigate("/instalar-app")}
+                className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-cp-muted transition hover:bg-white/[0.04] hover:text-white"
+              >
+                <MdInstallMobile size={20} />
+                Instalar app
+              </button>
               <button
                 type="button"
                 onClick={() => navigate("/planos")}

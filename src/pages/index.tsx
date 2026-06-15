@@ -128,6 +128,12 @@ export default function Home() {
                       <FaWandMagicSparkles className="shrink-0 text-ai" />
                       Consultor IA
                     </a>
+                    <Link
+                      href="/instalar-app"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-white/[0.08] bg-cp-card px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-white/[0.04] sm:hidden"
+                    >
+                      📲 Instalar app no celular
+                    </Link>
                   </div>
                   <div className="mt-6 flex flex-wrap gap-2 sm:mt-10 sm:gap-3">
                     {[

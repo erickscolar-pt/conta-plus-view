@@ -161,6 +161,15 @@ export default function LoginLayout({ title, description, children }: LoginLayou
               </Link>
             </p>
 
+            <p className="mt-4 text-center text-sm text-cp-subtle lg:hidden">
+              <Link
+                href="/instalar-app"
+                className="font-medium text-brand-300 transition hover:text-white"
+              >
+                📲 Instalar app no celular (PWA ou APK)
+              </Link>
+            </p>
+
             <p className="mt-4 text-center lg:hidden">
               <Link
                 href="/"

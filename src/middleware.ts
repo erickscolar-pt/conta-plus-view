@@ -7,7 +7,9 @@ function isStaticOrApiPath(pathname: string) {
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/favicon') ||
-    !!pathname.match(/\.(ico|png|jpg|svg|webp|css|js)$/)
+    pathname === '/manifest.webmanifest' ||
+    pathname === '/sw.js' ||
+    !!pathname.match(/\.(ico|png|jpg|svg|webp|css|js|webmanifest)$/)
   );
 }
 
