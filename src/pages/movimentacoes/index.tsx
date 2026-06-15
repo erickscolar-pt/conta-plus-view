@@ -13,6 +13,7 @@ import {
 } from "@/model/type";
 import GanhosPanel from "@/component/movimentacoes/GanhosPanel";
 import GastosPanel from "@/component/movimentacoes/GastosPanel";
+import MetricCard from "@/component/metriccard";
 import {
   FaArrowTrendDown,
   FaArrowTrendUp,
@@ -105,43 +106,25 @@ export default function Movimentacoes({
               </div>
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 shadow-sm backdrop-blur-sm">
-                  <div className="flex items-center gap-2 text-emerald-300">
-                    <FaArrowTrendUp className="opacity-90" />
-                    <span className="text-xs font-semibold uppercase tracking-wide">
-                      Entradas (tudo)
-                    </span>
-                  </div>
-                  <p className="mt-2 text-xl font-semibold tabular-nums text-emerald-100">
-                    {formatCurrency(totalEntradas)}
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-4 shadow-sm backdrop-blur-sm">
-                  <div className="flex items-center gap-2 text-red-300">
-                    <FaArrowTrendDown className="opacity-90" />
-                    <span className="text-xs font-semibold uppercase tracking-wide">
-                      Saídas (compromissos)
-                    </span>
-                  </div>
-                  <p className="mt-2 text-xl font-semibold tabular-nums text-red-100">
-                    {formatCurrency(totalSaidas)}
-                  </p>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-sm backdrop-blur-sm">
-                  <div className="flex items-center gap-2 text-slate-400">
-                    <FaScaleBalanced className="opacity-90" />
-                    <span className="text-xs font-semibold uppercase tracking-wide">
-                      Saldo (entradas − saídas)
-                    </span>
-                  </div>
-                  <p
-                    className={`mt-2 text-xl font-semibold tabular-nums ${
-                      saldo >= 0 ? "text-emerald-300" : "text-red-300"
-                    }`}
-                  >
-                    {formatCurrency(saldo)}
-                  </p>
-                </div>
+                <MetricCard
+                  title="Entradas (tudo)"
+                  value={formatCurrency(totalEntradas)}
+                  icon={FaArrowTrendUp}
+                  variant="income"
+                />
+                <MetricCard
+                  title="Saídas (compromissos)"
+                  value={formatCurrency(totalSaidas)}
+                  icon={FaArrowTrendDown}
+                  variant="expense"
+                />
+                <MetricCard
+                  title="Saldo"
+                  subtitle="Entradas − saídas"
+                  value={formatCurrency(saldo)}
+                  icon={FaScaleBalanced}
+                  variant={saldo >= 0 ? "income" : "expense"}
+                />
               </div>
 
               <div

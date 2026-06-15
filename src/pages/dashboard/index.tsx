@@ -18,6 +18,7 @@ import {
 import { MdFilterAltOff, MdLink } from "react-icons/md";
 import ChartGraficLine from "@/component/chartgraficline";
 import MetricCard from "@/component/metriccard";
+import AiChatPrompts from "@/component/ai/AiChatPrompts";
 import { Usuario } from "@/model/type";
 import DebtByTypeDoughnut from "@/component/dashboard/DebtByTypeDoughnut";
 import PaidOpenByTypeBar from "@/component/dashboard/PaidOpenByTypeBar";
@@ -378,6 +379,8 @@ export default function Dashboard({
                   Receitas, despesas, saldo e evolução — tudo em tempo real.
                 </p>
               </header>
+
+              <AiChatPrompts />
 
               <section className="rounded-2xl border border-white/[0.08] bg-cp-card p-4 backdrop-blur-xl sm:p-6">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">

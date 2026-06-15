@@ -1,28 +1,31 @@
-import { ReactNode,ButtonHTMLAttributes } from 'react';
-import styles from './styles.module.scss';
+import { ReactNode, ButtonHTMLAttributes, CSSProperties } from "react";
+import Button from "../Button";
 
-import { FaSpinner } from 'react-icons/fa'
-
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{
- loading?: boolean,
- bg?: string,
- color?: string,
- children: ReactNode,
+interface ButtonPagesProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  loading?: boolean;
+  bg?: string;
+  color?: string;
+  children: ReactNode;
 }
 
-export function ButtonPages({loading, children, bg ,color ,...rest}: ButtonProps){
-    return(
-        <button
-        style={{ backgroundColor: bg ? bg : '#10b981', color: color ? color : '#FFF' }}
-        className={styles.btn}
-        disabled={loading}
-        {...rest}
-        >
-            {loading ? (
-                <FaSpinner color='#fff' size={16}/>
-            ) : (
-            <>{children}</>
-            )}
-        </button>
-    )
+/** @deprecated Use `Button` from `@/component/ui/Button` */
+export function ButtonPages({
+  loading,
+  children,
+  bg,
+  color,
+  className = "",
+  style,
+  ...rest
+}: ButtonPagesProps) {
+  const legacyStyle: CSSProperties | undefined =
+    bg || color
+      ? { backgroundColor: bg, color: color ?? "#fff", ...style }
+      : style;
+
+  return (
+    <Button loading={loading} variant="primary" className={className} style={legacyStyle} {...rest}>
+      {children}
+    </Button>
+  );
 }
