@@ -216,7 +216,7 @@ export default function SubscriptionPlanPanel({
 
   if (loading) {
     return (
-      <div className={`rounded-2xl border border-white/10 bg-white/5 p-6 text-center text-slate-400 ${className}`}>
+      <div className={`rounded-2xl border border-white/[0.08] bg-cp-card p-6 text-center text-cp-muted ${className}`}>
         Carregando plano...
       </div>
     );
@@ -233,7 +233,7 @@ export default function SubscriptionPlanPanel({
             </span>
           </div>
           {variant === "full" && (
-            <p className="mt-2 text-sm text-slate-400">
+            <p className="mt-2 text-sm text-cp-muted">
               Escolha mensal ou anual. O plano gratuito só volta automaticamente após o vencimento do Premium.
             </p>
           )}
@@ -253,18 +253,18 @@ export default function SubscriptionPlanPanel({
         </div>
       )}
 
-      <div className="rounded-xl border border-white/10 bg-cp-card-secondary/40 px-4 py-3 text-sm text-slate-300">
+      <div className="rounded-xl border border-white/[0.08] bg-cp-base/40 px-4 py-3 text-sm text-cp-muted">
         <p>
           Plano atual:{" "}
           <span className="font-medium text-brand-300">
             {subscription?.plan?.name ?? "Conta+ Free"}
           </span>
           {subscription?.billing_cycle && isPremium && (
-            <span className="text-slate-400"> · {cycleLabel(subscription.billing_cycle)}</span>
+            <span className="text-cp-muted"> · {cycleLabel(subscription.billing_cycle)}</span>
           )}
         </p>
         {subscription?.start_date && isPremium && (
-          <p className="mt-1 text-slate-400">
+          <p className="mt-1 text-cp-muted">
             Início: {new Date(subscription.start_date).toLocaleDateString("pt-BR")}
             {subscription.end_date && (
               <>
@@ -289,7 +289,7 @@ export default function SubscriptionPlanPanel({
 
       {showCycleToggle && (
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-sm text-slate-400">Ciclo de cobrança:</span>
+          <span className="text-sm text-cp-muted">Ciclo de cobrança:</span>
           <div className="inline-flex rounded-xl border border-white/[0.08] bg-cp-card p-1">
             {(["monthly", "annual"] as BillingCycle[]).map((cycle) => (
               <button
@@ -356,7 +356,7 @@ export default function SubscriptionPlanPanel({
                 className={`relative flex flex-col rounded-2xl border p-5 ${
                   highlighted
                     ? "border-primary/40 bg-gradient-to-br from-primary/10 to-ai/5"
-                    : "border-white/10 bg-white/5"
+                    : "border-white/[0.08] bg-cp-card"
                 }`}
               >
                 <h3 className="text-lg font-semibold text-white">{plan.name}</h3>
@@ -370,13 +370,13 @@ export default function SubscriptionPlanPanel({
                         ),
                       )}
                   {plan.price_cents > 0 && (
-                    <span className="text-sm font-normal text-slate-400">
+                    <span className="text-sm font-normal text-cp-muted">
                       {" "}
                       / {isPaid && highlighted && billingCycle === "annual" ? "ano" : "mês"}
                     </span>
                   )}
                 </p>
-                <ul className="mt-4 flex-1 space-y-2 text-sm text-slate-300">
+                <ul className="mt-4 flex-1 space-y-2 text-sm text-cp-muted">
                   {planFeatures(plan).map((feature) => (
                     <li key={feature} className="flex items-start gap-2">
                       <FaCheck className="mt-0.5 shrink-0 text-brand-400" />
@@ -386,7 +386,7 @@ export default function SubscriptionPlanPanel({
                 </ul>
                 <div className="mt-5">
                   {plan.code === "FREE" && isPremium ? (
-                    <p className="text-center text-xs text-slate-500">
+                    <p className="text-center text-xs text-cp-subtle">
                       {freePlanBlockedMessage(subscription)}
                     </p>
                   ) : isPaid ? (
@@ -402,7 +402,7 @@ export default function SubscriptionPlanPanel({
                         : planActionLabel(plan, subscription, billingCycle)}
                     </button>
                   ) : (
-                    <p className="text-center text-xs text-slate-500">
+                    <p className="text-center text-xs text-cp-subtle">
                       Plano gratuito — ativo automaticamente na conta
                     </p>
                   )}
@@ -414,13 +414,13 @@ export default function SubscriptionPlanPanel({
       )}
 
       {payment && isPendingPayment(payment.status) && selectedPlan && (
-        <div className="space-y-4 rounded-2xl border border-primary/20 bg-black/20 p-5">
+        <div className="space-y-4 rounded-2xl border border-primary/20 bg-cp-base/50 p-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <h4 className="font-medium text-white">
                 PIX pendente — {selectedPlan.name} ({cycleLabel(payment.billingCycle)})
               </h4>
-              <p className="text-xs text-slate-400">Conclua este pagamento para alterar o plano</p>
+              <p className="text-xs text-cp-muted">Conclua este pagamento para alterar o plano</p>
             </div>
             <button
               type="button"
@@ -447,12 +447,12 @@ export default function SubscriptionPlanPanel({
               <input
                 readOnly
                 value={payment.qrCode}
-                className="flex-1 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-xs text-slate-300"
+                className="flex-1 rounded-lg border border-white/[0.08] bg-cp-base px-3 py-2 text-xs text-cp-muted"
               />
               <button
                 type="button"
                 onClick={() => void copyPixCode()}
-                className="rounded-lg border border-white/10 px-3 py-2 text-brand-400"
+                className="rounded-lg border border-white/[0.08] bg-cp-card px-3 py-2 text-brand-300 transition hover:bg-white/[0.04]"
                 aria-label="Copiar PIX"
               >
                 <FaCopy />
