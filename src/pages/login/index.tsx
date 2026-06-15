@@ -1,10 +1,13 @@
 import { FormEvent, useContext, useState } from "react";
+import Link from "next/link";
+import Router from "next/router";
 import { AuthContexts } from "@/contexts/AuthContexts";
 import { canSSRGuest } from "@/utils/canSSRGuest";
 import { toast } from "react-toastify";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import Link from "next/link";
-import AuthLayout from "@/component/layout/AuthLayout";
+import { FaArrowRight, FaEye, FaEyeSlash } from "react-icons/fa";
+import { MdEmail, MdLock } from "react-icons/md";
+import LoginLayout from "@/component/layout/LoginLayout";
+import SignupField, { signupInputClass } from "@/component/signup/SignupField";
 
 export default function Login() {
   const { signIn } = useContext(AuthContexts);
@@ -28,40 +31,30 @@ export default function Login() {
   }
 
   return (
-    <AuthLayout
+    <LoginLayout
       title="Entrar na sua conta"
       description="Use seu e-mail ou nome de usuário cadastrado."
-      footer={
-        <p className="mt-6 text-center text-sm text-cp-subtle">
-          Não tem conta?{" "}
-          <Link
-            href="/signup"
-            className="font-medium text-primary transition hover:text-primary-hover"
-          >
-            Criar conta grátis
-          </Link>
-        </p>
-      }
     >
-      <form onSubmit={handleLogin} className="flex flex-col gap-5">
-        <div>
-          <label className="mb-2 block text-sm font-medium text-slate-300">
-            E-mail ou nome de usuário
-          </label>
+      <form onSubmit={handleLogin} className="space-y-6">
+        <SignupField
+          label="E-mail ou nome de usuário"
+          hint="O mesmo que você usou ao criar a conta."
+          icon={<MdEmail size={16} />}
+        >
           <input
             type="text"
             placeholder="ex: seu@email.com"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             autoComplete="username"
-            className="w-full rounded-xl border border-white/[0.08] bg-cp-base px-4 py-3 text-white placeholder:text-cp-subtle focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className={signupInputClass}
           />
-        </div>
+        </SignupField>
 
-        <div>
-          <label className="mb-2 block text-sm font-medium text-slate-300">
-            Senha
-          </label>
+        <SignupField
+          label="Senha"
+          icon={<MdLock size={16} />}
+        >
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -69,7 +62,7 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
-              className="w-full rounded-xl border border-white/[0.08] bg-cp-base py-3 pl-4 pr-12 text-white placeholder:text-cp-subtle focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className={`${signupInputClass} pr-12`}
             />
             <button
               type="button"
@@ -80,23 +73,34 @@ export default function Login() {
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
-        </div>
+        </SignupField>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="mt-1 w-full rounded-xl bg-primary py-3.5 text-sm font-semibold text-cp-base shadow-lg shadow-primary/25 transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {loading ? "Entrando…" : "Entrar"}
-        </button>
+        <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
+          <button
+            type="button"
+            onClick={() => void Router.push("/")}
+            className="text-sm font-medium text-cp-subtle transition hover:text-white"
+          >
+            ← Voltar ao início
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-dash to-brand-600 px-6 py-3.5 text-sm font-semibold text-white shadow-glow transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+          >
+            {loading ? "Entrando…" : "Entrar"}
+            {!loading ? <FaArrowRight className="text-sm" /> : null}
+          </button>
+        </div>
       </form>
 
-      <p className="mt-6 text-center text-xs text-cp-subtle">
-        <Link href="/" className="transition hover:text-cp-muted">
-          ← Voltar para a página inicial
+      <p className="mt-6 border-t border-white/[0.06] pt-5 text-center text-xs text-cp-subtle">
+        Precisa confirmar o e-mail?{" "}
+        <Link href="/verificar-email" className="font-medium text-primary hover:underline">
+          Reenviar confirmação
         </Link>
       </p>
-    </AuthLayout>
+    </LoginLayout>
   );
 }
 

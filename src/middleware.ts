@@ -1,5 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { jwtDecode } from 'jwt-decode';
+import { isPublicRoute } from '@/utils/publicRoutes';
 
 function isAdminHost(host: string | null) {
   if (!host) return false;
@@ -38,7 +39,7 @@ export function middleware(req: NextRequest) {
   const signInURL = new URL(adminHost ? '/admin/login' : '/login', req.url);
 
   if (!token) {
-    if (pathname === '/login' || pathname === '/admin/login') {
+    if (isPublicRoute(pathname)) {
       return NextResponse.next();
     }
     if (adminHost && pathname.startsWith('/admin')) {
@@ -72,21 +73,7 @@ export function middleware(req: NextRequest) {
     return response;
   }
 
-  const publicRoutes = [
-    '/',
-    '/login',
-    '/signup',
-    '/tecnologiasderastreamento',
-    '/politicadeprivacidade',
-    '/politicadecookies',
-    '/manual',
-    '/codigo',
-    '/verificar-email',
-    '/admin/login',
-  ];
-  const isPublicRoute = publicRoutes.some((route) => pathname.startsWith(route));
-
-  if (isPublicRoute) {
+  if (isPublicRoute(pathname)) {
     return NextResponse.next();
   }
 
