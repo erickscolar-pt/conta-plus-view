@@ -11,7 +11,6 @@ export const PUBLIC_ROUTES = [
   '/codigo',
   '/verificar-email',
   '/importreport',
-  '/admin/login',
 ] as const;
 
 export function isPublicRoute(pathname: string): boolean {
