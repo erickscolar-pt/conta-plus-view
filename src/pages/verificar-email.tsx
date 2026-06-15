@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
-import { setupAPIClient } from '@/services/api';
+import { getErrorMessage, setupAPIClient } from '@/services/api';
 import BrandLogo from '@/component/brand/BrandLogo';
 
 export default function VerificarEmailPage() {
@@ -13,35 +14,52 @@ export default function VerificarEmailPage() {
   const [loading, setLoading] = useState(false);
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const autoAttempted = useRef(false);
 
-  async function confirmToken() {
-    if (!token) return;
+  async function confirmToken(activeToken = token) {
+    if (!activeToken) return;
     setLoading(true);
     setError(null);
     try {
       const api = setupAPIClient();
-      await api.post('/auth/verify-email', { token });
+      await api.post('/auth/verify-email', { token: activeToken });
       setVerified(true);
       toast.success('E-mail confirmado!');
-    } catch {
-      setError('Link inválido ou expirado. Solicite um novo e-mail abaixo.');
+    } catch (err) {
+      const msg =
+        err instanceof AxiosError
+          ? getErrorMessage(err.response?.data)
+          : 'Link inválido ou expirado.';
+      setError(msg);
     } finally {
       setLoading(false);
     }
   }
 
-  async function resend() {
+  useEffect(() => {
+    if (!router.isReady || !token || autoAttempted.current) return;
+    autoAttempted.current = true;
+    void confirmToken(token);
+  }, [router.isReady, token]);
+
+  async function resend(e: FormEvent) {
+    e.preventDefault();
     if (!email.trim()) {
       toast.warning('Informe seu e-mail.');
       return;
     }
     setLoading(true);
+    setError(null);
     try {
       const api = setupAPIClient();
       await api.post('/auth/resend-verification', { email: email.trim() });
-      toast.success('Se o e-mail existir, enviamos um novo link.');
-    } catch {
-      toast.error('Não foi possível reenviar. Tente novamente.');
+      toast.success('Novo e-mail de confirmação enviado. Verifique sua caixa de entrada.');
+    } catch (err) {
+      const msg =
+        err instanceof AxiosError
+          ? getErrorMessage(err.response?.data)
+          : 'Não foi possível reenviar.';
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -75,21 +93,34 @@ export default function VerificarEmailPage() {
           ) : (
             <div className="mt-6 space-y-4">
               {token ? (
-                <button
-                  type="button"
-                  onClick={() => void confirmToken()}
-                  disabled={loading}
-                  className="w-full rounded-xl bg-primary py-3 text-sm font-semibold text-white disabled:opacity-50"
-                >
-                  {loading ? 'Confirmando…' : 'Confirmar meu e-mail'}
-                </button>
+                <p className="text-sm text-cp-muted">
+                  {loading ? 'Confirmando seu e-mail…' : 'Processando link de confirmação…'}
+                </p>
               ) : (
                 <p className="text-sm text-cp-subtle">
-                  Abra o link que enviamos para seu e-mail.
+                  Abra o link que enviamos para seu e-mail ou solicite um novo abaixo.
                 </p>
               )}
-              {error ? <p className="text-sm text-amber-300">{error}</p> : null}
-              <div className="border-t border-white/10 pt-4">
+
+              {error ? (
+                <div className="space-y-3">
+                  <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+                    {error}
+                  </p>
+                  {token ? (
+                    <button
+                      type="button"
+                      onClick={() => void confirmToken()}
+                      disabled={loading}
+                      className="w-full rounded-xl border border-white/10 py-2.5 text-sm text-cp-muted hover:text-white disabled:opacity-50"
+                    >
+                      Tentar confirmar novamente
+                    </button>
+                  ) : null}
+                </div>
+              ) : null}
+
+              <form onSubmit={resend} className="border-t border-white/10 pt-4">
                 <p className="text-xs text-cp-subtle">Não recebeu? Reenvie o link:</p>
                 <input
                   type="email"
@@ -99,14 +130,19 @@ export default function VerificarEmailPage() {
                   className="mt-2 w-full rounded-xl border border-white/10 bg-cp-base px-3 py-2.5 text-sm text-white"
                 />
                 <button
-                  type="button"
-                  onClick={() => void resend()}
+                  type="submit"
                   disabled={loading}
-                  className="mt-3 w-full rounded-xl border border-white/10 py-2.5 text-sm text-cp-muted hover:text-white"
+                  className="mt-3 w-full rounded-xl border border-white/10 py-2.5 text-sm text-cp-muted hover:text-white disabled:opacity-50"
                 >
                   Reenviar e-mail de confirmação
                 </button>
-              </div>
+              </form>
+
+              <p className="text-center text-xs text-cp-subtle">
+                <Link href="/login" className="text-primary hover:underline">
+                  Voltar ao login
+                </Link>
+              </p>
             </div>
           )}
         </div>

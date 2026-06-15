@@ -18,6 +18,17 @@ function getErrorMessage(data: unknown): string {
   return 'Ocorreu um erro na requisição.'
 }
 
+function isPublicAuthRequest(url?: string) {
+  if (!url) return false;
+  const path = url.split('?')[0] ?? '';
+  return (
+    path.includes('auth/verify-email') ||
+    path.includes('auth/resend-verification') ||
+    path.includes('auth/forgot-password') ||
+    path.includes('auth/reset-password')
+  );
+}
+
 export function setupAPIClient(ctx?: GetServerSidePropsContext) {
   const cookies = parseRequestCookies(ctx)
   const isBrowser = typeof window !== 'undefined'
@@ -35,7 +46,7 @@ export function setupAPIClient(ctx?: GetServerSidePropsContext) {
     (response) => response,
     (error: AxiosError<{ message?: string | string[] }>) => {
       const status = error.response?.status
-      if (status === 401) {
+      if (status === 401 && !isPublicAuthRequest(error.config?.url)) {
         if (typeof window !== 'undefined') {
           axios.post('/api/auth/logout').catch(() => undefined)
           Router.push('/login')

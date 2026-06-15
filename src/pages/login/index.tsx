@@ -73,6 +73,11 @@ export default function Login() {
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
+          <p className="mt-2 text-right">
+            <Link href="/esqueci-senha" className="text-xs font-medium text-primary hover:underline">
+              Esqueci minha senha
+            </Link>
+          </p>
         </SignupField>
 
         <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">

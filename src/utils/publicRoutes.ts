@@ -10,6 +10,8 @@ export const PUBLIC_ROUTES = [
   '/manual',
   '/codigo',
   '/verificar-email',
+  '/esqueci-senha',
+  '/redefinir-senha',
   '/importreport',
 ] as const;
 
