@@ -67,12 +67,12 @@ export default function Modal({
         aria-label="Fechar modal"
       />
       <div
-        className={`relative z-10 flex w-full ${sizeClass[size]} max-h-[90vh] flex-col overflow-hidden rounded-2xl border border-white/10 bg-cp-card/95 text-slate-100 shadow-2xl ring-1 ring-white/5`}
+        className={`relative z-10 flex w-full ${sizeClass[size]} max-h-[90vh] flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-cp-card/95 text-white shadow-card ring-1 ring-white/5`}
         onClick={(e) => e.stopPropagation()}
       >
         <button
           type="button"
-          className="absolute right-2 top-2 z-20 rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+          className="absolute right-2 top-2 z-20 rounded-xl p-2 text-cp-muted transition hover:bg-white/[0.06] hover:text-white"
           onClick={onClose}
           aria-label="Fechar"
         >

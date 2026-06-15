@@ -11,9 +11,10 @@ import {
   modalLabel,
   modalMuted,
   modalSelect,
+  modalSecondaryBtn,
   modalTitle,
 } from "@/component/ui/modal/modalClasses";
-import { ButtonPages } from "@/component/ui/buttonPages";
+import Button from "@/component/ui/Button";
 import Calendar from "@/component/ui/calendar";
 import { toast } from "react-toastify";
 import InputMoney from "@/component/ui/inputMoney";
@@ -26,7 +27,7 @@ import { TruncatedCell } from "@/component/ui/TruncatedCell";
 import GastosMobileCards from "@/component/movimentacoes/GastosMobileCards";
 
 const filterSelectClass =
-  "min-w-[9rem] rounded-lg border border-white/10 bg-cp-base/80 px-2 py-1.5 text-sm text-slate-100 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20";
+  "min-w-[9rem] rounded-lg border border-white/10 bg-cp-base/80 px-2 py-1.5 text-sm text-white focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20";
 
 export interface GastosPanelProps {
   dividas: Dividas[];
@@ -537,8 +538,8 @@ export default function GastosPanel({
   }, [fetchDividas, refreshDebtTypes]);
 
   const createBtnClass = embedded
-    ? "inline-flex items-center gap-2 rounded-xl bg-red-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-red-500/25 transition hover:bg-red-400"
-    : "flex w-full items-center space-x-2 rounded-xl bg-red-500 px-4 py-2.5 text-white shadow-lg shadow-red-500/25 hover:bg-red-400 sm:w-auto";
+    ? "inline-flex items-center gap-2 rounded-xl bg-expense/20 px-4 py-2.5 text-sm font-semibold text-red-100 ring-1 ring-expense/30 transition hover:bg-expense/30"
+    : "flex w-full items-center space-x-2 rounded-xl bg-expense/20 px-4 py-2.5 text-red-100 ring-1 ring-expense/30 transition hover:bg-expense/30 sm:w-auto";
 
   return (
     <>
@@ -551,18 +552,18 @@ export default function GastosPanel({
           <div>
             {!embedded && (
               <>
-                <h1 className="text-2xl font-bold text-slate-50 sm:text-3xl">
+                <h1 className="text-2xl font-bold text-white sm:text-3xl">
                   Meus Gastos
                 </h1>
-                <p className="text-slate-400">
+                <p className="text-cp-muted">
                   Controle suas dívidas e pagamentos.
                 </p>
               </>
             )}
             {embedded && (
               <>
-                <h2 className="text-lg font-semibold text-slate-100">Saídas</h2>
-                <p className="text-sm text-slate-400">
+                <h2 className="text-lg font-semibold text-white">Saídas</h2>
+                <p className="text-sm text-cp-muted">
                   Contas, cartão e obrigações — com vínculo familiar quando
                   aplicável.
                 </p>
@@ -580,7 +581,7 @@ export default function GastosPanel({
           </button>
         </header>
         <div
-          className={`min-w-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-md backdrop-blur-sm ${embedded ? "p-4 sm:p-6" : "p-2 sm:p-4 md:p-6"}`}
+          className={`min-w-0 overflow-hidden rounded-2xl border border-white/[0.08] bg-cp-card shadow-card ${embedded ? "p-4 sm:p-6" : "p-2 sm:p-4 md:p-6"}`}
         >
               <div className="mb-4 flex flex-col items-stretch justify-between gap-4 sm:flex-row sm:items-center">
                 <Calendar
@@ -602,7 +603,7 @@ export default function GastosPanel({
                 itemLabel="saídas"
                 extraFilters={
                   <>
-                    <label className="flex flex-col gap-1 text-sm text-slate-400 sm:flex-row sm:items-center sm:gap-2">
+                    <label className="flex flex-col gap-1 text-sm text-cp-muted sm:flex-row sm:items-center sm:gap-2">
                       <span className="whitespace-nowrap">Pagamento</span>
                       <select
                         value={paymentFilter}
@@ -618,7 +619,7 @@ export default function GastosPanel({
                         <option value="unpaid">Em aberto</option>
                       </select>
                     </label>
-                    <label className="flex flex-col gap-1 text-sm text-slate-400 sm:flex-row sm:items-center sm:gap-2">
+                    <label className="flex flex-col gap-1 text-sm text-cp-muted sm:flex-row sm:items-center sm:gap-2">
                       <span className="whitespace-nowrap">Categoria</span>
                       <select
                         value={categoryFilter}
@@ -640,7 +641,7 @@ export default function GastosPanel({
                 paymentFilter !== "all" ||
                 categoryFilter !== "all") &&
               filteredDividas.length < dividas.length ? (
-                <p className="mb-3 text-xs text-slate-500">
+                <p className="mb-3 text-xs text-white0">
                   Os totais no rodapé consideram todas as saídas do período, não só os filtros da tabela.
                 </p>
               ) : null}
@@ -665,14 +666,14 @@ export default function GastosPanel({
                     </div>
                   </>
                 ) : dividas.length > 0 ? (
-                  <p className="py-10 text-center text-sm text-slate-400">
+                  <p className="py-10 text-center text-sm text-cp-muted">
                     Nenhuma saída corresponde aos filtros ou à pesquisa.
                   </p>
                 ) : (
                   <NotFound />
                 )}
               </div>
-              <div className="mt-6 flex flex-col items-center justify-between gap-4 rounded-xl border border-white/10 bg-cp-card-secondary/60 p-4 text-slate-100 backdrop-blur-sm md:flex-row">
+              <div className="mt-6 flex flex-col items-center justify-between gap-4 rounded-xl border border-white/10 bg-cp-card-secondary/60 p-4 text-white backdrop-blur-sm md:flex-row">
                 <div className="flex w-full flex-col items-start space-y-2 sm:flex-row sm:items-center sm:space-x-6 sm:space-y-0">
                   <div>
                     Total de dívida:{" "}
@@ -698,7 +699,7 @@ export default function GastosPanel({
                       className={`text-lg font-bold ${
                         totalRendas - total < 0
                           ? "text-red-300"
-                          : "text-emerald-300"
+                          : "text-income"
                       }`}
                     >
                       {formatCurrency(totalRendas - total)}
@@ -796,7 +797,7 @@ export default function GastosPanel({
                 <button
                   type="button"
                   onClick={createDebtType}
-                  className="inline-flex items-center justify-center rounded-xl bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 shadow-lg shadow-slate-900/20 transition hover:bg-slate-600"
+                  className={modalSecondaryBtn}
                 >
                   Cadastrar categoria
                 </button>
@@ -809,16 +810,16 @@ export default function GastosPanel({
               ? formatDate(modalDividas.data_inclusao)
               : '—'}
           </span>
-          <ButtonPages
-            bg="#dc2626"
+          <Button
             loading={loading}
+            variant="expense"
             onClick={() => {
               if (modalDividas?.id == null) return;
               void saveEdit(modalDividas.id);
             }}
           >
             Salvar
-          </ButtonPages>
+          </Button>
         </div>
       </Modal>
 
@@ -925,7 +926,7 @@ export default function GastosPanel({
               <button
                 type="button"
                 onClick={createDebtType}
-                className="inline-flex items-center justify-center rounded-xl bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-100 shadow-lg shadow-slate-900/20 transition hover:bg-slate-600"
+                className={modalSecondaryBtn}
               >
                 Cadastrar categoria
               </button>

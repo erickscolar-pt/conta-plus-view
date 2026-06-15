@@ -17,7 +17,7 @@ import {
   MdAccountBalanceWallet,
   MdOutlineSavings,
 } from "react-icons/md";
-import { ButtonPages } from "@/component/ui/buttonPages";
+import Button from "@/component/ui/Button";
 import {
   modalLabel,
   modalInput,
@@ -71,7 +71,7 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
       title: "Categoria",
       key: "categoria",
       render: (obj: Objetivos) => (
-        <span className="text-slate-300">{obj.categoria?.trim() || "—"}</span>
+        <span className="text-cp-muted">{obj.categoria?.trim() || "—"}</span>
       ),
     },
     { title: "Valor", key: "valor", formatter: formatCurrency },
@@ -79,7 +79,7 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
       title: "Desconta saldo",
       key: "desconta_entrada",
       render: (obj: Objetivos) => (
-        <span className={obj.desconta_entrada === false ? "text-amber-200" : "text-emerald-300"}>
+        <span className={obj.desconta_entrada === false ? "text-amber-200" : "text-goals"}>
           {obj.desconta_entrada === false ? "Não" : "Sim"}
         </span>
       ),
@@ -304,11 +304,11 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
                 <NotFound />
               )}
             </div>
-            <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-xl border border-primary/20 bg-primary/10 p-4 text-slate-100 backdrop-blur-sm sm:flex-row sm:p-6">
+            <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-xl border border-primary/20 bg-primary/10 p-4 text-white backdrop-blur-sm sm:flex-row sm:p-6">
               <div className="flex items-center space-x-4">
                 <MdAccountBalanceWallet size={32} className="text-brand-400" />
                 <div>
-                  <p className="text-lg text-slate-300">Guardado este mês</p>
+                  <p className="text-lg text-cp-muted">Guardado este mês</p>
                   <p className="text-2xl font-bold text-white">{formatCurrency(total)}</p>
                 </div>
               </div>
@@ -366,15 +366,15 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
               ? formatDate(modalObjetivos.data_inclusao)
               : '—'}
           </span>
-          <ButtonPages
-            bg="#059669"
+          <Button
             loading={loading}
+            variant="primary"
             onClick={() => {
               if (modalObjetivos?.id != null) void saveEdit(modalObjetivos.id);
             }}
           >
             Salvar
-          </ButtonPages>
+          </Button>
         </div>
       </Modal>
 

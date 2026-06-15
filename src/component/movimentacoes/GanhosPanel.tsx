@@ -10,7 +10,7 @@ import {
   modalMuted,
   modalTitle,
 } from "@/component/ui/modal/modalClasses";
-import { ButtonPages } from "@/component/ui/buttonPages";
+import Button from "@/component/ui/Button";
 import Calendar from "@/component/ui/calendar";
 import { toast } from "react-toastify";
 import InputMoney from "@/component/ui/inputMoney";
@@ -286,8 +286,8 @@ export default function GanhosPanel({
   }, [fetchRendas]);
 
   const btnClass = embedded
-    ? "inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400"
-    : "flex w-full items-center space-x-2 rounded-xl bg-emerald-500 px-4 py-2.5 text-white shadow-lg shadow-emerald-500/25 hover:bg-emerald-400 sm:w-auto";
+    ? "inline-flex items-center gap-2 rounded-xl bg-income/20 px-4 py-2.5 text-sm font-semibold text-green-100 ring-1 ring-income/30 transition hover:bg-income/30"
+    : "flex w-full items-center space-x-2 rounded-xl bg-income/20 px-4 py-2.5 text-green-100 ring-1 ring-income/30 transition hover:bg-income/30 sm:w-auto";
 
   return (
     <>
@@ -302,20 +302,20 @@ export default function GanhosPanel({
           <div>
             {!embedded && (
               <>
-                <h1 className="text-2xl font-bold text-slate-50 sm:text-3xl">
+                <h1 className="text-2xl font-bold text-white sm:text-3xl">
                   Meus Ganhos
                 </h1>
-                <p className="text-slate-400">
+                <p className="text-cp-muted">
                   Acompanhe suas rendas e salários.
                 </p>
               </>
             )}
             {embedded && (
               <>
-                <h2 className="text-lg font-semibold text-slate-100">
+                <h2 className="text-lg font-semibold text-white">
                   Entradas
                 </h2>
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-cp-muted">
                   Salários, freelas e outros recebimentos.
                 </p>
               </>
@@ -332,7 +332,7 @@ export default function GanhosPanel({
         </header>
 
         <div
-          className={`min-w-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-md backdrop-blur-sm ${embedded ? "p-4 sm:p-6" : "p-2 sm:p-4 md:p-6"}`}
+          className={`min-w-0 overflow-hidden rounded-2xl border border-white/[0.08] bg-cp-card shadow-card ${embedded ? "p-4 sm:p-6" : "p-2 sm:p-4 md:p-6"}`}
         >
           <div className="mb-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <Calendar
@@ -353,7 +353,7 @@ export default function GanhosPanel({
             itemLabel="entradas"
           />
           {searchQuery.trim() && filteredRendas.length < rendas.length ? (
-            <p className="mb-3 text-xs text-slate-500">
+            <p className="mb-3 text-xs text-white0">
               Os totais no rodapé consideram todas as entradas do período, não só o resultado da busca.
             </p>
           ) : null}
@@ -374,7 +374,7 @@ export default function GanhosPanel({
                 </div>
               </>
             ) : rendas.length > 0 ? (
-              <p className="py-10 text-center text-sm text-slate-400">
+              <p className="py-10 text-center text-sm text-cp-muted">
                 Nenhuma entrada corresponde à pesquisa.
               </p>
             ) : (
@@ -383,20 +383,20 @@ export default function GanhosPanel({
           </div>
           <div className="mt-6 flex flex-col gap-4 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-medium text-slate-400">Total no filtro:</span>
-              <span className="rounded-lg bg-emerald-500/20 px-4 py-2 font-bold text-emerald-200">
+              <span className="font-medium text-cp-muted">Total no filtro:</span>
+              <span className="rounded-lg bg-income/20 px-4 py-2 font-bold text-green-100">
                 {formatCurrency(total)}
               </span>
               {totalvinculo > 0 && (
                 <>
-                  <span className="font-medium text-slate-400">
+                  <span className="font-medium text-cp-muted">
                     Do vínculo:
                   </span>
-                  <span className="rounded-lg bg-emerald-500/20 px-4 py-2 font-bold text-emerald-200">
+                  <span className="rounded-lg bg-income/20 px-4 py-2 font-bold text-green-100">
                     {formatCurrency(totalvinculo)}
                   </span>
-                  <span className="font-medium text-slate-400">Geral:</span>
-                  <span className="rounded-lg bg-emerald-500/20 px-4 py-2 font-bold text-emerald-200">
+                  <span className="font-medium text-cp-muted">Geral:</span>
+                  <span className="rounded-lg bg-income/20 px-4 py-2 font-bold text-green-100">
                     {formatCurrency(totalvinculo + total)}
                   </span>
                 </>
@@ -434,12 +434,9 @@ export default function GanhosPanel({
               Mesma regra da criação: o dia enviado à API é ajustado para o fluxo do sistema.
             </span>
           </label>
-          <ButtonPages
-            loading={loading}
-            onClick={() => saveEdit(modalRendas?.id)}
-          >
+          <Button loading={loading} variant="primary" onClick={() => saveEdit(modalRendas?.id)}>
             Salvar
-          </ButtonPages>
+          </Button>
         </div>
       </Modal>
       <Modal isOpen={isModalCreate} onClose={handleCloseCreate} size="md">

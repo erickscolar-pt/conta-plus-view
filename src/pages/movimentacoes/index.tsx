@@ -96,10 +96,13 @@ export default function Movimentacoes({
         <main className="relative min-w-0 flex-1 overflow-x-hidden overflow-y-auto px-3 py-4 sm:px-6 md:px-10 md:py-8">
             <div className="mx-auto max-w-7xl min-w-0 space-y-6">
               <div>
-                <h1 className="text-2xl font-semibold tracking-tight text-slate-50 md:text-3xl">
+                <p className="text-sm font-medium uppercase tracking-wider text-dash">
+                  Fluxo de caixa
+                </p>
+                <h1 className="mt-1 text-2xl font-bold tracking-tight text-white md:text-3xl">
                   Movimentações
                 </h1>
-                <p className="mt-1 max-w-2xl text-sm text-slate-400 md:text-base">
+                <p className="mt-1 max-w-2xl text-sm text-cp-muted md:text-base">
                   Entradas e saídas no mesmo lugar: veja o saldo e alterne entre
                   abas para lançar ou revisar cada lado.
                 </p>
@@ -128,7 +131,7 @@ export default function Movimentacoes({
               </div>
 
               <div
-                className="inline-flex rounded-2xl border border-white/10 bg-white/5 p-1 shadow-sm backdrop-blur-sm"
+                className="inline-flex rounded-2xl border border-white/[0.08] bg-cp-card p-1 shadow-card"
                 role="tablist"
                 aria-label="Alternar entre entradas e saídas"
               >
@@ -138,8 +141,8 @@ export default function Movimentacoes({
                   aria-selected={tab === "entradas"}
                   className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition sm:px-6 ${
                     tab === "entradas"
-                      ? "bg-emerald-500/25 text-emerald-100 shadow-inner shadow-emerald-500/10"
-                      : "text-slate-400 hover:text-white"
+                      ? "bg-income/20 text-green-100 ring-1 ring-income/30"
+                      : "text-cp-muted hover:text-white"
                   }`}
                   onClick={() => setTabAndUrl("entradas")}
                 >
@@ -151,8 +154,8 @@ export default function Movimentacoes({
                   aria-selected={tab === "saidas"}
                   className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition sm:px-6 ${
                     tab === "saidas"
-                      ? "bg-red-500/25 text-red-100 shadow-inner shadow-red-500/10"
-                      : "text-slate-400 hover:text-white"
+                      ? "bg-expense/20 text-red-100 ring-1 ring-expense/30"
+                      : "text-cp-muted hover:text-white"
                   }`}
                   onClick={() => setTabAndUrl("saidas")}
                 >

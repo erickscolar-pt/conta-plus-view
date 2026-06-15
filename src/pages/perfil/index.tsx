@@ -185,10 +185,10 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
         <main className="relative flex-1 overflow-y-auto px-4 py-6 md:px-10 md:py-8">
           <div className="mx-auto max-w-4xl space-y-6">
             <header>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-50 md:text-3xl">
+              <h1 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
                 Meu perfil
               </h1>
-              <p className="mt-1 text-sm text-slate-400">
+              <p className="mt-1 text-sm text-cp-muted">
                 Dados da conta e quem pode ver suas movimentações compartilhadas.
               </p>
             </header>
@@ -197,21 +197,21 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
               <SubscriptionPlanPanel usuario={usuario} variant="compact" />
             </section>
 
-            <section className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-sm backdrop-blur-sm md:p-8">
-              <h2 className="text-lg font-semibold text-slate-100">Dados pessoais</h2>
+            <section className="rounded-2xl border border-white/[0.08] bg-cp-card p-6 shadow-card md:p-8">
+              <h2 className="text-lg font-semibold text-white">Dados pessoais</h2>
               <form
                 className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2"
                 onSubmit={(e) => e.preventDefault()}
               >
                 <div>
                   <label
-                    className="block text-sm font-medium text-slate-400"
+                    className="block text-sm font-medium text-cp-muted"
                     htmlFor="name"
                   >
                     Nome
                   </label>
                   <input
-                    className="mt-1 block w-full rounded-xl border border-white/10 bg-cp-card-secondary/60 px-4 py-3 text-sm text-slate-100 shadow-sm transition placeholder:text-slate-500 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="mt-1 block w-full rounded-xl border border-white/10 bg-cp-card-secondary/60 px-4 py-3 text-sm text-white shadow-sm transition placeholder:text-white0 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                     id="name"
                     type="text"
                     value={nome}
@@ -220,13 +220,13 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                 </div>
                 <div>
                   <label
-                    className="block text-sm font-medium text-slate-400"
+                    className="block text-sm font-medium text-cp-muted"
                     htmlFor="username"
                   >
                     Nome de usuário
                   </label>
                   <input
-                    className="mt-1 block w-full rounded-xl border border-white/10 bg-cp-card-secondary/60 px-4 py-3 text-sm text-slate-100 shadow-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="mt-1 block w-full rounded-xl border border-white/10 bg-cp-card-secondary/60 px-4 py-3 text-sm text-white shadow-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                     id="username"
                     type="text"
                     value={username}
@@ -235,13 +235,13 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                 </div>
                 <div className="md:col-span-2">
                   <label
-                    className="block text-sm font-medium text-slate-400"
+                    className="block text-sm font-medium text-cp-muted"
                     htmlFor="email"
                   >
                     E-mail
                   </label>
                   <input
-                    className="mt-1 block w-full rounded-xl border border-white/10 bg-cp-card-secondary/60 px-4 py-3 text-sm text-slate-100 shadow-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+                    className="mt-1 block w-full rounded-xl border border-white/10 bg-cp-card-secondary/60 px-4 py-3 text-sm text-white shadow-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                     id="email"
                     type="email"
                     value={email}
@@ -262,16 +262,16 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
             </section>
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              <section className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-sm backdrop-blur-sm">
-                <h2 className="text-lg font-semibold text-slate-100">
+              <section className="rounded-2xl border border-white/[0.08] bg-cp-card p-6 shadow-card">
+                <h2 className="text-lg font-semibold text-white">
                   Pessoas com quem compartilho
                 </h2>
-                <p className="mt-1 text-sm text-slate-400">
+                <p className="mt-1 text-sm text-cp-muted">
                   Convites pendentes, quem ainda não aceitou e vínculos já ativos — evita mandar o
                   mesmo convite sem precisar.
                 </p>
 
-                <h3 className="mt-5 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <h3 className="mt-5 text-xs font-semibold uppercase tracking-wide text-white0">
                   Convites pendentes (para você)
                 </h3>
                 <ul className="mt-2 space-y-2">
@@ -281,14 +281,14 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                         key={`recv-${row.inviterUserId}-${row.inviteeUserId}`}
                         className="rounded-xl border border-amber-500/25 bg-amber-500/5 px-4 py-3"
                       >
-                        <p className="text-sm font-medium text-slate-200">
+                        <p className="text-sm font-medium text-white/90">
                           {row.inviterNome}{" "}
-                          <span className="text-slate-400">
+                          <span className="text-cp-muted">
                             (@{row.inviterUsername})
                           </span>
                         </p>
                         {row.expiresAt ? (
-                          <p className="mt-1 text-xs text-slate-500">
+                          <p className="mt-1 text-xs text-white0">
                             Válido até {formatDate(row.expiresAt)}
                           </p>
                         ) : null}
@@ -300,7 +300,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                             Abrir convite →
                           </Link>
                         ) : (
-                          <p className="mt-2 text-xs text-slate-500">
+                          <p className="mt-2 text-xs text-white0">
                             Este convite foi gerado antes da atualização do app. Peça um novo link
                             à pessoa que convidou.
                           </p>
@@ -308,13 +308,13 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                       </li>
                     ))
                   ) : (
-                    <li className="rounded-xl border border-dashed border-white/10 px-4 py-4 text-sm text-slate-500">
+                    <li className="rounded-xl border border-dashed border-white/10 px-4 py-4 text-sm text-white0">
                       Nenhum convite aguardando sua aceitação.
                     </li>
                   )}
                 </ul>
 
-                <h3 className="mt-6 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <h3 className="mt-6 text-xs font-semibold uppercase tracking-wide text-white0">
                   Convites que você enviou (aguardando aceite)
                 </h3>
                 <ul className="mt-2 space-y-2">
@@ -325,14 +325,14 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                         className="flex flex-col gap-2 rounded-xl border border-white/10 bg-cp-card-secondary/40 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
                       >
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-medium text-slate-200">
+                          <p className="truncate text-sm font-medium text-white/90">
                             {row.inviteeNome || row.inviteeUsername}{" "}
-                            <span className="text-slate-400">
+                            <span className="text-cp-muted">
                               (@{row.inviteeUsername || "—"})
                             </span>
                           </p>
                           {row.expiresAt ? (
-                            <p className="mt-0.5 text-xs text-slate-500">
+                            <p className="mt-0.5 text-xs text-white0">
                               Expira em {formatDate(row.expiresAt)}
                             </p>
                           ) : null}
@@ -348,13 +348,13 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                       </li>
                     ))
                   ) : (
-                    <li className="rounded-xl border border-dashed border-white/10 px-4 py-4 text-sm text-slate-500">
+                    <li className="rounded-xl border border-dashed border-white/10 px-4 py-4 text-sm text-white0">
                       Nenhum convite seu pendente de aceite.
                     </li>
                   )}
                 </ul>
 
-                <h3 className="mt-6 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <h3 className="mt-6 text-xs font-semibold uppercase tracking-wide text-white0">
                   Vínculos ativos — você convidou
                 </h3>
                 <ul className="mt-2 space-y-2">
@@ -364,7 +364,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                         key={v.id ?? idx}
                         className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-cp-card-secondary/40 px-4 py-3"
                       >
-                        <span className="truncate text-sm font-medium text-slate-200">
+                        <span className="truncate text-sm font-medium text-white/90">
                           {v.username}
                         </span>
                         <button
@@ -378,13 +378,13 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                       </li>
                     ))
                   ) : (
-                    <li className="rounded-xl border border-dashed border-white/10 px-4 py-4 text-sm text-slate-500">
+                    <li className="rounded-xl border border-dashed border-white/10 px-4 py-4 text-sm text-white0">
                       Ninguém aceitou seu convite ainda (ou você não convidou ninguém).
                     </li>
                   )}
                 </ul>
 
-                <h3 className="mt-6 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <h3 className="mt-6 text-xs font-semibold uppercase tracking-wide text-white0">
                   Vínculos ativos — você foi convidado
                 </h3>
                 <ul className="mt-2 space-y-2">
@@ -394,9 +394,9 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                         key={v.id}
                         className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-cp-card-secondary/40 px-4 py-3"
                       >
-                        <span className="truncate text-sm font-medium text-slate-200">
+                        <span className="truncate text-sm font-medium text-white/90">
                           {v.parceiroNome}{" "}
-                          <span className="text-slate-400">
+                          <span className="text-cp-muted">
                             (@{v.parceiroUsername})
                           </span>
                         </span>
@@ -411,7 +411,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                       </li>
                     ))
                   ) : (
-                    <li className="rounded-xl border border-dashed border-white/10 px-4 py-4 text-sm text-slate-500">
+                    <li className="rounded-xl border border-dashed border-white/10 px-4 py-4 text-sm text-white0">
                       Você não está vinculado como convidado de nenhuma conta.
                     </li>
                   )}
@@ -424,10 +424,10 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                     <MdLink size={22} aria-hidden />
                   </span>
                   <div>
-                    <h2 className="text-lg font-semibold text-slate-100">
+                    <h2 className="text-lg font-semibold text-white">
                       Convidar por link
                     </h2>
-                    <p className="mt-1 text-sm text-slate-400">
+                    <p className="mt-1 text-sm text-cp-muted">
                       Informe o e-mail ou o nome de usuário de quem{" "}
                       <strong className="font-semibold text-brand-300">já tem cadastro</strong>.
                       Geramos um link único; você copia e envia como quiser (não enviamos e-mail
@@ -438,7 +438,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
 
                 <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-stretch">
                   <input
-                    className="min-w-0 flex-1 rounded-xl border border-white/10 bg-cp-card-secondary/60 px-4 py-3 text-sm text-slate-100 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25"
+                    className="min-w-0 flex-1 rounded-xl border border-white/10 bg-cp-card-secondary/60 px-4 py-3 text-sm text-white shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25"
                     placeholder="E-mail ou @usuário do convidado"
                     type="text"
                     value={inviteIdentifier}
@@ -465,7 +465,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                         Convite para {guestLabel}
                       </p>
                     ) : null}
-                    <p className="mt-2 break-all font-mono text-sm text-slate-200">{inviteLink}</p>
+                    <p className="mt-2 break-all font-mono text-sm text-white/90">{inviteLink}</p>
                     <button
                       className="mt-3 inline-flex items-center gap-2 rounded-lg bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/15"
                       onClick={handleCopyInviteLink}
