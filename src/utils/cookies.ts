@@ -1,6 +1,5 @@
 import type { GetServerSidePropsContext } from 'next';
-
-const AUTH_COOKIE = '@nextauth.token';
+import { AUTH_COOKIE } from './authToken';
 
 function parseCookieHeader(cookieHeader?: string): Record<string, string> {
   const parsed: Record<string, string> = {};

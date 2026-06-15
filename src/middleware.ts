@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { jwtDecode } from 'jwt-decode';
 import { isPublicRoute } from '@/utils/publicRoutes';
+import { AUTH_COOKIE, decodeAuthToken, isAuthTokenValid } from '@/utils/authToken';
 
 function isAdminHost(host: string | null) {
   if (!host) return false;
@@ -8,21 +8,25 @@ function isAdminHost(host: string | null) {
   return h === 'admin.contaplus.app.br' || h.startsWith('admin.');
 }
 
+function isStaticOrApiPath(pathname: string) {
+  return (
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/favicon') ||
+    !!pathname.match(/\.(ico|png|jpg|svg|webp|css|js)$/)
+  );
+}
+
 export function middleware(req: NextRequest) {
   const host = req.headers.get('host');
   const adminHost = isAdminHost(host);
   const pathname = req.nextUrl.pathname;
 
-  if (adminHost) {
-    if (
-      pathname.startsWith('/_next') ||
-      pathname.startsWith('/api') ||
-      pathname.startsWith('/favicon') ||
-      pathname.match(/\.(ico|png|jpg|svg|webp|css|js)$/)
-    ) {
-      return NextResponse.next();
-    }
+  if (isStaticOrApiPath(pathname)) {
+    return NextResponse.next();
+  }
 
+  if (adminHost) {
     if (pathname === '/') {
       return NextResponse.redirect(new URL('/admin/login', req.url));
     }
@@ -35,12 +39,16 @@ export function middleware(req: NextRequest) {
     }
   }
 
-  const token = req.cookies.get('@nextauth.token');
+  const token = req.cookies.get(AUTH_COOKIE)?.value;
   const signInURL = new URL(adminHost ? '/admin/login' : '/login', req.url);
 
-  if (!token) {
+  if (!isAuthTokenValid(token)) {
     if (isPublicRoute(pathname)) {
-      return NextResponse.next();
+      const response = NextResponse.next();
+      if (token) {
+        response.cookies.set(AUTH_COOKIE, '', { maxAge: 0, path: '/' });
+      }
+      return response;
     }
     if (adminHost && pathname.startsWith('/admin')) {
       if (pathname === '/admin/login') return NextResponse.next();
@@ -52,25 +60,12 @@ export function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  try {
-    const decodedToken: { exp: number; role?: string } = jwtDecode(token.value);
-    const currentTime = Math.floor(Date.now() / 1000);
+  const decodedToken = decodeAuthToken(token);
 
-    if (decodedToken.exp < currentTime) {
-      const response = NextResponse.redirect(signInURL);
-      response.cookies.set('@nextauth.token', '', { maxAge: 0, path: '/' });
-      return response;
+  if (adminHost && pathname.startsWith('/admin') && pathname !== '/admin/login') {
+    if (decodedToken?.role !== 'admin') {
+      return NextResponse.redirect(new URL('/admin/login', req.url));
     }
-
-    if (adminHost && pathname.startsWith('/admin') && pathname !== '/admin/login') {
-      if (decodedToken.role !== 'admin') {
-        return NextResponse.redirect(new URL('/admin/login', req.url));
-      }
-    }
-  } catch {
-    const response = NextResponse.redirect(signInURL);
-    response.cookies.set('@nextauth.token', '', { maxAge: 0, path: '/' });
-    return response;
   }
 
   if (isPublicRoute(pathname)) {

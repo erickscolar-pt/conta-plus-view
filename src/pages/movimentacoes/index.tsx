@@ -227,7 +227,7 @@ export const getServerSideProps = canSSRAuth(async (ctx) => {
   } catch (error) {
     console.error("movimentacoes:", error);
     return {
-      redirect: { destination: "/", permanent: false },
+      redirect: { destination: "/login", permanent: false },
     };
   }
 });

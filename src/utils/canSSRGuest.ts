@@ -1,33 +1,29 @@
 import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
-import { AuthTokenError } from '../services/errors/AuthTokenError';
-import { api } from '@/services/apiCliente';
 import { clearAuthCookie, parseRequestCookies } from './cookies';
+import { AUTH_COOKIE, isAuthTokenValid } from './authToken';
 
-export function canSSRGuest<P extends { [key: string]: any } = { [key: string]: any }>(
+export function canSSRGuest<P extends { [key: string]: unknown } = { [key: string]: unknown }>(
   fn: (ctx: GetServerSidePropsContext) => Promise<GetServerSidePropsResult<P>>,
 ): GetServerSideProps<P> {
   return async (
     ctx: GetServerSidePropsContext,
   ): Promise<GetServerSidePropsResult<P>> => {
-        const cookies = parseRequestCookies(ctx);
-        const token = cookies['@nextauth.token'];
+    const cookies = parseRequestCookies(ctx);
+    const token = cookies[AUTH_COOKIE];
 
-        if (token) {
-            try {
-                return {
-                    redirect: {
-                        destination: '/movimentacoes',
-                        permanent: false,
-                    }
-                };
-            } catch (err) {
-                if (err instanceof AuthTokenError) {
-                    clearAuthCookie(ctx);
-                    return await fn(ctx);
-                }
-            }
-        }
+    if (isAuthTokenValid(token)) {
+      return {
+        redirect: {
+          destination: '/movimentacoes',
+          permanent: false,
+        },
+      };
+    }
 
-        return await fn(ctx);
-    };
+    if (token) {
+      clearAuthCookie(ctx);
+    }
+
+    return await fn(ctx);
+  };
 }

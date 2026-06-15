@@ -10,21 +10,30 @@ function getApiBaseUrl() {
   return url.replace(/\/+$/, '');
 }
 
-function cookieDomain(): string | undefined {
+function cookieDomain(req: NextApiRequest): string | undefined {
   if (process.env.NODE_ENV !== 'production') return undefined;
-  return process.env.AUTH_COOKIE_DOMAIN || '.contaplus.app.br';
+
+  const host = req.headers.host?.split(':')[0]?.toLowerCase() ?? '';
+  const configured = (process.env.AUTH_COOKIE_DOMAIN || '.contaplus.app.br').toLowerCase();
+  const bare = configured.replace(/^\./, '');
+
+  if (host === bare || host.endsWith(`.${bare}`)) {
+    return configured.startsWith('.') ? configured : `.${configured}`;
+  }
+
+  return undefined;
 }
 
-function serializeAuthCookie(token: string) {
+function serializeAuthCookie(token: string, req: NextApiRequest) {
   const parts = [
-    `${AUTH_COOKIE}=${encodeURIComponent(token)}`,
+    `${AUTH_COOKIE}=${token}`,
     'Path=/',
     'HttpOnly',
     'SameSite=Lax',
     `Max-Age=${60 * 60 * 24}`,
   ];
 
-  const domain = cookieDomain();
+  const domain = cookieDomain(req);
   if (domain) parts.push(`Domain=${domain}`);
 
   if (process.env.NODE_ENV === 'production') {
@@ -65,7 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     res.setHeader(
       'Set-Cookie',
-      serializeAuthCookie(token),
+      serializeAuthCookie(token, req),
     );
 
     res.status(200).json(user);

@@ -61,8 +61,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   async function signIn({ username, password }: SignInProps) {
     try {
-      const response = await axios.post('/api/auth/signin', { username, password });
-      const { id, name, role } = response.data;
+      const response = await axios.post('/api/auth/signin', { username, password }, {
+        withCredentials: true,
+      });
+      const { id, name, role } = response.data ?? {};
+
+      if (id == null || !name) {
+        toast.error('Resposta de login inválida. Tente novamente.');
+        return;
+      }
 
       if (window) {
         sessionStorage.setItem('id', id);
