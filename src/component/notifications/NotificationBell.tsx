@@ -140,12 +140,12 @@ export default function NotificationBell() {
           setOpen((o) => !o);
           if (!open) fetchNotifications();
         }}
-        className="relative rounded-xl p-2 text-slate-100 ring-1 ring-white/15 transition hover:bg-white/15 hover:ring-white/25"
+        className="relative rounded-xl p-2 text-white ring-1 ring-white/[0.12] transition hover:bg-white/[0.08] hover:ring-white/20"
         title="Notificações"
         aria-expanded={open}
         aria-haspopup="true"
       >
-        <MdNotificationsNone className="h-6 w-6 text-slate-100" aria-hidden />
+        <MdNotificationsNone className="h-6 w-6 text-white" aria-hidden />
         {badge > 0 ? (
           <span className="absolute right-1 top-1 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
             {badge > 9 ? "9+" : badge}
@@ -182,11 +182,11 @@ export default function NotificationBell() {
 
           <div className="max-h-[min(70vh,420px)] overflow-y-auto">
             {loading ? (
-              <p className="px-4 py-8 text-center text-sm text-slate-300">
+              <p className="px-4 py-8 text-center text-sm text-cp-muted">
                 Carregando…
               </p>
             ) : visible.length === 0 ? (
-              <p className="px-4 py-8 text-center text-sm text-slate-200">
+              <p className="px-4 py-8 text-center text-sm text-cp-muted">
                 Nenhuma notificação no momento.
               </p>
             ) : (
@@ -201,11 +201,11 @@ export default function NotificationBell() {
                         <p className="text-sm font-medium text-white">
                           {n.title}
                         </p>
-                        <p className="mt-0.5 text-xs leading-relaxed text-slate-300">
+                        <p className="mt-0.5 text-xs leading-relaxed text-cp-muted">
                           {n.message}
                         </p>
                         {n.amount != null && n.amount > 0 ? (
-                          <p className="mt-1 text-xs font-semibold tabular-nums text-slate-200">
+                          <p className="mt-1 text-xs font-semibold tabular-nums text-white/90">
                             {formatCurrency(n.amount)}
                           </p>
                         ) : null}
@@ -221,7 +221,7 @@ export default function NotificationBell() {
                       </div>
                       <button
                         type="button"
-                        className="shrink-0 rounded-lg p-1 text-slate-400 hover:bg-white/15 hover:text-white"
+                        className="shrink-0 rounded-lg p-1 text-cp-muted hover:bg-white/[0.08] hover:text-white"
                         title="Dispensar"
                         onClick={() => dismissOne(n.id)}
                       >
@@ -234,7 +234,7 @@ export default function NotificationBell() {
             )}
           </div>
 
-          <p className="border-t border-white/15 bg-cp-card px-4 py-2.5 text-[11px] leading-snug text-slate-300">
+          <p className="border-t border-white/[0.08] bg-cp-card px-4 py-2.5 text-[11px] leading-snug text-cp-muted">
             Dívidas, convites aceitos (quem te vinculou e quem você vinculou) e dica se
             ainda não há parceiros.
           </p>

@@ -21,8 +21,8 @@ function Row({
 }) {
   return (
     <div className="flex justify-between gap-3 text-xs">
-      <span className="shrink-0 text-slate-500">{label}</span>
-      <span className="min-w-0 text-right text-slate-200">{value}</span>
+      <span className="shrink-0 text-cp-subtle">{label}</span>
+      <span className="min-w-0 text-right text-white/90">{value}</span>
     </div>
   );
 }
@@ -43,23 +43,23 @@ export default function GastosMobileCards({
         return (
           <li
             key={d.id}
-            className="rounded-2xl border border-white/10 bg-cp-card-secondary/55 p-4 shadow-sm ring-1 ring-white/[0.04]"
+            className="rounded-2xl border border-white/[0.08] bg-cp-card p-4 shadow-card ring-1 ring-expense/10"
           >
             <div className="flex flex-col gap-1">
-              <p className="text-sm font-medium leading-snug text-slate-100">
+              <p className="text-sm font-medium leading-snug text-white">
                 {d.nome_divida || "—"}
               </p>
               <div className="flex items-baseline justify-between gap-2">
-                <span className="text-[11px] font-medium uppercase tracking-wide text-slate-500">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-cp-subtle">
                   Quanto vou pagar
                 </span>
-                <span className="text-lg font-semibold tabular-nums text-red-200">
+                <span className="text-lg font-semibold tabular-nums text-expense">
                   {formatCurrency(d.quantoVouPagar ?? 0)}
                 </span>
               </div>
             </div>
 
-            <div className="mt-3 space-y-2 border-t border-white/10 pt-3">
+            <div className="mt-3 space-y-2 border-t border-white/[0.06] pt-3">
               <Row label="Valor do boleto" value={formatCurrency(d.valor)} />
               <Row
                 label="Categoria"
@@ -82,9 +82,9 @@ export default function GastosMobileCards({
               ) : null}
             </div>
 
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-3">
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] pt-3">
               <div className="flex items-center gap-2">
-                <span className="text-xs text-slate-500">Pago</span>
+                <span className="text-xs text-cp-subtle">Pago</span>
                 <Toggle
                   checked={!!d.payment}
                   onChange={(e) => onTogglePaid(d.id, e.target.checked)}
@@ -94,19 +94,19 @@ export default function GastosMobileCards({
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-sky-500/30 text-white hover:bg-sky-500/50"
+                    className="flex h-9 w-9 items-center justify-center rounded-full bg-dash/20 text-dash ring-1 ring-dash/25 transition hover:bg-dash/30"
                     onClick={() => onEdit(d)}
                     title="Editar"
                   >
-                    <MdEdit size={20} className="text-white" />
+                    <MdEdit size={20} />
                   </button>
                   <button
                     type="button"
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-red-500/40 text-white hover:bg-red-500/60"
+                    className="flex h-9 w-9 items-center justify-center rounded-full bg-expense/20 text-expense ring-1 ring-expense/25 transition hover:bg-expense/30"
                     onClick={() => onDelete(d)}
                     title="Excluir"
                   >
-                    <MdDelete size={20} className="text-white" />
+                    <MdDelete size={20} />
                   </button>
                 </div>
               ) : null}

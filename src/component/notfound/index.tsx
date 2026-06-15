@@ -5,15 +5,15 @@ export default function NotFound() {
     <div className="m-8 flex flex-col items-center justify-center">
       <div className="relative inline-block">
         <MdContentPaste
-          className="text-slate-700"
+          className="text-cp-card-secondary"
           style={{ fontSize: "120px" }}
         />
         <MdContentPaste
-          className="absolute -right-4 -top-4 text-slate-500"
+          className="absolute -right-4 -top-4 text-cp-subtle"
           style={{ fontSize: "80px" }}
         />
       </div>
-      <span className="mt-4 text-lg font-medium text-slate-500">
+      <span className="mt-4 text-lg font-medium text-cp-muted">
         Nenhum dado encontrado
       </span>
     </div>

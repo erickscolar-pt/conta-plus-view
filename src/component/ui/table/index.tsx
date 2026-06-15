@@ -42,11 +42,11 @@ export function Table({
 
   return (
     <div
-      className="w-full max-w-full overflow-x-auto rounded-xl [-webkit-overflow-scrolling:touch] [scrollbar-color:rgba(71,85,105,0.9)_rgba(15,23,42,0.9)] [scrollbar-width:thin] [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-600/90 [&::-webkit-scrollbar-thumb]:hover:bg-slate-500 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-slate-900/60"
+      className="w-full max-w-full overflow-x-auto rounded-xl [-webkit-overflow-scrolling:touch] [scrollbar-color:rgba(236,72,153,0.35)_rgba(15,10,20,0.9)] [scrollbar-width:thin] [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-dash/40 [&::-webkit-scrollbar-thumb]:hover:bg-dash/55 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-cp-base/80"
     >
       <table className={`w-full text-left ${minWidthClassName}`}>
         <thead>
-          <tr className="border-b border-white/10 bg-white/5 text-[10px] font-semibold uppercase leading-normal tracking-wide text-slate-400 sm:text-xs">
+          <tr className="border-b border-white/[0.08] bg-cp-base/40 text-[10px] font-semibold uppercase leading-normal tracking-wide text-cp-muted sm:text-xs">
             {columns.map((column) => (
               <th
                 key={String(column.key)}
@@ -57,11 +57,11 @@ export function Table({
             ))}
           </tr>
         </thead>
-        <tbody className="text-xs font-light text-slate-300 sm:text-sm">
+        <tbody className="text-xs font-light text-cp-muted sm:text-sm">
           {data.map((item, index) => (
             <tr
               key={rowKey ? rowKey(item, index) : index}
-              className="border-b border-white/5 transition-colors hover:bg-white/5"
+              className="border-b border-white/[0.04] transition-colors hover:bg-white/[0.03]"
             >
               {columns.map((column, columnIndex) => (
                 <td

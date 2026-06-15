@@ -4,10 +4,11 @@ import { canSSRAuth } from "@/utils/canSSRAuth";
 import { setupAPIClient } from "@/services/api";
 import GastosPanel from "@/component/movimentacoes/GastosPanel";
 import DebtCard from "@/component/dividas/DebtCard";
-import PremiumCard from "@/component/ui/PremiumCard";
+import MetricCard from "@/component/metriccard";
 import { Dividas, ITipoDivida, Rendas, Usuario } from "@/model/type";
 import { formatCurrency } from "@/helper";
 import { motion } from "framer-motion";
+import { FaCircleCheck, FaClock, FaWallet } from "react-icons/fa6";
 
 interface Props {
   dividas: Dividas[];
@@ -38,18 +39,26 @@ export default function DividasPage({ dividas, rendas, usuario, tipodivida }: Pr
             </motion.div>
 
             <div className="grid gap-4 sm:grid-cols-3">
-              <PremiumCard className="p-4">
-                <p className="text-xs text-cp-subtle">Total</p>
-                <p className="mt-1 text-xl font-bold text-white">{formatCurrency(total)}</p>
-              </PremiumCard>
-              <PremiumCard className="p-4">
-                <p className="text-xs text-cp-subtle">Pagas</p>
-                <p className="mt-1 text-xl font-bold text-income">{paid}</p>
-              </PremiumCard>
-              <PremiumCard className="p-4">
-                <p className="text-xs text-cp-subtle">Pendentes</p>
-                <p className="mt-1 text-xl font-bold text-amber-300">{pending}</p>
-              </PremiumCard>
+              <MetricCard
+                title="Total em dívidas"
+                value={formatCurrency(total)}
+                icon={FaWallet}
+                variant="expense"
+              />
+              <MetricCard
+                title="Pagas"
+                subtitle="Contas quitadas"
+                value={String(paid)}
+                icon={FaCircleCheck}
+                variant="income"
+              />
+              <MetricCard
+                title="Pendentes"
+                subtitle="Ainda em aberto"
+                value={String(pending)}
+                icon={FaClock}
+                variant="balance"
+              />
             </div>
 
             {dividas.length > 0 && (
@@ -60,14 +69,15 @@ export default function DividasPage({ dividas, rendas, usuario, tipodivida }: Pr
               </div>
             )}
 
-            <PremiumCard className="p-4 sm:p-6">
+            <section className="rounded-2xl border border-white/[0.08] bg-cp-card p-4 shadow-card sm:p-6">
               <GastosPanel
                 dividas={dividas}
                 rendas={rendas}
                 usuario={usuario}
                 tipodivida={tipodivida}
+                embedded
               />
-            </PremiumCard>
+            </section>
           </div>
         </main>
       </LoggedLayout>
