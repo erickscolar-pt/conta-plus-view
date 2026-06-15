@@ -226,7 +226,7 @@ export default function SubscriptionPlanPanel({
     <div className={`space-y-4 ${className}`}>
       {showTitle && (
         <div>
-          <div className="flex items-center gap-2 text-emerald-400">
+          <div className="flex items-center gap-2 text-brand-400">
             <FaWandMagicSparkles />
             <span className="text-xs font-semibold uppercase tracking-wider">
               Plano Conta+ AI
@@ -253,10 +253,10 @@ export default function SubscriptionPlanPanel({
         </div>
       )}
 
-      <div className="rounded-xl border border-white/10 bg-slate-900/40 px-4 py-3 text-sm text-slate-300">
+      <div className="rounded-xl border border-white/10 bg-cp-card-secondary/40 px-4 py-3 text-sm text-slate-300">
         <p>
           Plano atual:{" "}
-          <span className="font-medium text-emerald-300">
+          <span className="font-medium text-brand-300">
             {subscription?.plan?.name ?? "Conta+ Free"}
           </span>
           {subscription?.billing_cycle && isPremium && (
@@ -270,7 +270,7 @@ export default function SubscriptionPlanPanel({
               <>
                 {" "}
                 · Vencimento:{" "}
-                <span className="font-medium text-emerald-300/90">
+                <span className="font-medium text-brand-300/90">
                   {new Date(subscription.end_date).toLocaleDateString("pt-BR")}
                 </span>
               </>
@@ -318,7 +318,7 @@ export default function SubscriptionPlanPanel({
           type="button"
           disabled={creating}
           onClick={() => void handleCreatePix("AI_PREMIUM")}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-500 disabled:opacity-60 sm:w-auto"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-white hover:bg-primary-hover disabled:opacity-60 sm:w-auto"
         >
           <FaPix />
           {creating ? "Gerando PIX..." : `Assinar Premium ${cycleLabel(billingCycle)}`}
@@ -330,7 +330,7 @@ export default function SubscriptionPlanPanel({
           type="button"
           disabled={creating}
           onClick={() => void handleCreatePix("AI_PREMIUM")}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600/90 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-500 disabled:opacity-60 sm:w-auto"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary/90 px-4 py-3 text-sm font-semibold text-white hover:bg-primary-hover disabled:opacity-60 sm:w-auto"
         >
           <FaPix />
           {creating ? "Gerando PIX..." : `Mudar para ${cycleLabel(billingCycle)}`}
@@ -355,12 +355,12 @@ export default function SubscriptionPlanPanel({
                 key={plan.code}
                 className={`relative flex flex-col rounded-2xl border p-5 ${
                   highlighted
-                    ? "border-emerald-500/40 bg-gradient-to-br from-emerald-500/10 to-cyan-500/5"
+                    ? "border-primary/40 bg-gradient-to-br from-primary/10 to-ai/5"
                     : "border-white/10 bg-white/5"
                 }`}
               >
                 <h3 className="text-lg font-semibold text-white">{plan.name}</h3>
-                <p className="mt-2 text-2xl font-bold text-emerald-400">
+                <p className="mt-2 text-2xl font-bold text-brand-400">
                   {plan.price_cents === 0
                     ? "Grátis"
                     : formatBrl(
@@ -379,7 +379,7 @@ export default function SubscriptionPlanPanel({
                 <ul className="mt-4 flex-1 space-y-2 text-sm text-slate-300">
                   {planFeatures(plan).map((feature) => (
                     <li key={feature} className="flex items-start gap-2">
-                      <FaCheck className="mt-0.5 shrink-0 text-emerald-400" />
+                      <FaCheck className="mt-0.5 shrink-0 text-brand-400" />
                       {feature}
                     </li>
                   ))}
@@ -394,7 +394,7 @@ export default function SubscriptionPlanPanel({
                       type="button"
                       disabled={disabled}
                       onClick={() => void handleCreatePix(plan.code)}
-                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-white hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <FaPix />
                       {creating && selectedPlanCode === plan.code
@@ -414,7 +414,7 @@ export default function SubscriptionPlanPanel({
       )}
 
       {payment && isPendingPayment(payment.status) && selectedPlan && (
-        <div className="space-y-4 rounded-2xl border border-emerald-500/20 bg-black/20 p-5">
+        <div className="space-y-4 rounded-2xl border border-primary/20 bg-black/20 p-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <h4 className="font-medium text-white">
@@ -426,7 +426,7 @@ export default function SubscriptionPlanPanel({
               type="button"
               onClick={() => void handleRefreshStatus()}
               disabled={polling}
-              className="flex items-center gap-1 text-sm text-emerald-400 hover:underline disabled:opacity-60"
+              className="flex items-center gap-1 text-sm text-brand-400 hover:underline disabled:opacity-60"
             >
               <FaRotateRight className={polling ? "animate-spin" : ""} />
               Atualizar
@@ -452,7 +452,7 @@ export default function SubscriptionPlanPanel({
               <button
                 type="button"
                 onClick={() => void copyPixCode()}
-                className="rounded-lg border border-white/10 px-3 py-2 text-emerald-400"
+                className="rounded-lg border border-white/10 px-3 py-2 text-brand-400"
                 aria-label="Copiar PIX"
               >
                 <FaCopy />
@@ -463,7 +463,7 @@ export default function SubscriptionPlanPanel({
       )}
 
       {variant === "compact" && (
-        <Link href="/planos" className="inline-block text-sm text-emerald-400 hover:underline">
+        <Link href="/planos" className="inline-block text-sm text-brand-400 hover:underline">
           Ver todos os planos →
         </Link>
       )}

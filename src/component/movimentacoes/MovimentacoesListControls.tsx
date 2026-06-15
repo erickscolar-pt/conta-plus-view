@@ -48,7 +48,7 @@ export default function MovimentacoesListControls({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={searchPlaceholder}
-            className="w-full rounded-xl border border-white/10 bg-slate-950/80 py-2.5 pl-10 pr-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-emerald-500/40 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+            className="w-full rounded-xl border border-white/10 bg-cp-base/80 py-2.5 pl-10 pr-3 text-sm text-slate-100 placeholder:text-slate-500 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
             autoComplete="off"
           />
         </div>
@@ -59,7 +59,7 @@ export default function MovimentacoesListControls({
             <select
               value={pageSize}
               onChange={(e) => onPageSizeChange(Number(e.target.value))}
-              className="rounded-lg border border-white/10 bg-slate-950/80 px-2 py-1.5 text-sm text-slate-100 focus:border-emerald-500/40 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+              className="rounded-lg border border-white/10 bg-cp-base/80 px-2 py-1.5 text-sm text-slate-100 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
             >
               {PAGE_SIZE_OPTIONS.map((n) => (
                 <option key={n} value={n}>
@@ -87,7 +87,7 @@ export default function MovimentacoesListControls({
               type="button"
               disabled={safePage <= 1}
               onClick={() => onPageChange(safePage - 1)}
-              className="inline-flex items-center rounded-lg border border-white/10 bg-slate-900/80 px-2 py-1.5 text-slate-200 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex items-center rounded-lg border border-white/10 bg-cp-card-secondary/80 px-2 py-1.5 text-slate-200 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
               aria-label="Página anterior"
             >
               <MdChevronLeft className="h-5 w-5" />
@@ -99,7 +99,7 @@ export default function MovimentacoesListControls({
               type="button"
               disabled={safePage >= totalPages}
               onClick={() => onPageChange(safePage + 1)}
-              className="inline-flex items-center rounded-lg border border-white/10 bg-slate-900/80 px-2 py-1.5 text-slate-200 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex items-center rounded-lg border border-white/10 bg-cp-card-secondary/80 px-2 py-1.5 text-slate-200 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
               aria-label="Próxima página"
             >
               <MdChevronRight className="h-5 w-5" />

@@ -18,8 +18,8 @@ export default function AdminLayout({ title, children }: Props) {
       <Head>
         <title>{title} | Admin Conta+</title>
       </Head>
-      <div className="min-h-screen bg-slate-950 text-slate-100">
-        <header className="border-b border-white/10 bg-slate-900/80">
+      <div className="min-h-screen bg-cp-base text-slate-100">
+        <header className="border-b border-white/10 bg-cp-card/80">
           <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
             <div className="flex items-center gap-4">
               <BrandLogo size="compact" />

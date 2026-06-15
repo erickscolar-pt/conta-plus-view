@@ -7,10 +7,10 @@ export const modalTitle = "text-lg font-semibold tracking-tight text-slate-50";
 export const modalLabel = "block text-sm font-medium text-slate-400";
 
 export const modalInput =
-  "mt-1 block w-full rounded-xl border border-white/10 bg-slate-950/80 px-4 py-2.5 text-sm text-slate-100 shadow-sm placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30";
+  "mt-1 block w-full rounded-xl border border-white/10 bg-cp-base/80 px-4 py-2.5 text-sm text-slate-100 shadow-sm placeholder:text-slate-500 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30";
 
 export const modalSelect =
-  "mt-1 w-full rounded-xl border border-white/10 bg-slate-950/80 px-3 py-2.5 text-sm text-slate-100 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30";
+  "mt-1 w-full rounded-xl border border-white/10 bg-cp-base/80 px-3 py-2.5 text-sm text-slate-100 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30";
 
 /** Bloco com borda (vínculo, tipo de dívida, parcelas). */
 export const modalInset =
@@ -18,4 +18,4 @@ export const modalInset =
 
 export const modalMuted = "text-sm text-slate-400";
 
-export const modalInfo = "text-sm font-medium text-emerald-300/90";
+export const modalInfo = "text-sm font-medium text-brand-300/90";

@@ -67,7 +67,7 @@ export default function Modal({
         aria-label="Fechar modal"
       />
       <div
-        className={`relative z-10 flex w-full ${sizeClass[size]} max-h-[90vh] flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-900/95 text-slate-100 shadow-2xl ring-1 ring-white/5`}
+        className={`relative z-10 flex w-full ${sizeClass[size]} max-h-[90vh] flex-col overflow-hidden rounded-2xl border border-white/10 bg-cp-card/95 text-slate-100 shadow-2xl ring-1 ring-white/5`}
         onClick={(e) => e.stopPropagation()}
       >
         <button

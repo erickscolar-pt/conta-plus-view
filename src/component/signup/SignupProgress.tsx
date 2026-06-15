@@ -20,7 +20,7 @@ export default function SignupProgress({ step, totalSteps }: Props) {
       </div>
       <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
         <motion.div
-          className="h-full rounded-full bg-gradient-to-r from-dash via-primary to-cyan-400"
+          className="h-full rounded-full bg-gradient-to-r from-dash via-primary to-brand-300"
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.5, ease: "easeOut" }}

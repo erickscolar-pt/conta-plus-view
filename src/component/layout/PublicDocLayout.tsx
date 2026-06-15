@@ -41,9 +41,9 @@ export default function PublicDocLayout({
       />
 
       <div className="relative z-10 flex min-h-screen flex-col lg:flex-row">
-        <aside className="hidden w-full flex-col border-r border-white/[0.06] bg-gradient-to-br from-cp-card via-cp-base to-[#0a121f] lg:flex lg:max-w-[320px] xl:max-w-[360px]">
+        <aside className="hidden w-full flex-col border-r border-white/[0.06] bg-gradient-to-br from-cp-card via-cp-base to-[#140E12] lg:flex lg:max-w-[320px] xl:max-w-[360px]">
           <div className="flex flex-1 flex-col px-6 py-8 xl:px-8">
-            <BrandLogo size="default" href="/" />
+            <BrandLogo size="hero" href="/" />
 
             <div className="mt-10">
               <p className="inline-flex items-center gap-2 rounded-full border border-dash/30 bg-dash/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-dash">

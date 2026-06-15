@@ -22,7 +22,7 @@ export default function TermosDeUso() {
             O Conta+ é uma plataforma de organização financeira pessoal que permite registrar
             receitas, despesas, metas, dívidas, importar extratos e acompanhar relatórios.
           </p>
-          <ul className="mt-3 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
+          <ul className="mt-3 list-inside list-disc space-y-2 text-slate-300 marker:text-brand-400">
             <li>
               <strong className="text-slate-200">Plano Grátis:</strong> inclui dashboard,
               movimentações, metas, dívidas, relatórios e importação de arquivos, sem cobrança
@@ -45,7 +45,7 @@ export default function TermosDeUso() {
         </DocSection>
 
         <DocSection title="2. Cadastro e conta">
-          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
+          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-brand-400">
             <li>Você deve ter 18 anos ou mais para utilizar o serviço.</li>
             <li>
               As informações de cadastro devem ser verdadeiras, completas e mantidas atualizadas.
@@ -69,7 +69,7 @@ export default function TermosDeUso() {
 
         <DocSection title="3. Uso aceitável">
           <p className="mt-2 text-slate-300">Ao utilizar o Conta+, você concorda em:</p>
-          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
+          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-brand-400">
             <li>Respeitar a legislação brasileira aplicável.</li>
             <li>Não utilizar a plataforma para fins ilícitos, fraudulentos ou abusivos.</li>
             <li>
@@ -134,7 +134,7 @@ export default function TermosDeUso() {
         <DocSection title="
             6. Planos pagos, assinatura e pagamento
           ">
-          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
+          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-brand-400">
             <li>
               A contratação do Conta+ AI Premium é opcional. O plano gratuito permanece
               disponível independentemente da assinatura paga.

@@ -54,8 +54,7 @@ export default function VerificarEmailPage() {
       </Head>
       <div className="flex min-h-screen items-start justify-center overflow-x-hidden bg-cp-base px-3 py-8 pb-28 sm:items-center sm:px-4 sm:py-10 sm:pb-10">
         <div className="w-full max-w-md rounded-2xl border border-white/10 bg-cp-card p-5 sm:p-8">
-          <BrandLogo size="compact" className="mb-5 sm:hidden" />
-          <BrandLogo size="default" className="mb-6 hidden sm:inline-flex" />
+          <BrandLogo size="default" className="mb-6" />
           <h1 className="text-lg font-bold text-white sm:text-xl">Confirme seu e-mail</h1>
           <p className="mt-2 text-sm text-cp-muted">
             Precisamos confirmar seu e-mail para ativar a conta e evitar cadastros falsos.

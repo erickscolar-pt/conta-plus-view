@@ -49,7 +49,7 @@ export default function ImportReport() {
       }
     >
         <DocSection title="Como funciona">
-          <ol className="mt-2 list-inside list-decimal space-y-2 text-slate-300 marker:text-emerald-300">
+          <ol className="mt-2 list-inside list-decimal space-y-2 text-slate-300 marker:text-brand-400">
             <li>
               Baixe o modelo <strong className="text-slate-200">modelo-conta-plus.xlsx</strong>{" "}
               (botão abaixo ou pelo menu lateral, logado).
@@ -71,7 +71,7 @@ export default function ImportReport() {
         </DocSection>
 
         <DocSection title="Abas do modelo">
-          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
+          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-brand-400">
             <li>
               <strong className="text-slate-200">Salário:</strong> colunas Empresa, Valor, Data.
               Registra <strong>entradas</strong> (rendas).
@@ -105,7 +105,7 @@ export default function ImportReport() {
             ter texto selecionável (não funciona com extrato escaneado); o layout varia entre
             bancos, então em caso de falha use OFX ou CSV exportados pelo internet banking.
           </p>
-          <ol className="mt-2 list-inside list-decimal space-y-2 text-slate-300 marker:text-emerald-300">
+          <ol className="mt-2 list-inside list-decimal space-y-2 text-slate-300 marker:text-brand-400">
             <li>Para <strong>OFX</strong>, basta exportar do banco e enviar o arquivo direto.</li>
             <li>
               Para <strong>CSV</strong>, você pode enviar o arquivo direto; o sistema tenta mapear
@@ -129,7 +129,7 @@ export default function ImportReport() {
         </DocSection>
 
         <DocSection title="Regras de validação">
-          <ul className="mt-2 list-inside list-disc space-y-1 text-slate-300 marker:text-emerald-300">
+          <ul className="mt-2 list-inside list-disc space-y-1 text-slate-300 marker:text-brand-400">
             <li>Textos principais (Empresa, Dívida, Objetivo) com pelo menos 3 caracteres.</li>
             <li>Valores numéricos positivos; moeda brasileira é interpretada automaticamente.</li>
             <li>Datas válidas, inclusive em texto dd/mm/aaaa.</li>

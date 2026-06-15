@@ -193,7 +193,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
               </p>
             </header>
 
-            <section className="rounded-2xl border border-emerald-500/25 bg-gradient-to-br from-emerald-500/10 to-slate-900/40 p-6 shadow-sm ring-1 ring-emerald-500/20 backdrop-blur-sm md:p-8">
+            <section className="rounded-2xl border border-primary/25 bg-gradient-to-br from-primary/10 to-cp-card/40 p-6 shadow-sm ring-1 ring-primary/20 backdrop-blur-sm md:p-8">
               <SubscriptionPlanPanel usuario={usuario} variant="compact" />
             </section>
 
@@ -211,7 +211,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                     Nome
                   </label>
                   <input
-                    className="mt-1 block w-full rounded-xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 shadow-sm transition placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                    className="mt-1 block w-full rounded-xl border border-white/10 bg-cp-card-secondary/60 px-4 py-3 text-sm text-slate-100 shadow-sm transition placeholder:text-slate-500 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                     id="name"
                     type="text"
                     value={nome}
@@ -226,7 +226,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                     Nome de usuário
                   </label>
                   <input
-                    className="mt-1 block w-full rounded-xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                    className="mt-1 block w-full rounded-xl border border-white/10 bg-cp-card-secondary/60 px-4 py-3 text-sm text-slate-100 shadow-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                     id="username"
                     type="text"
                     value={username}
@@ -241,7 +241,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                     E-mail
                   </label>
                   <input
-                    className="mt-1 block w-full rounded-xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 shadow-sm transition focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                    className="mt-1 block w-full rounded-xl border border-white/10 bg-cp-card-secondary/60 px-4 py-3 text-sm text-slate-100 shadow-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                     id="email"
                     type="email"
                     value={email}
@@ -251,7 +251,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
               </form>
               <div className="mt-8 flex justify-end border-t border-white/10 pt-6 max-md:justify-stretch">
                 <button
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400 max-md:w-full"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-500/25 transition hover:bg-primary-hover max-md:w-full"
                   onClick={handleSaveChanges}
                   type="button"
                 >
@@ -295,7 +295,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                         {row.inviteCode ? (
                           <Link
                             href={row.hrefPath}
-                            className="mt-2 inline-block text-xs font-semibold text-emerald-400 hover:text-emerald-300"
+                            className="mt-2 inline-block text-xs font-semibold text-brand-400 hover:text-brand-300"
                           >
                             Abrir convite →
                           </Link>
@@ -322,7 +322,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                     pendingSent.map((row) => (
                       <li
                         key={`sent-${row.inviterUserId}-${row.inviteeUserId}`}
-                        className="flex flex-col gap-2 rounded-xl border border-white/10 bg-slate-900/40 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                        className="flex flex-col gap-2 rounded-xl border border-white/10 bg-cp-card-secondary/40 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
                       >
                         <div className="min-w-0">
                           <p className="truncate text-sm font-medium text-slate-200">
@@ -362,7 +362,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                     vinculos.map((v, idx) => (
                       <li
                         key={v.id ?? idx}
-                        className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-slate-900/40 px-4 py-3"
+                        className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-cp-card-secondary/40 px-4 py-3"
                       >
                         <span className="truncate text-sm font-medium text-slate-200">
                           {v.username}
@@ -392,7 +392,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                     vinculosComoConvidado.map((v) => (
                       <li
                         key={v.id}
-                        className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-slate-900/40 px-4 py-3"
+                        className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-cp-card-secondary/40 px-4 py-3"
                       >
                         <span className="truncate text-sm font-medium text-slate-200">
                           {v.parceiroNome}{" "}
@@ -418,9 +418,9 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                 </ul>
               </section>
 
-              <section className="rounded-2xl border border-emerald-500/25 bg-gradient-to-br from-emerald-500/10 to-slate-900/40 p-6 shadow-sm ring-1 ring-emerald-500/20 backdrop-blur-sm">
+              <section className="rounded-2xl border border-primary/25 bg-gradient-to-br from-primary/10 to-cp-card/40 p-6 shadow-sm ring-1 ring-primary/20 backdrop-blur-sm">
                 <div className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-white shadow-lg shadow-emerald-500/30">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-white shadow-lg shadow-brand-500/30">
                     <MdLink size={22} aria-hidden />
                   </span>
                   <div>
@@ -429,7 +429,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                     </h2>
                     <p className="mt-1 text-sm text-slate-400">
                       Informe o e-mail ou o nome de usuário de quem{" "}
-                      <strong className="font-semibold text-emerald-300">já tem cadastro</strong>.
+                      <strong className="font-semibold text-brand-300">já tem cadastro</strong>.
                       Geramos um link único; você copia e envia como quiser (não enviamos e-mail
                       pelo app).
                     </p>
@@ -438,7 +438,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
 
                 <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-stretch">
                   <input
-                    className="min-w-0 flex-1 rounded-xl border border-white/10 bg-slate-900/60 px-4 py-3 text-sm text-slate-100 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/25"
+                    className="min-w-0 flex-1 rounded-xl border border-white/10 bg-cp-card-secondary/60 px-4 py-3 text-sm text-slate-100 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25"
                     placeholder="E-mail ou @usuário do convidado"
                     type="text"
                     value={inviteIdentifier}
@@ -446,7 +446,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                     autoComplete="off"
                   />
                   <button
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400 disabled:opacity-60"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-500/25 transition hover:bg-primary-hover disabled:opacity-60"
                     disabled={loading}
                     onClick={handleGenerateInviteLink}
                     type="button"
@@ -459,9 +459,9 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                 </div>
 
                 {inviteLink ? (
-                  <div className="mt-5 rounded-xl border border-white/10 bg-slate-900/60 p-4">
+                  <div className="mt-5 rounded-xl border border-white/10 bg-cp-card-secondary/60 p-4">
                     {guestLabel ? (
-                      <p className="text-xs font-medium uppercase tracking-wide text-emerald-300">
+                      <p className="text-xs font-medium uppercase tracking-wide text-brand-300">
                         Convite para {guestLabel}
                       </p>
                     ) : null}

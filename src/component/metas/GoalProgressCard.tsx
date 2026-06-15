@@ -57,7 +57,7 @@ export default function GoalProgressCard({
           initial={{ width: 0 }}
           animate={{ width: `${pct}%` }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="h-full rounded-full bg-gradient-to-r from-goals to-cyan-400"
+          className="h-full rounded-full bg-gradient-to-r from-goals to-brand-300"
         />
       </div>
 

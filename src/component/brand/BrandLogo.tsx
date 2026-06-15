@@ -1,58 +1,53 @@
 import Image from "next/image";
 import Link from "next/link";
-import imgLogo from "../../../public/logo_login.png";
+import imgLogo from "../../../public/adaptive-icon.png";
+
+/** Proporção original do arquivo adaptive-icon.png */
+const LOGO_WIDTH = 560;
+const LOGO_HEIGHT = 503;
 
 type Props = {
   href?: string;
-  /** compact = header mobile; default = sidebar; hero = destaque na marca */
-  size?: "compact" | "default" | "hero";
+  /**
+   * full = tamanho original (560×503)
+   * hero / lead / default / compact = mesma imagem, escala proporcional
+   */
+  size?: "compact" | "default" | "lead" | "hero" | "full";
   className?: string;
-  /** Fundo claro atrás da logo — essencial para o porquinho (olhos e focinho pretos) */
-  variant?: "badge" | "plain";
 };
 
-const sizes = {
-  compact: { w: 120, h: 36, img: "h-8 w-auto", pad: "px-3 py-2" },
-  default: { w: 150, h: 44, img: "h-10 w-auto", pad: "px-4 py-2.5" },
-  hero: { w: 180, h: 52, img: "h-12 w-auto", pad: "px-5 py-3" },
+const sizes: Record<NonNullable<Props["size"]>, string> = {
+  compact: "h-9 w-auto",
+  default: "h-11 w-auto sm:h-12",
+  lead: "h-16 w-auto sm:h-20",
+  hero: "h-24 w-auto sm:h-28",
+  full: "h-auto w-[560px] max-w-full",
 };
 
 export default function BrandLogo({
   href = "/",
   size = "default",
   className = "",
-  variant = "badge",
 }: Props) {
-  const s = sizes[size];
-
   const image = (
     <Image
       src={imgLogo}
       alt="Conta+"
-      width={s.w}
-      height={s.h}
-      className={s.img}
-      priority
+      width={LOGO_WIDTH}
+      height={LOGO_HEIGHT}
+      className={sizes[size]}
+      priority={size === "full" || size === "hero"}
     />
   );
 
-  const wrapped =
-    variant === "badge" ? (
-      <span
-        className={`inline-flex items-center rounded-2xl bg-gradient-to-br from-stone-300/90 via-rose-100/80 to-stone-400/70 shadow-lg shadow-black/25 ring-1 ring-white/15 ${s.pad}`}
-      >
-        {image}
-      </span>
-    ) : (
-      image
-    );
+  const wrapped = <span className={`inline-flex shrink-0 ${className}`}>{image}</span>;
 
   if (!href) {
-    return <span className={className}>{wrapped}</span>;
+    return wrapped;
   }
 
   return (
-    <Link href={href} className={`inline-flex transition hover:opacity-90 ${className}`}>
+    <Link href={href} className="inline-flex shrink-0 transition hover:opacity-90">
       {wrapped}
     </Link>
   );

@@ -18,7 +18,7 @@ export default function GanhosMobileCards({
       {items.map((r) => (
         <li
           key={r.id}
-          className="rounded-2xl border border-white/10 bg-slate-900/55 p-4 shadow-sm ring-1 ring-white/[0.04]"
+          className="rounded-2xl border border-white/10 bg-cp-card-secondary/55 p-4 shadow-sm ring-1 ring-white/[0.04]"
         >
           <div className="flex flex-col gap-1">
             <p className="text-sm font-medium leading-snug text-slate-100">

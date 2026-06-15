@@ -146,7 +146,7 @@ export default function MercadoPage({ usuario, tipodivida }: Props) {
               <label className="mb-2 block text-sm text-slate-300">Nova lista</label>
               <div className="flex flex-col gap-3 md:flex-row">
                 <input
-                  className="flex-1 rounded-xl border border-white/10 bg-slate-900/80 px-3 py-2 text-sm"
+                  className="flex-1 rounded-xl border border-white/10 bg-cp-card-secondary/80 px-3 py-2 text-sm"
                   placeholder="Ex.: Compra da semana"
                   value={newSessionName}
                   onChange={(e) => setNewSessionName(e.target.value)}
@@ -154,7 +154,7 @@ export default function MercadoPage({ usuario, tipodivida }: Props) {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="rounded-xl bg-emerald-500/25 px-4 py-2 text-sm font-semibold text-emerald-100 disabled:opacity-60"
+                  className="rounded-xl bg-primary/25 px-4 py-2 text-sm font-semibold text-brand-100 disabled:opacity-60"
                 >
                   Criar lista
                 </button>
@@ -179,8 +179,8 @@ export default function MercadoPage({ usuario, tipodivida }: Props) {
                         onClick={() => setActiveId(s.id)}
                         className={`w-full rounded-xl border px-3 py-2 text-left text-sm ${
                           s.id === activeId
-                            ? "border-emerald-400/40 bg-emerald-500/15 text-emerald-100"
-                            : "border-white/10 bg-slate-900/70 text-slate-200"
+                            ? "border-brand-400/40 bg-primary/15 text-brand-100"
+                            : "border-white/10 bg-cp-card-secondary/70 text-slate-200"
                         }`}
                       >
                         <div className="flex items-center justify-between gap-2">
@@ -213,26 +213,26 @@ export default function MercadoPage({ usuario, tipodivida }: Props) {
                     {active.status === "open" && (
                       <form onSubmit={addItem} className="grid grid-cols-1 gap-3 md:grid-cols-4">
                         <input
-                          className="rounded-xl border border-white/10 bg-slate-900/80 px-3 py-2 text-sm md:col-span-2"
+                          className="rounded-xl border border-white/10 bg-cp-card-secondary/80 px-3 py-2 text-sm md:col-span-2"
                           placeholder="Nome do produto"
                           value={itemNome}
                           onChange={(e) => setItemNome(e.target.value)}
                           required
                         />
                         <input
-                          className="rounded-xl border border-white/10 bg-slate-900/80 px-3 py-2 text-sm"
+                          className="rounded-xl border border-white/10 bg-cp-card-secondary/80 px-3 py-2 text-sm"
                           placeholder="Código de barras"
                           value={itemBarcode}
                           onChange={(e) => setItemBarcode(e.target.value)}
                         />
                         <input
-                          className="rounded-xl border border-white/10 bg-slate-900/80 px-3 py-2 text-sm"
+                          className="rounded-xl border border-white/10 bg-cp-card-secondary/80 px-3 py-2 text-sm"
                           placeholder="Qtd"
                           value={itemQuantidade}
                           onChange={(e) => setItemQuantidade(e.target.value)}
                         />
                         <input
-                          className="rounded-xl border border-white/10 bg-slate-900/80 px-3 py-2 text-sm"
+                          className="rounded-xl border border-white/10 bg-cp-card-secondary/80 px-3 py-2 text-sm"
                           placeholder="Preço unit."
                           value={itemPreco}
                           onChange={(e) => setItemPreco(e.target.value)}
@@ -241,7 +241,7 @@ export default function MercadoPage({ usuario, tipodivida }: Props) {
                         <button
                           type="submit"
                           disabled={saving}
-                          className="rounded-xl bg-cyan-500/25 px-4 py-2 text-sm font-semibold text-cyan-100 md:col-span-4"
+                          className="rounded-xl bg-brand-500/25 px-4 py-2 text-sm font-semibold text-brand-100 md:col-span-4"
                         >
                           Adicionar item
                         </button>
@@ -255,7 +255,7 @@ export default function MercadoPage({ usuario, tipodivida }: Props) {
                         active.items.map((item) => (
                           <div
                             key={item.id}
-                            className="flex items-center justify-between rounded-xl border border-white/10 bg-slate-900/70 px-3 py-2"
+                            className="flex items-center justify-between rounded-xl border border-white/10 bg-cp-card-secondary/70 px-3 py-2"
                           >
                             <div>
                               <p className="text-sm font-medium text-slate-100">{item.nome}</p>
@@ -284,12 +284,12 @@ export default function MercadoPage({ usuario, tipodivida }: Props) {
                     </div>
 
                     {active.status === "open" && (
-                      <div className="rounded-xl border border-white/10 bg-slate-900/60 p-3">
+                      <div className="rounded-xl border border-white/10 bg-cp-card-secondary/60 p-3">
                         <label className="mb-2 block text-xs font-medium uppercase tracking-wide text-slate-400">
                           Categoria de saída ao finalizar (opcional)
                         </label>
                         <select
-                          className="w-full rounded-xl border border-white/10 bg-slate-900/80 px-3 py-2 text-sm"
+                          className="w-full rounded-xl border border-white/10 bg-cp-card-secondary/80 px-3 py-2 text-sm"
                           value={tipoDividaId}
                           onChange={(e) => setTipoDividaId(e.target.value)}
                         >
@@ -304,7 +304,7 @@ export default function MercadoPage({ usuario, tipodivida }: Props) {
                           type="button"
                           onClick={() => void finalize()}
                           disabled={saving || active.items.length === 0}
-                          className="mt-3 rounded-xl bg-emerald-500/25 px-4 py-2 text-sm font-semibold text-emerald-100 disabled:opacity-60"
+                          className="mt-3 rounded-xl bg-primary/25 px-4 py-2 text-sm font-semibold text-brand-100 disabled:opacity-60"
                         >
                           Finalizar compra e registrar saída
                         </button>

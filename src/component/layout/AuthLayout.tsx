@@ -32,8 +32,7 @@ export default function AuthLayout({
 
       <header className="relative z-10 border-b border-white/[0.06] bg-cp-base/90 backdrop-blur-xl">
         <div className="mx-auto flex h-14 max-w-lg items-center justify-between px-3 sm:h-16 sm:px-6">
-          <BrandLogo size="compact" className="sm:hidden" />
-          <BrandLogo size="default" className="hidden sm:inline-flex" />
+          <BrandLogo size="default" />
           <Link
             href="/signup"
             className="rounded-full px-3 py-2 text-xs font-medium text-cp-muted transition hover:bg-white/5 hover:text-primary sm:text-sm"

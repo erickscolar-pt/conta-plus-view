@@ -272,7 +272,7 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
             </motion.div>
             <button
               type="button"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-goals to-cyan-500 px-5 py-3 font-semibold text-white shadow-lg transition hover:brightness-110 sm:w-auto"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-goals to-brand-400 px-5 py-3 font-semibold text-white shadow-lg transition hover:brightness-110 sm:w-auto"
               onClick={() => setIsModalCreate(true)}
             >
               <MdOutlineSavings size={22} />
@@ -304,9 +304,9 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
                 <NotFound />
               )}
             </div>
-            <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-slate-100 backdrop-blur-sm sm:flex-row sm:p-6">
+            <div className="mt-8 flex flex-col items-center justify-between gap-4 rounded-xl border border-primary/20 bg-primary/10 p-4 text-slate-100 backdrop-blur-sm sm:flex-row sm:p-6">
               <div className="flex items-center space-x-4">
-                <MdAccountBalanceWallet size={32} className="text-emerald-400" />
+                <MdAccountBalanceWallet size={32} className="text-brand-400" />
                 <div>
                   <p className="text-lg text-slate-300">Guardado este mês</p>
                   <p className="text-2xl font-bold text-white">{formatCurrency(total)}</p>
@@ -314,7 +314,7 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
               </div>
               <button
                 type="button"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400 sm:w-auto"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 font-semibold text-white shadow-lg shadow-brand-500/25 transition hover:bg-primary-hover sm:w-auto"
                 onClick={() => setIsModalCreate(true)}
               >
                 <MdOutlineSavings size={22} />
@@ -352,7 +352,7 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
               type="checkbox"
               checked={descontaEntradaEdit}
               onChange={(e) => setDescontaEntradaEdit(e.target.checked)}
-              className="h-4 w-4 rounded border-white/20 bg-slate-900 text-emerald-500 focus:ring-emerald-500"
+              className="h-4 w-4 rounded border-white/20 bg-cp-base text-primary focus:ring-primary"
             />
             <span className={modalLabel}>Descontar do saldo (entrada)</span>
           </label>
@@ -407,7 +407,7 @@ export default function Metas({ objetivos: initialObjetivos, usuario }: Metas) {
               type="checkbox"
               checked={createDescontaEntrada}
               onChange={(e) => setCreateDescontaEntrada(e.target.checked)}
-              className="h-4 w-4 rounded border-white/20 bg-slate-900 text-emerald-500 focus:ring-emerald-500"
+              className="h-4 w-4 rounded border-white/20 bg-cp-base text-primary focus:ring-primary"
             />
             <span className={modalLabel}>Descontar do saldo (entrada)</span>
           </label>

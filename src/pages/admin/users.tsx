@@ -42,12 +42,12 @@ export default function AdminUsersPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar e-mail ou nome"
-            className="rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-sm"
+            className="rounded-lg border border-white/10 bg-cp-card px-3 py-2 text-sm"
           />
           <button
             type="button"
             onClick={() => void load()}
-            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium"
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium"
           >
             Buscar
           </button>
@@ -56,7 +56,7 @@ export default function AdminUsersPage() {
 
       <div className="mt-6 overflow-x-auto rounded-xl border border-white/10">
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-white/10 bg-slate-900/80 text-slate-400">
+          <thead className="border-b border-white/10 bg-cp-card/80 text-slate-400">
             <tr>
               <th className="p-3">ID</th>
               <th className="p-3">Nome</th>

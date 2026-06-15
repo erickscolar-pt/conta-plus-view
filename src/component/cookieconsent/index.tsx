@@ -21,16 +21,16 @@ export default function CookieConsent() {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 w-full bg-gray-800 text-white p-4 z-50 flex flex-col md:flex-row items-center justify-between">
-      <div className="mb-2 md:mb-0">
-        Este site utiliza cookies para melhorar a experiência do usuário. Ao continuar navegando, você concorda com a nossa{' '}
-        <Link href="/politicadecookies" className="underline text-blue-400">
+    <div className="fixed bottom-0 left-0 w-full z-50 flex flex-col items-center justify-between border-t border-primary/30 bg-cp-card p-4 text-white md:flex-row">
+      <div className="mb-2 md:mb-0 text-sm leading-relaxed">
+        Este site utiliza cookies para melhorar a experiência do usuário. Ao continuar navegando, você concorda com a nossa{" "}
+        <Link href="/politicadecookies" className="font-medium underline text-brand-300 hover:text-brand-200">
           Política de Cookies
         </Link>.
       </div>
       <button
         onClick={handleAccept}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        className="rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-hover"
       >
         Aceitar
       </button>

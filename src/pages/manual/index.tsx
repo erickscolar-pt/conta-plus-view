@@ -14,7 +14,7 @@ export default function Manual() {
       }
     >
         <DocSection title="Primeiros passos">
-          <ol className="mt-2 list-inside list-decimal space-y-1 text-slate-300 marker:text-emerald-300">
+          <ol className="mt-2 list-inside list-decimal space-y-1 text-slate-300 marker:text-brand-400">
             <li>Cadastre-se ou faça login.</li>
             <li>Cadastre rendas e saídas (ou importe pelo Excel).</li>
             <li>Acompanhe o saldo no dashboard.</li>
@@ -29,7 +29,7 @@ export default function Manual() {
             bancários em <strong className="text-slate-200">CSV</strong> e{" "}
             <strong className="text-slate-200">OFX</strong>.
           </p>
-          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
+          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-brand-400">
             <li>
               <strong>Onde baixar:</strong> menu lateral (logado) em Importar arquivo, ou a página{" "}
               <Link href="/importreport" >
@@ -54,7 +54,7 @@ export default function Manual() {
         </DocSection>
 
         <DocSection title="Funcionalidades principais">
-          <ul className="mt-2 list-inside list-disc space-y-1 text-slate-300 marker:text-emerald-300">
+          <ul className="mt-2 list-inside list-disc space-y-1 text-slate-300 marker:text-brand-400">
             <li>
               <strong>Rendas:</strong> registre entradas por data.
             </li>

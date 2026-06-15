@@ -26,7 +26,7 @@ import { TruncatedCell } from "@/component/ui/TruncatedCell";
 import GastosMobileCards from "@/component/movimentacoes/GastosMobileCards";
 
 const filterSelectClass =
-  "min-w-[9rem] rounded-lg border border-white/10 bg-slate-950/80 px-2 py-1.5 text-sm text-slate-100 focus:border-emerald-500/40 focus:outline-none focus:ring-2 focus:ring-emerald-500/20";
+  "min-w-[9rem] rounded-lg border border-white/10 bg-cp-base/80 px-2 py-1.5 text-sm text-slate-100 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20";
 
 export interface GastosPanelProps {
   dividas: Dividas[];
@@ -672,7 +672,7 @@ export default function GastosPanel({
                   <NotFound />
                 )}
               </div>
-              <div className="mt-6 flex flex-col items-center justify-between gap-4 rounded-xl border border-white/10 bg-slate-900/60 p-4 text-slate-100 backdrop-blur-sm md:flex-row">
+              <div className="mt-6 flex flex-col items-center justify-between gap-4 rounded-xl border border-white/10 bg-cp-card-secondary/60 p-4 text-slate-100 backdrop-blur-sm md:flex-row">
                 <div className="flex w-full flex-col items-start space-y-2 sm:flex-row sm:items-center sm:space-x-6 sm:space-y-0">
                   <div>
                     Total de dívida:{" "}

@@ -45,7 +45,7 @@ export default function LoginLayout({ title, description, children }: LoginLayou
       />
 
       <div className="relative z-10 flex min-h-screen flex-col lg:flex-row">
-        <aside className="relative hidden w-full flex-col justify-between border-r border-white/[0.06] bg-gradient-to-br from-cp-card via-cp-base to-[#0a121f] px-10 py-10 lg:flex lg:max-w-[46%] xl:max-w-[42%]">
+        <aside className="relative hidden w-full flex-col justify-between border-r border-white/[0.06] bg-gradient-to-br from-cp-card via-cp-base to-[#140E12] px-10 py-10 lg:flex lg:max-w-[46%] xl:max-w-[42%]">
           <div>
             <BrandLogo size="hero" href="/" />
 
@@ -112,7 +112,7 @@ export default function LoginLayout({ title, description, children }: LoginLayou
               </Link>
               <Link
                 href="/signup"
-                className="rounded-full bg-emerald-500/15 px-2.5 py-2 text-xs font-semibold text-emerald-300 transition hover:bg-emerald-500/25 sm:px-3 sm:text-sm"
+                className="rounded-full bg-primary/15 px-2.5 py-2 text-xs font-semibold text-brand-300 transition hover:bg-primary/25 sm:px-3 sm:text-sm"
               >
                 Criar conta
               </Link>

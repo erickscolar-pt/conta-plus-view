@@ -32,10 +32,7 @@ export default function PublicMarketingHeader({ onLoginClick }: Props) {
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-white/[0.08] bg-cp-base/90 backdrop-blur-xl">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 px-3 sm:h-16 sm:px-6">
-        <div className="min-w-0 shrink">
-          <BrandLogo size="compact" className="sm:hidden" />
-          <BrandLogo size="default" className="hidden sm:inline-flex" />
-        </div>
+        <BrandLogo size="default" className="min-w-0 shrink" />
 
         <nav className="hidden items-center gap-6 text-sm text-cp-muted md:flex">
           {NAV_LINKS.map((item) => (
@@ -55,7 +52,7 @@ export default function PublicMarketingHeader({ onLoginClick }: Props) {
           </button>
           <Link
             href="/signup"
-            className="hidden rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400 sm:inline-flex sm:px-5"
+                className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-brand-500/30 transition hover:bg-primary-hover sm:inline-flex sm:px-5"
           >
             Criar conta grátis
           </Link>
@@ -104,7 +101,7 @@ export default function PublicMarketingHeader({ onLoginClick }: Props) {
               <Link
                 href="/signup"
                 onClick={() => setMobileNavOpen(false)}
-                className="mt-1 rounded-lg bg-emerald-500 px-3 py-2.5 text-center text-sm font-semibold text-white"
+                className="mt-1 rounded-lg bg-primary px-3 py-2.5 text-center text-sm font-semibold text-white"
               >
                 Criar conta grátis
               </Link>

@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState, useRef, type ChangeEvent } from "react";
 import Router, { useRouter } from "next/router";
-import Image from "next/image";
 import Link from "next/link";
 import { AuthContexts } from "@/contexts/AuthContexts";
 import Modal from "../ui/modal";
@@ -8,7 +7,7 @@ import { ButtonPages } from "../ui/buttonPages";
 import { getErrorMessage, setupAPIClient } from "@/services/api";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import logoBranco from "../../../public/logo_branco.png";
+import BrandLogo from "@/component/brand/BrandLogo";
 import {
   MdDashboard,
   MdSwapHoriz,
@@ -143,12 +142,17 @@ export default function MenuLateral() {
       }
       const data = response.data as {
         message?: string;
-        counts?: { rendas?: number; dividas?: number; metas?: number };
+        counts?: {
+          rendas?: number;
+          dividas?: number;
+          metas?: number;
+          extratoIgnorados?: number;
+        };
       };
       const c = data.counts;
       const detail =
         c != null
-          ? ` (${c.rendas ?? 0} entrada(s), ${c.dividas ?? 0} saída(s), ${c.metas ?? 0} meta(s)).`
+          ? ` (${c.rendas ?? 0} entrada(s), ${c.dividas ?? 0} saída(s) categorizadas${c.extratoIgnorados ? `, ${c.extratoIgnorados} ignorado(s)` : ""}, ${c.metas ?? 0} meta(s)).`
           : "";
       toast.success((data.message ?? "Importação concluída.") + detail);
       setIsModalExcel(false);
@@ -185,26 +189,8 @@ export default function MenuLateral() {
     <>
       {/* Desktop sidebar */}
       <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-white/[0.08] bg-cp-card/95 backdrop-blur-xl lg:flex">
-        <div className="border-b border-white/[0.08] px-5 py-5">
-          <Link href="/dashboard" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-dash/30 to-brand-600/20 ring-1 ring-dash/20">
-              <Image
-                src={logoBranco}
-                alt="Conta+"
-                width={28}
-                height={28}
-                className="h-7 w-auto object-contain"
-              />
-            </div>
-            <div>
-              <p className="text-base font-bold tracking-tight text-white">
-                Conta<span className="text-dash">+</span>
-              </p>
-              <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-cp-subtle">
-                Finance Premium
-              </p>
-            </div>
-          </Link>
+        <div className="border-b border-white/[0.08] px-4 py-4">
+          <BrandLogo size="default" href="/dashboard" />
         </div>
 
         <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
@@ -395,7 +381,7 @@ export default function MenuLateral() {
               onChange={handleFileChange}
               disabled={loadingSendFileExcel}
               ref={fileInputRef}
-              className="block w-full cursor-pointer rounded-xl border border-white/[0.08] bg-cp-base px-3 py-2 text-sm text-slate-300 file:mr-3 file:rounded-lg file:border-0 file:bg-dash/20 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-emerald-200"
+              className="block w-full cursor-pointer rounded-xl border border-white/[0.08] bg-cp-base px-3 py-2 text-sm text-slate-300 file:mr-3 file:rounded-lg file:border-0 file:bg-dash/20 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand-200"
             />
             {selectedFile && (
               <ButtonPages loading={loadingSendFileExcel} onClick={handleSendFile}>

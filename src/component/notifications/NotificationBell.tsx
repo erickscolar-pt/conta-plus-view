@@ -128,7 +128,7 @@ export default function NotificationBell() {
   const severityBorder = (s: NotificationItem["severity"]) => {
     if (s === "high") return "border-l-red-500";
     if (s === "medium") return "border-l-amber-500";
-    return "border-l-emerald-500/80";
+    return "border-l-brand-500/80";
   };
 
   return (
@@ -158,14 +158,14 @@ export default function NotificationBell() {
           <button
             type="button"
             aria-label="Fechar notificações"
-            className="fixed inset-x-0 bottom-0 top-16 z-[48] bg-slate-950/80 sm:hidden"
+            className="fixed inset-x-0 bottom-0 top-16 z-[48] bg-cp-base/80 sm:hidden"
             onClick={() => setOpen(false)}
           />
           <div
             ref={panelRef}
-            className="fixed left-3 right-3 top-[4.25rem] z-[50] max-h-[min(78vh,560px)] overflow-hidden rounded-2xl border border-white/20 bg-slate-900 shadow-2xl sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:max-h-none sm:w-[min(100vw-2rem,22rem)]"
+            className="fixed left-3 right-3 top-[4.25rem] z-[50] max-h-[min(78vh,560px)] overflow-hidden rounded-2xl border border-white/20 bg-cp-card shadow-2xl sm:absolute sm:inset-auto sm:right-0 sm:top-full sm:mt-2 sm:max-h-none sm:w-[min(100vw-2rem,22rem)]"
           >
-          <div className="flex items-center justify-between border-b border-white/15 bg-slate-900 px-4 py-3">
+          <div className="flex items-center justify-between border-b border-white/15 bg-cp-card px-4 py-3">
             <span className="text-sm font-semibold text-white">
               Notificações
             </span>
@@ -173,7 +173,7 @@ export default function NotificationBell() {
               <button
                 type="button"
                 onClick={dismissAll}
-                className="text-xs font-medium text-emerald-400 hover:text-emerald-300"
+                className="text-xs font-medium text-brand-400 hover:text-brand-300"
               >
                 Limpar visíveis
               </button>
@@ -194,7 +194,7 @@ export default function NotificationBell() {
                 {visible.map((n) => (
                   <li
                     key={n.id}
-                    className={`border-l-4 ${severityBorder(n.severity)} bg-slate-900/95 px-3 py-3`}
+                    className={`border-l-4 ${severityBorder(n.severity)} bg-cp-card/95 px-3 py-3`}
                   >
                     <div className="flex gap-2">
                       <div className="min-w-0 flex-1">
@@ -212,7 +212,7 @@ export default function NotificationBell() {
                         {n.href ? (
                           <Link
                             href={n.href}
-                            className="mt-2 inline-block text-xs font-semibold text-emerald-400 hover:text-emerald-300"
+                            className="mt-2 inline-block text-xs font-semibold text-brand-400 hover:text-brand-300"
                             onClick={() => setOpen(false)}
                           >
                             Abrir →
@@ -234,7 +234,7 @@ export default function NotificationBell() {
             )}
           </div>
 
-          <p className="border-t border-white/15 bg-slate-900 px-4 py-2.5 text-[11px] leading-snug text-slate-300">
+          <p className="border-t border-white/15 bg-cp-card px-4 py-2.5 text-[11px] leading-snug text-slate-300">
             Dívidas, convites aceitos (quem te vinculou e quem você vinculou) e dica se
             ainda não há parceiros.
           </p>

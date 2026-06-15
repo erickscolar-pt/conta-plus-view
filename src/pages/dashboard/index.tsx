@@ -424,7 +424,7 @@ export default function Dashboard({
                         onClick={() => applyPreset(id)}
                         className={`rounded-full px-3 py-1.5 text-xs font-medium transition sm:text-sm ${
                           preset === id
-                            ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/25"
+                            ? "bg-primary text-white shadow-lg shadow-brand-500/25"
                             : "bg-white/10 text-slate-200 hover:bg-white/15"
                         } disabled:opacity-50`}
                       >
@@ -445,7 +445,7 @@ export default function Dashboard({
                         setDateStart(e.target.value);
                         setPreset("custom");
                       }}
-                      className="rounded-xl border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                      className="rounded-xl border border-white/10 bg-cp-card-secondary/80 px-3 py-2 text-sm text-slate-100 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                     />
                   </div>
                   <div className="flex flex-1 flex-col gap-1 sm:max-w-xs">
@@ -459,14 +459,14 @@ export default function Dashboard({
                         setDateEnd(e.target.value);
                         setPreset("custom");
                       }}
-                      className="rounded-xl border border-white/10 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+                      className="rounded-xl border border-white/10 bg-cp-card-secondary/80 px-3 py-2 text-sm text-slate-100 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
                     />
                   </div>
                   <button
                     type="button"
                     disabled={loading || !dateStart || !dateEnd}
                     onClick={onCustomFilter}
-                    className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/20 transition hover:bg-emerald-400 disabled:opacity-50"
+                    className="rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-500/20 transition hover:bg-primary-hover disabled:opacity-50"
                   >
                     {loading ? "Carregando…" : "Aplicar datas"}
                   </button>

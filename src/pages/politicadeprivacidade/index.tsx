@@ -41,7 +41,7 @@ export default function PoliticaDePrivacidade() {
 
         <DocSection title="2. Dados que coletamos">
           <p className="mt-2 text-slate-300">Podemos tratar as seguintes categorias de dados:</p>
-          <ul className="mt-3 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
+          <ul className="mt-3 list-inside list-disc space-y-2 text-slate-300 marker:text-brand-400">
             <li>
               <strong className="text-slate-200">Cadastro:</strong> nome, e-mail, senha
               (armazenada de forma criptografada) e preferências de conta.
@@ -75,7 +75,7 @@ export default function PoliticaDePrivacidade() {
         </DocSection>
 
         <DocSection title="3. Finalidades do tratamento">
-          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
+          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-brand-400">
             <li>Criar e gerenciar sua conta e autenticar seu acesso.</li>
             <li>Exibir dashboards, relatórios, metas e demais funcionalidades do plano gratuito.</li>
             <li>Processar assinaturas, pagamentos e suporte relacionado a planos pagos.</li>
@@ -115,7 +115,7 @@ export default function PoliticaDePrivacidade() {
         </DocSection>
 
         <DocSection title="5. Base legal (LGPD)">
-          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
+          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-brand-400">
             <li>
               <strong className="text-slate-200">Execução de contrato:</strong> prestação do
               serviço gratuito ou pago que você contratou.
@@ -137,7 +137,7 @@ export default function PoliticaDePrivacidade() {
 
         <DocSection title="6. Compartilhamento de dados">
           <p className="mt-2 text-slate-300">Seus dados podem ser compartilhados, limitadamente, com:</p>
-          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
+          <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-brand-400">
             <li>Provedores de hospedagem e infraestrutura em nuvem.</li>
             <li>Processadores de pagamento (Mercado Pago) para confirmação de PIX e assinaturas.</li>
             <li>Provedores de IA para execução das funcionalidades premium solicitadas por você.</li>
@@ -184,7 +184,7 @@ export default function PoliticaDePrivacidade() {
             </a>
             :
           </p>
-          <ul className="mt-2 list-inside list-disc space-y-1 text-slate-300 marker:text-emerald-300">
+          <ul className="mt-2 list-inside list-disc space-y-1 text-slate-300 marker:text-brand-400">
             <li>Confirmação da existência de tratamento e acesso aos dados.</li>
             <li>Correção de dados incompletos, inexatos ou desatualizados.</li>
             <li>Anonimização, bloqueio ou eliminação de dados desnecessários ou tratados em

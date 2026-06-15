@@ -7,6 +7,7 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { AuthContexts } from "@/contexts/AuthContexts";
 import PublicMarketingHeader from "@/component/layout/PublicMarketingHeader";
+import BrandLogo from "@/component/brand/BrandLogo";
 import {
   MdArrowForward,
   MdBarChart,
@@ -94,13 +95,14 @@ export default function Home() {
             <div className="relative mx-auto max-w-6xl px-3 sm:px-6">
               <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
                 <div className="min-w-0">
+                  <BrandLogo size="compact" href="/" className="mr-5 mb-6 sm:mb-8" />
                   <p className="mb-3 inline-flex max-w-full items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary sm:mb-4 sm:text-sm">
                     <MdSavings aria-hidden className="shrink-0" />
                     100% grátis para organizar suas contas
                   </p>
                   <h1 className="text-balance text-3xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl lg:leading-[1.08]">
                     Suas finanças organizadas.{" "}
-                    <span className="bg-gradient-to-r from-dash via-emerald-300 to-cyan-300 bg-clip-text text-transparent">
+                    <span className="bg-gradient-to-r from-brand-300 via-brand-200 to-logo-peach bg-clip-text text-transparent">
                       De graça.
                     </span>
                   </h1>
@@ -287,7 +289,7 @@ export default function Home() {
                     <MdShield className="mb-1 inline text-primary" size={16} />{" "}
                     Seus dados financeiros são usados apenas para gerar análises quando você
                     solicita. Saiba mais na{" "}
-                    <Link href="/politicadeprivacidade" className="text-emerald-300 underline underline-offset-2 hover:text-emerald-200">
+                    <Link href="/politicadeprivacidade" className="text-brand-300 underline underline-offset-2 hover:text-brand-200">
                       Política de Privacidade
                     </Link>
                     .
@@ -486,7 +488,7 @@ export default function Home() {
                     key={s.step}
                     className="relative rounded-2xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent p-5 text-center sm:p-8"
                   >
-                    <span className="text-5xl font-black text-emerald-500/20">{s.step}</span>
+                    <span className="text-5xl font-black text-brand-500/20">{s.step}</span>
                     <h3 className="mt-2 text-xl font-semibold text-white">{s.title}</h3>
                     <p className="mt-3 text-sm text-slate-400">{s.desc}</p>
                   </div>
@@ -498,7 +500,7 @@ export default function Home() {
           {/* CTA */}
           <section className="border-t border-white/10 py-12 sm:py-24">
             <div className="mx-auto max-w-4xl px-3 text-center sm:px-6">
-              <div className="rounded-3xl border border-emerald-500/30 bg-gradient-to-br from-emerald-500/20 via-slate-900 to-slate-950 p-6 sm:p-14">
+              <div className="rounded-3xl border border-brand-500/30 bg-gradient-to-br from-brand-500/20 via-cp-card to-cp-base p-6 sm:p-14">
                 <h2 className="text-2xl font-bold tracking-tight text-white sm:text-4xl">
                   Suas contas organizadas começam aqui — de graça
                 </h2>
@@ -527,33 +529,39 @@ export default function Home() {
           </section>
 
           <footer className="border-t border-white/10 py-10 sm:py-12">
-            <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-3 sm:flex-row sm:gap-8 sm:px-6">
+            <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 px-3 sm:px-6">
+              <BrandLogo size="default" href="/" />
+              <div className="flex w-full flex-col items-center justify-between gap-6 sm:flex-row sm:gap-8">
               <div className="grid w-full grid-cols-2 gap-x-4 gap-y-3 text-sm text-slate-500 sm:flex sm:w-auto sm:flex-wrap sm:justify-center sm:gap-6">
-                <Link href="/termosdeuso" className="transition hover:text-emerald-400">
+                <Link href="/termosdeuso" className="transition hover:text-brand-400">
                   Termos de uso
                 </Link>
-                <Link href="/politicadeprivacidade" className="transition hover:text-emerald-400">
+                <Link href="/politicadeprivacidade" className="transition hover:text-brand-400">
                   Privacidade
                 </Link>
-                <Link href="/politicadecookies" className="transition hover:text-emerald-400">
+                <Link href="/politicadecookies" className="transition hover:text-brand-400">
                   Cookies
                 </Link>
-                <Link href="/manual" className="transition hover:text-emerald-400">
+                <Link href="/manual" className="transition hover:text-brand-400">
                   Ajuda
                 </Link>
               </div>
               <p className="text-center text-sm text-slate-600">
                 © {new Date().getFullYear()} Conta+. Organize grátis · Consultor IA Premium.
               </p>
+              </div>
             </div>
           </footer>
         </main>
       </div>
 
       <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)} className="relative z-50">
-        <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm" aria-hidden />
+        <div className="fixed inset-0 bg-cp-base/70 backdrop-blur-sm" aria-hidden />
         <div className="fixed inset-0 flex items-end justify-center p-3 sm:items-center sm:p-4">
-          <Dialog.Panel className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-white/10 bg-slate-900 p-5 shadow-2xl sm:p-8">
+          <Dialog.Panel className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-white/10 bg-cp-card p-5 shadow-2xl sm:p-8">
+            <div className="mb-4 flex justify-center sm:justify-start">
+              <BrandLogo size="compact" href="/" />
+            </div>
             <Dialog.Title className="text-xl font-bold text-white">
               Entrar na sua conta
             </Dialog.Title>
@@ -571,7 +579,7 @@ export default function Home() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   autoComplete="username"
-                  className="w-full rounded-xl border border-white/10 bg-slate-950/50 px-4 py-3 text-white placeholder:text-slate-600 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                  className="w-full rounded-xl border border-white/10 bg-cp-base/80 px-4 py-3 text-white placeholder:text-cp-subtle focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                   placeholder="ex: seu@email.com"
                 />
               </div>
@@ -585,7 +593,7 @@ export default function Home() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="current-password"
-                    className="w-full rounded-xl border border-white/10 bg-slate-950/50 py-3 pl-4 pr-12 text-white placeholder:text-slate-600 focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                    className="w-full rounded-xl border border-white/10 bg-cp-base/80 py-3 pl-4 pr-12 text-white placeholder:text-cp-subtle focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
                     placeholder="••••••••"
                   />
                   <button
@@ -601,7 +609,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-2 w-full rounded-xl bg-emerald-500 py-3.5 font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400 disabled:opacity-60"
+                className="mt-2 w-full rounded-xl bg-primary py-3.5 font-semibold text-white shadow-lg shadow-brand-500/30 transition hover:bg-primary-hover disabled:opacity-60"
               >
                 {loading ? "Entrando…" : "Entrar"}
               </button>
@@ -611,7 +619,7 @@ export default function Home() {
               Não tem conta?{" "}
               <Link
                 href="/signup"
-                className="font-semibold text-emerald-400 hover:text-emerald-300"
+                className="font-semibold text-brand-400 hover:text-brand-300"
                 onClick={() => setIsModalOpen(false)}
               >
                 Criar conta grátis

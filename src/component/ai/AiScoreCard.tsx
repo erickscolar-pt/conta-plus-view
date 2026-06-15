@@ -19,7 +19,7 @@ export default function AiScoreCard({ score, loading, onRefresh }: Props) {
           type="button"
           onClick={onRefresh}
           disabled={loading}
-          className="text-xs text-emerald-400 hover:text-emerald-300 disabled:opacity-50"
+          className="text-xs text-brand-400 hover:text-brand-300 disabled:opacity-50"
         >
           Atualizar
         </button>
@@ -29,12 +29,12 @@ export default function AiScoreCard({ score, loading, onRefresh }: Props) {
       ) : (
         <>
           <div className="flex items-end gap-3">
-            <span className="text-4xl font-bold text-emerald-400">{value}</span>
+            <span className="text-4xl font-bold text-brand-400">{value}</span>
             <span className="mb-1 text-lg text-slate-300">{score?.nivel ?? "—"}</span>
           </div>
           <div className="mt-3 h-2 overflow-hidden rounded-full bg-slate-800">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all"
+              className="h-full rounded-full bg-gradient-to-r from-ai to-brand-400 transition-all"
               style={{ width: `${pct}%` }}
             />
           </div>
@@ -61,7 +61,7 @@ export function AiCreditsBadge({
   if (!credits) return null;
   if (credits.premium) {
     return (
-      <span className="rounded-full bg-gradient-to-r from-emerald-500/30 to-cyan-500/30 px-3 py-1 text-xs font-medium text-emerald-200">
+      <span className="rounded-full bg-gradient-to-r from-ai/30 to-brand-500/30 px-3 py-1 text-xs font-medium text-brand-200">
         AI Premium · Ilimitado
       </span>
     );

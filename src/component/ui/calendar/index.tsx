@@ -44,7 +44,7 @@ export default function Calendar({
   }, [type]);
 
   return (
-    <div className="w-full rounded-2xl border border-white/10 bg-slate-900/40 p-3 shadow-inner shadow-black/20 ring-1 ring-white/[0.04] sm:p-4">
+    <div className="w-full rounded-2xl border border-white/10 bg-cp-card-secondary/40 p-3 shadow-inner shadow-black/20 ring-1 ring-white/[0.04] sm:p-4">
       <div className="mb-3 flex flex-wrap items-center gap-2">
         {!hideType && (
           <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
@@ -53,7 +53,7 @@ export default function Calendar({
         )}
         {!hideType && (
           <div
-            className="inline-flex w-full max-w-full rounded-xl bg-slate-950/80 p-1 ring-1 ring-white/10 sm:w-auto"
+            className="inline-flex w-full max-w-full rounded-xl bg-cp-base/80 p-1 ring-1 ring-white/10 sm:w-auto"
             role="group"
             aria-label="Tipo de período"
           >
@@ -62,7 +62,7 @@ export default function Calendar({
               onClick={() => handleSelectType("day")}
               className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all sm:flex-initial sm:px-4 ${
                 selectedType === "day"
-                  ? "bg-emerald-500 text-white shadow-md shadow-emerald-900/40"
+                  ? "bg-primary text-white shadow-md shadow-brand-900/40"
                   : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
               }`}
             >
@@ -74,7 +74,7 @@ export default function Calendar({
               onClick={() => handleSelectType("month")}
               className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all sm:flex-initial sm:px-4 ${
                 selectedType === "month"
-                  ? "bg-emerald-500 text-white shadow-md shadow-emerald-900/40"
+                  ? "bg-primary text-white shadow-md shadow-brand-900/40"
                   : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
               }`}
             >
@@ -97,7 +97,7 @@ export default function Calendar({
             type={selectedType === "day" ? "date" : "month"}
             value={selectedDate}
             onChange={handleDateChange}
-            className="w-full rounded-xl border border-white/10 bg-slate-950/90 py-2.5 pl-3 pr-3 text-sm text-slate-100 shadow-sm focus:border-emerald-500/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/25 [color-scheme:dark]"
+            className="w-full rounded-xl border border-white/10 bg-cp-base/90 py-2.5 pl-3 pr-3 text-sm text-slate-100 shadow-sm focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/25 [color-scheme:dark]"
           />
         </label>
         {!hideButton && (

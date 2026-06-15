@@ -135,7 +135,7 @@ export default function Step1({
             type="checkbox"
             checked={acceptTerms}
             onChange={() => setAcceptTerms(!acceptTerms)}
-            className="mt-0.5 h-4 w-4 rounded border-white/20 bg-slate-900 text-primary focus:ring-primary/40"
+            className="mt-0.5 h-4 w-4 rounded border-white/20 bg-cp-base text-primary focus:ring-primary/40"
           />
           <span className="text-sm leading-relaxed text-cp-muted group-hover:text-slate-300">
             Li e aceito os{" "}

@@ -5,13 +5,13 @@
 html {
   width: 100%;
   min-height: 100%;
-  background: #020617;
-  color: #ffffff;
+  background: #1a1216;
+  color: #fff5f7;
 }
 
 body {
   min-height: 100vh;
-  background: #020617;
+  background: #1a1216;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -31,21 +31,23 @@ body {
 }
 
 :root {
-  --cp-base: #020617;
-  --cp-card: #071126;
-  --cp-card-secondary: #0b1730;
-  --cp-border: rgba(255, 255, 255, 0.08);
-  --cp-text: #ffffff;
-  --cp-muted: #94a3b8;
-  --cp-subtle: #64748b;
+  --cp-base: #1a1216;
+  --cp-card: #261820;
+  --cp-card-secondary: #322028;
+  --cp-border: rgba(255, 220, 230, 0.1);
+  --cp-text: #fff5f7;
+  --cp-muted: #c9b4bc;
+  --cp-subtle: #8f7a82;
   --cp-income: #22c55e;
   --cp-expense: #ef4444;
-  --cp-goals: #06b6d4;
-  --cp-planning: #8b5cf6;
-  --cp-ai: #a855f7;
-  --cp-dash: #10b981;
-  --btn-1: #00d084;
-  --btn-2: #00f59e;
+  --cp-goals: #f0ab98;
+  --cp-planning: #c084a8;
+  --cp-ai: #b87da8;
+  --cp-dash: #e8799a;
+  --btn-1: #e8799a;
+  --btn-2: #f095af;
+  --logo-peach: #f5d0c8;
+  --logo-snout: #e88896;
 }
 
 @layer components {
@@ -62,7 +64,7 @@ body {
   }
 
   .cp-gradient-text {
-    @apply bg-gradient-to-br from-white via-slate-100 to-slate-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-br from-logo-blush via-brand-200 to-brand-400 bg-clip-text text-transparent;
   }
 
   .doc-prose {
@@ -73,7 +75,7 @@ body {
     }
 
     strong {
-      @apply font-semibold text-slate-200;
+      @apply font-semibold text-brand-100;
     }
 
     a {
@@ -86,11 +88,11 @@ body {
     }
 
     ul {
-      @apply list-inside list-disc marker:text-dash;
+      @apply list-inside list-disc marker:text-brand-400;
     }
 
     ol {
-      @apply list-inside list-decimal marker:text-dash;
+      @apply list-inside list-decimal marker:text-brand-400;
     }
 
     li {
@@ -101,22 +103,22 @@ body {
 
 *::-webkit-scrollbar-track {
   border-radius: 4px;
-  background-color: #071126;
+  background-color: #261820;
 }
 
 *::-webkit-scrollbar {
   width: 8px;
   height: 8px;
-  background-color: #020617;
+  background-color: #1a1216;
 }
 
 *::-webkit-scrollbar-thumb {
   border-radius: 8px;
-  background-color: rgba(148, 163, 184, 0.25);
+  background-color: rgba(232, 121, 154, 0.25);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(148, 163, 184, 0.45);
+  background-color: rgba(232, 121, 154, 0.45);
 }
 
 @media (max-width: 640px) {

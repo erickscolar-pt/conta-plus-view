@@ -31,7 +31,7 @@ export default function AdminAuditPage() {
 
       <div className="mt-6 overflow-x-auto rounded-xl border border-white/10">
         <table className="w-full text-left text-xs">
-          <thead className="border-b border-white/10 bg-slate-900/80 text-slate-400">
+          <thead className="border-b border-white/10 bg-cp-card-secondary/80 text-slate-400">
             <tr>
               <th className="p-2">Data</th>
               <th className="p-2">Ação</th>

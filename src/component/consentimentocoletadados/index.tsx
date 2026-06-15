@@ -34,7 +34,7 @@ export default function ConsentimentoColetaDados() {
     <div
       role="dialog"
       aria-label="Consentimento de privacidade"
-      className="fixed bottom-0 left-0 right-0 z-[100] border-t border-emerald-600/40 bg-emerald-600 px-4 py-3 text-white shadow-lg sm:px-6"
+      className="fixed bottom-0 left-0 right-0 z-[100] border-t border-primary/40 bg-gradient-to-r from-brand-600 to-primary px-4 py-3 text-white shadow-lg sm:px-6"
     >
       <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
         <p className="text-sm leading-relaxed text-white/95 sm:text-[15px]">
@@ -51,7 +51,7 @@ export default function ConsentimentoColetaDados() {
           <button
             type="button"
             onClick={handleAccept}
-            className="rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-emerald-700 shadow-sm transition hover:bg-emerald-50"
+            className="rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-brand-700 shadow-sm transition hover:bg-brand-50"
           >
             Entendi e aceito
           </button>

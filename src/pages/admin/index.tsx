@@ -19,7 +19,7 @@ type Dashboard = {
 
 function Stat({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-slate-900/60 p-4">
+    <div className="rounded-xl border border-white/10 bg-cp-card-secondary/60 p-4">
       <p className="text-2xl font-bold text-white">{value}</p>
       <p className="mt-1 text-xs text-slate-400">{label}</p>
     </div>
@@ -65,7 +65,7 @@ export default function AdminDashboardPage() {
                   className="flex items-center justify-between rounded-xl border border-white/10 px-4 py-3"
                 >
                   <span className="text-sm text-slate-300">{p.name}</span>
-                  <span className="font-mono text-sm text-emerald-400">
+                  <span className="font-mono text-sm text-brand-400">
                     {p.activeSubscriptions}
                   </span>
                 </div>

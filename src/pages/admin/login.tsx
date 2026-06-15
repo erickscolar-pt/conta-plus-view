@@ -42,16 +42,16 @@ export default function AdminLoginPage() {
       <Head>
         <title>Admin | Conta+</title>
       </Head>
-      <div className="flex min-h-screen items-center justify-center bg-slate-950 px-4">
+      <div className="flex min-h-screen items-center justify-center bg-cp-base px-4">
         <form
           onSubmit={handleSubmit}
-          className="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900 p-8"
+          className="w-full max-w-sm rounded-2xl border border-white/10 bg-cp-card p-8"
         >
           <BrandLogo size="default" className="mb-6" />
           <h1 className="text-lg font-bold text-white">Painel administrativo</h1>
           <p className="mt-1 text-xs text-slate-400">Acesso restrito a administradores</p>
           <input
-            className="mt-6 w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2.5 text-sm text-white"
+            className="mt-6 w-full rounded-xl border border-white/10 bg-cp-base px-3 py-2.5 text-sm text-white"
             placeholder="E-mail"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -59,7 +59,7 @@ export default function AdminLoginPage() {
           />
           <input
             type="password"
-            className="mt-3 w-full rounded-xl border border-white/10 bg-slate-950 px-3 py-2.5 text-sm text-white"
+            className="mt-3 w-full rounded-xl border border-white/10 bg-cp-base px-3 py-2.5 text-sm text-white"
             placeholder="Senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

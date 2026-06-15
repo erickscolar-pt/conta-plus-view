@@ -56,7 +56,7 @@ export default function AdminCancelRequestsPage() {
           <p className="text-slate-500">Nenhuma solicitação pendente.</p>
         ) : (
           items.map((r) => (
-            <div key={r.id} className="rounded-xl border border-white/10 bg-slate-900/50 p-4">
+            <div key={r.id} className="rounded-xl border border-white/10 bg-cp-card-secondary/50 p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <p className="font-medium text-white">
@@ -72,7 +72,7 @@ export default function AdminCancelRequestsPage() {
                     type="button"
                     disabled={loadingId === r.id}
                     onClick={() => void process(r.id, true)}
-                    className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-medium disabled:opacity-50"
+                    className="rounded-lg bg-primary px-3 py-1.5 text-xs font-medium disabled:opacity-50"
                   >
                     Aprovar
                   </button>

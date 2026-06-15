@@ -3,6 +3,7 @@ import type {
   AiCreditsStatus,
   ChatResponse,
   CoachResponse,
+  ConfirmChatResponse,
   DiagnosticResponse,
   ScoreResponse,
 } from '@/types/ai';
@@ -43,6 +44,19 @@ export async function sendAiChat(message: string, sessionId?: string) {
   const { data } = await api().post<ChatResponse>('/ai/chat', {
     message,
     sessionId,
+  });
+  return data;
+}
+
+export async function confirmAiChatActions(
+  sessionId: string,
+  actionIds: string[],
+  overrides?: { actionId: string; vinculoId?: number }[],
+) {
+  const { data } = await api().post<ConfirmChatResponse>('/ai/chat/confirm', {
+    sessionId,
+    actionIds,
+    overrides,
   });
   return data;
 }

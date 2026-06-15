@@ -22,13 +22,13 @@ function Shell({
   title: string;
 }) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-100">
+    <div className="min-h-screen bg-gradient-to-b from-cp-base via-cp-card to-cp-base text-slate-100">
       <Head>
         <title>{title}</title>
       </Head>
       <div className="mx-auto flex min-h-screen max-w-lg flex-col px-4 py-10 md:py-16">
         <header className="mb-8 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-400/90">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-400/90">
             Conta+
           </p>
           <p className="mt-1 text-sm text-slate-500">Gestão financeira compartilhada</p>
@@ -83,9 +83,9 @@ export default function CodigoPage() {
     return (
       <Shell title="Conta+ | Confirmando vínculo">
         <div className="flex flex-1 flex-col items-center justify-center gap-6 py-20">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/10 shadow-lg shadow-emerald-500/10">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-primary/30 bg-primary/10 shadow-lg shadow-brand-500/10">
             <AiOutlineLoading3Quarters
-              className="h-8 w-8 animate-spin text-emerald-400"
+              className="h-8 w-8 animate-spin text-brand-400"
               aria-hidden
             />
           </div>
@@ -116,7 +116,7 @@ export default function CodigoPage() {
             </h1>
             <p className="mt-3 text-sm leading-relaxed text-slate-400">
               Este endereço precisa incluir o código do convite{" "}
-              <code className="rounded bg-slate-800 px-1.5 py-0.5 font-mono text-xs text-emerald-300">
+              <code className="rounded bg-cp-card-secondary px-1.5 py-0.5 font-mono text-xs text-brand-300">
                 ?c=...
               </code>
               . Peça à pessoa que convidou para enviar o link novamente, ou abra o convite
@@ -124,7 +124,7 @@ export default function CodigoPage() {
             </p>
             <Link
               href="/perfil"
-              className="mt-8 inline-flex w-full max-w-xs items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400"
+              className="mt-8 inline-flex w-full max-w-xs items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-brand-500/25 transition hover:bg-primary-hover"
             >
               <MdPerson size={20} aria-hidden />
               Ir ao perfil
@@ -141,12 +141,12 @@ export default function CodigoPage() {
     return (
       <Shell title="Conta+ | Vínculo aceito">
         <div className="flex flex-1 flex-col">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-emerald-950/20 ring-1 ring-white/5 backdrop-blur-md md:p-8">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 shadow-2xl shadow-brand-900/20 ring-1 ring-white/5 backdrop-blur-md md:p-8">
             <div className="flex flex-col items-center text-center">
               <div className="relative">
-                <div className="absolute inset-0 animate-pulse rounded-full bg-emerald-400/20 blur-xl" />
-                <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-emerald-400/40 bg-gradient-to-br from-emerald-500/30 to-emerald-600/10">
-                  <MdCheckCircle className="h-11 w-11 text-emerald-400" aria-hidden />
+                <div className="absolute inset-0 animate-pulse rounded-full bg-brand-400/20 blur-xl" />
+                <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-brand-400/40 bg-gradient-to-br from-primary/30 to-brand-600/10">
+                  <MdCheckCircle className="h-11 w-11 text-brand-400" aria-hidden />
                 </div>
               </div>
 
@@ -155,14 +155,14 @@ export default function CodigoPage() {
               </h1>
               <p className="mt-2 text-base text-slate-400">
                 Você e{" "}
-                <span className="font-semibold text-emerald-300">{nomeParceiro}</span>{" "}
+                <span className="font-semibold text-brand-300">{nomeParceiro}</span>{" "}
                 agora compartilham contas no Conta+.
               </p>
             </div>
 
-            <ul className="mt-8 space-y-3 rounded-xl border border-white/5 bg-slate-950/50 px-4 py-4 text-left text-sm text-slate-300">
+            <ul className="mt-8 space-y-3 rounded-xl border border-white/5 bg-cp-base/50 px-4 py-4 text-left text-sm text-slate-300">
               <li className="flex gap-3">
-                <span className="mt-0.5 text-emerald-500" aria-hidden>
+                <span className="mt-0.5 text-primary" aria-hidden>
                   ✓
                 </span>
                 <span>
@@ -171,7 +171,7 @@ export default function CodigoPage() {
                 </span>
               </li>
               <li className="flex gap-3">
-                <span className="mt-0.5 text-emerald-500" aria-hidden>
+                <span className="mt-0.5 text-primary" aria-hidden>
                   ✓
                 </span>
                 <span>
@@ -184,7 +184,7 @@ export default function CodigoPage() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
               <Link
                 href="/dashboard"
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3.5 text-center text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400 sm:flex-none sm:min-w-[200px]"
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3.5 text-center text-sm font-semibold text-white shadow-lg shadow-brand-500/25 transition hover:bg-primary-hover sm:flex-none sm:min-w-[200px]"
               >
                 <MdPieChart size={20} aria-hidden />
                 Ir para o painel
@@ -229,7 +229,7 @@ export default function CodigoPage() {
           </p>
           <Link
             href="/perfil"
-            className="mt-8 inline-flex w-full max-w-xs items-center justify-center gap-2 rounded-xl bg-emerald-500 px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition hover:bg-emerald-400"
+            className="mt-8 inline-flex w-full max-w-xs items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3.5 text-sm font-semibold text-white shadow-lg shadow-brand-500/25 transition hover:bg-primary-hover"
           >
             <MdPerson size={20} aria-hidden />
             Ir ao perfil
