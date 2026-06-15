@@ -1,5 +1,4 @@
 import { AppProps } from "next/app";
-import { useEffect } from "react";
 import "../../styles/globals.scss";
 import Head from "next/head";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,13 +7,9 @@ import { AuthProvider } from "../contexts/AuthContexts";
 import GoogleAnalytics from "@/component/GoogleAnalytics";
 import AvisosDeAtualizacao from "@/component/avisosdeatualizacao";
 import InstallAppPrompt from "@/component/pwa/InstallAppPrompt";
-import { registerServiceWorker } from "@/utils/pwa";
+import PwaUpdateModal from "@/component/pwa/PwaUpdateModal";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  useEffect(() => {
-    void registerServiceWorker();
-  }, []);
-
   return (
     <div className="min-h-screen font-sans antialiased">
       <Head>
@@ -30,11 +25,12 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Conta+" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/icon-192.png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.webmanifest" />
       </Head>
       <GoogleAnalytics />
       <AvisosDeAtualizacao />
+      <PwaUpdateModal />
       <AuthProvider>
         <Component {...pageProps} />
         <InstallAppPrompt />

@@ -20,6 +20,8 @@ type ModalProps = {
   children: ReactNode;
   /** Largura máxima do painel */
   size?: keyof typeof sizeClass;
+  /** Acima de banners e outros modais (ex.: aviso de atualização PWA) */
+  priority?: boolean;
 };
 
 export default function Modal({
@@ -27,6 +29,7 @@ export default function Modal({
   onClose,
   children,
   size = "lg",
+  priority = false,
 }: ModalProps) {
   const [mounted, setMounted] = useState(false);
 
@@ -56,7 +59,7 @@ export default function Modal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
+      className={`fixed inset-0 ${priority ? "z-[120]" : "z-[100]"} flex items-center justify-center p-4 sm:p-6`}
       role="dialog"
       aria-modal="true"
     >

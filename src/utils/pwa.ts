@@ -13,12 +13,84 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
   if (typeof window === "undefined" || !("serviceWorker" in navigator)) return null;
 
   try {
-    const reg = await navigator.serviceWorker.register(SW_PATH, { scope: "/" });
-    if (reg.waiting) reg.waiting.postMessage({ type: "SKIP_WAITING" });
-    return reg;
+    return await navigator.serviceWorker.register(SW_PATH, { scope: "/" });
   } catch {
     return null;
   }
+}
+
+export async function clearAppCaches(): Promise<void> {
+  if (typeof window === "undefined" || !("caches" in window)) return;
+  const keys = await caches.keys();
+  await Promise.all(keys.map((key) => caches.delete(key)));
+}
+
+export async function applyAppUpdate(): Promise<void> {
+  if (typeof window === "undefined") return;
+
+  await clearAppCaches();
+
+  if (!("serviceWorker" in navigator)) {
+    window.location.reload();
+    return;
+  }
+
+  const reg = await navigator.serviceWorker.getRegistration();
+  const waiting = reg?.waiting;
+
+  if (waiting) {
+    await new Promise<void>((resolve) => {
+      const onControllerChange = () => {
+        navigator.serviceWorker.removeEventListener("controllerchange", onControllerChange);
+        resolve();
+      };
+      navigator.serviceWorker.addEventListener("controllerchange", onControllerChange);
+      waiting.postMessage({ type: "SKIP_WAITING" });
+    });
+  } else {
+    await reg?.update();
+  }
+
+  window.location.reload();
+}
+
+function trackInstallingWorker(
+  worker: ServiceWorker,
+  onUpdateAvailable: () => void,
+): void {
+  worker.addEventListener("statechange", () => {
+    if (worker.state === "installed" && navigator.serviceWorker.controller) {
+      onUpdateAvailable();
+    }
+  });
+}
+
+export function subscribeToAppUpdates(onUpdateAvailable: () => void): () => void {
+  if (typeof window === "undefined" || !("serviceWorker" in navigator)) {
+    return () => {};
+  }
+
+  let registration: ServiceWorkerRegistration | null = null;
+
+  void registerServiceWorker().then((reg) => {
+    if (!reg) return;
+    registration = reg;
+
+    if (reg.waiting && navigator.serviceWorker.controller) {
+      onUpdateAvailable();
+    }
+
+    reg.addEventListener("updatefound", () => {
+      const worker = reg.installing;
+      if (worker) trackInstallingWorker(worker, onUpdateAvailable);
+    });
+  });
+
+  const interval = window.setInterval(() => {
+    void registration?.update();
+  }, 60 * 60 * 1000);
+
+  return () => window.clearInterval(interval);
 }
 
 export function isStandalonePwa(): boolean {

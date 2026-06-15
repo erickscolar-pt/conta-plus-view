@@ -1,12 +1,24 @@
-const CACHE = "contaplus-pwa-v1";
+const CACHE = "contaplus-pwa-v3";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE).then((cache) =>
-      cache.addAll(["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"]),
+      cache.addAll([
+        "/",
+        "/manifest.webmanifest",
+        "/icon-192.png",
+        "/icon-512.png",
+        "/icon-512-maskable.png",
+        "/apple-touch-icon.png",
+      ]),
     ),
   );
-  self.skipWaiting();
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener("activate", (event) => {
