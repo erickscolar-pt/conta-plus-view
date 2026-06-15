@@ -1,30 +1,28 @@
 import PublicDocLayout from "@/component/layout/PublicDocLayout";
+import DocSection from "@/component/doc/DocSection";
 import Link from "next/link";
 
 export default function Manual() {
   return (
-    <PublicDocLayout title="Manual de instrucoes">
-      <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">
-        Manual de Instruções
-      </h1>
-      <p className="mb-8 max-w-3xl text-slate-300">
-        Guia rápido para começar no Conta+ e aproveitar melhor as funcionalidades de controle
-        financeiro, incluindo importação por planilha e extrato bancário.
-      </p>
-
-      <div className="grid gap-4">
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
-          <h2 className="text-xl font-semibold text-slate-100">Primeiros passos</h2>
+    <PublicDocLayout
+      title="Manual de Instruções | Conta+"
+      heading="Manual de Instruções"
+      description={
+        <>
+          Guia rápido para começar no Conta+ e aproveitar melhor as funcionalidades de controle financeiro, incluindo importação por planilha e extrato bancário.
+        </>
+      }
+    >
+        <DocSection title="Primeiros passos">
           <ol className="mt-2 list-inside list-decimal space-y-1 text-slate-300 marker:text-emerald-300">
             <li>Cadastre-se ou faça login.</li>
             <li>Cadastre rendas e saídas (ou importe pelo Excel).</li>
             <li>Acompanhe o saldo no dashboard.</li>
             <li>Defina metas financeiras com categoria e opção de descontar do saldo.</li>
           </ol>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
-          <h2 className="text-xl font-semibold text-slate-100">Importação de arquivos e extrato</h2>
+        <DocSection title="Importação de arquivos e extrato">
           <p className="mt-2 text-slate-300">
             Você pode lançar vários registros de uma vez com o arquivo oficial{" "}
             <strong className="text-slate-200">modelo-conta-plus.xlsx</strong> ou enviar arquivos
@@ -34,7 +32,7 @@ export default function Manual() {
           <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
             <li>
               <strong>Onde baixar:</strong> menu lateral (logado) em Importar arquivo, ou a página{" "}
-              <Link href="/importreport" className="text-emerald-400 underline hover:text-emerald-300">
+              <Link href="/importreport" >
                 Importação de relatórios
               </Link>
               .
@@ -53,10 +51,9 @@ export default function Manual() {
               criados automaticamente quando necessário. Erros mostram aba e linha do problema.
             </li>
           </ul>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
-          <h2 className="text-xl font-semibold text-slate-100">Funcionalidades principais</h2>
+        <DocSection title="Funcionalidades principais">
           <ul className="mt-2 list-inside list-disc space-y-1 text-slate-300 marker:text-emerald-300">
             <li>
               <strong>Rendas:</strong> registre entradas por data.
@@ -72,10 +69,9 @@ export default function Manual() {
               saídas e metas que descontam).
             </li>
           </ul>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
-          <h2 className="text-xl font-semibold text-slate-100">Dúvidas frequentes</h2>
+        <DocSection title="Dúvidas frequentes">
           <div className="mt-2 space-y-4 text-slate-300">
             <div>
               <p className="font-semibold text-slate-100">Como redefinir minha senha?</p>
@@ -93,8 +89,7 @@ export default function Manual() {
               <p>As notificações aparecem no sino no topo da aplicação.</p>
             </div>
           </div>
-        </section>
-      </div>
+        </DocSection>
     </PublicDocLayout>
   );
 }

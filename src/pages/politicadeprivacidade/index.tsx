@@ -1,36 +1,29 @@
 import Link from "next/link";
 import PublicDocLayout from "@/component/layout/PublicDocLayout";
+import DocSection from "@/component/doc/DocSection";
+import { CONTACT_EMAIL } from "@/component/doc/legalNav";
 
-const CONTACT_EMAIL = "contato@contaplus.app.br";
 const LAST_UPDATED = "8 de junho de 2026";
 
 export default function PoliticaDePrivacidade() {
   return (
-    <PublicDocLayout title="Política de Privacidade | Conta+">
-      <div className="mb-8 rounded-2xl border border-emerald-400/20 bg-gradient-to-r from-emerald-500/15 via-emerald-500/5 to-cyan-500/10 p-5">
-        <span className="mb-3 inline-flex rounded-full border border-emerald-300/30 bg-emerald-400/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-200">
-          Versão atualizada
-        </span>
-        <h1 className="mb-2 text-3xl font-bold text-white sm:text-4xl">
-          Política de Privacidade
-        </h1>
-        <p className="max-w-3xl text-slate-200">
-          Esta política explica como a plataforma Conta+ (contaplus.app.br), operada pela
-          Otimafy, coleta, utiliza, armazena e protege seus dados pessoais e financeiros,
-          em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018).
-        </p>
-        <p className="mt-3 text-sm text-slate-400">Última atualização: {LAST_UPDATED}</p>
-      </div>
-
-      <div className="grid gap-4">
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">1. Quem somos</h2>
+    <PublicDocLayout
+      title="Política de Privacidade | Conta+"
+      heading="Política de Privacidade"
+      lastUpdated={LAST_UPDATED}
+      description={
+        <>
+          Esta política explica como a plataforma Conta+ (contaplus.app.br), operada pela Otimafy, coleta, utiliza, armazena e protege seus dados pessoais e financeiros, em conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018).
+        </>
+      }
+    >
+        <DocSection title="1. Quem somos">
           <p className="mt-2 text-slate-300">
             O Conta+ é um serviço de organização financeira pessoal. O plano gratuito permite
             registrar e acompanhar suas contas sem custo. Planos pagos (Conta+ AI Premium)
             incluem recursos adicionais de consultoria por inteligência artificial, descritos
             nesta política e nos{" "}
-            <Link href="/termosdeuso" className="text-emerald-300 underline underline-offset-2 hover:text-emerald-200">
+            <Link href="/termosdeuso" >
               Termos de Uso
             </Link>
             .
@@ -39,15 +32,14 @@ export default function PoliticaDePrivacidade() {
             Para questões sobre privacidade e proteção de dados:{" "}
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              className="font-medium text-emerald-300 underline underline-offset-2 hover:text-emerald-200"
+              
             >
               {CONTACT_EMAIL}
             </a>
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">2. Dados que coletamos</h2>
+        <DocSection title="2. Dados que coletamos">
           <p className="mt-2 text-slate-300">Podemos tratar as seguintes categorias de dados:</p>
           <ul className="mt-3 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
             <li>
@@ -80,10 +72,9 @@ export default function PoliticaDePrivacidade() {
               (confirmação de cadastro, avisos de assinatura, lembretes autorizados).
             </li>
           </ul>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">3. Finalidades do tratamento</h2>
+        <DocSection title="3. Finalidades do tratamento">
           <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
             <li>Criar e gerenciar sua conta e autenticar seu acesso.</li>
             <li>Exibir dashboards, relatórios, metas e demais funcionalidades do plano gratuito.</li>
@@ -98,10 +89,9 @@ export default function PoliticaDePrivacidade() {
             <li>Enviar comunicações essenciais sobre o serviço e, com seu consentimento quando
               exigido, novidades relevantes.</li>
           </ul>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-ai/25 bg-ai/5 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">4. Inteligência artificial e terceiros</h2>
+        <DocSection title="4. Inteligência artificial e terceiros" variant="ai">
           <p className="mt-2 text-slate-300">
             Os recursos de consultor IA do Conta+ AI Premium utilizam provedores de modelos de
             linguagem (atualmente OpenAI) para processar suas perguntas e gerar análises. Para
@@ -122,10 +112,9 @@ export default function PoliticaDePrivacidade() {
               funcionalidades gratuitas de organização, sem acionar o processamento por IA.
             </li>
           </ul>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">5. Base legal (LGPD)</h2>
+        <DocSection title="5. Base legal (LGPD)">
           <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
             <li>
               <strong className="text-slate-200">Execução de contrato:</strong> prestação do
@@ -144,10 +133,9 @@ export default function PoliticaDePrivacidade() {
               exigências fiscais, judiciais ou regulatórias.
             </li>
           </ul>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">6. Compartilhamento de dados</h2>
+        <DocSection title="6. Compartilhamento de dados">
           <p className="mt-2 text-slate-300">Seus dados podem ser compartilhados, limitadamente, com:</p>
           <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
             <li>Provedores de hospedagem e infraestrutura em nuvem.</li>
@@ -160,10 +148,9 @@ export default function PoliticaDePrivacidade() {
             Não compartilhamos seus dados financeiros detalhados com parceiros comerciais para
             fins de marketing de terceiros.
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">7. Retenção e exclusão</h2>
+        <DocSection title="7. Retenção e exclusão">
           <p className="mt-2 text-slate-300">
             Mantemos seus dados enquanto sua conta estiver ativa ou enquanto forem necessários
             para cumprir as finalidades descritas nesta política, incluindo obrigações legais
@@ -175,25 +162,23 @@ export default function PoliticaDePrivacidade() {
             Ao encerrar sua conta, iniciaremos a exclusão ou anonimização dos dados pessoais,
             salvo retenção exigida por lei.
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">8. Segurança</h2>
+        <DocSection title="8. Segurança">
           <p className="mt-2 text-slate-300">
             Adotamos medidas técnicas e organizacionais para proteger seus dados, incluindo
             comunicação criptografada (HTTPS), controle de acesso, senhas com hash e monitoramento
             de incidentes. Nenhum sistema é 100% invulnerável; recomendamos senha forte e não
             compartilhar suas credenciais.
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">9. Seus direitos (titular de dados)</h2>
+        <DocSection title="9. Seus direitos (titular de dados)">
           <p className="mt-2 text-slate-300">
             Nos termos da LGPD, você pode solicitar, mediante requisição a{" "}
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              className="font-medium text-emerald-300 underline underline-offset-2 hover:text-emerald-200"
+              
             >
               {CONTACT_EMAIL}
             </a>
@@ -212,41 +197,37 @@ export default function PoliticaDePrivacidade() {
             Responderemos em prazo razoável. Você também pode registrar reclamação perante a
             Autoridade Nacional de Proteção de Dados (ANPD).
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">10. Cookies e tecnologias similares</h2>
+        <DocSection title="10. Cookies e tecnologias similares">
           <p className="mt-2 text-slate-300">
             Utilizamos cookies essenciais para manter sua sessão autenticada e cookies analíticos
             para entender o uso da plataforma. Detalhes adicionais estão na{" "}
-            <Link href="/politicadecookies" className="text-emerald-300 underline underline-offset-2 hover:text-emerald-200">
+            <Link href="/politicadecookies" >
               Política de Cookies
             </Link>
             .
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">11. Menores de idade</h2>
+        <DocSection title="11. Menores de idade">
           <p className="mt-2 text-slate-300">
             O Conta+ não se destina a menores de 18 anos. Não coletamos intencionalmente dados
             de crianças ou adolescentes. Se identificarmos cadastro indevido, poderemos excluir
             a conta.
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">12. Alterações desta política</h2>
+        <DocSection title="12. Alterações desta política">
           <p className="mt-2 text-slate-300">
             Podemos atualizar esta política para refletir novos recursos (como evoluções do
             consultor IA), parceiros ou exigências legais. A data da última revisão será
             indicada no topo desta página. Alterações relevantes poderão ser comunicadas por
             e-mail ou aviso na plataforma.
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-amber-300/20 bg-amber-500/10 p-5">
-          <h2 className="text-xl font-semibold text-amber-100">Resumo</h2>
+        <DocSection title="Resumo" variant="summary">
           <ul className="mt-2 list-inside list-disc space-y-1 text-slate-200 marker:text-amber-300">
             <li>Organizar suas contas no plano gratuito não exige pagamento.</li>
             <li>Seus dados financeiros são usados para exibir sua visão financeira e, se você
@@ -255,8 +236,7 @@ export default function PoliticaDePrivacidade() {
               infraestrutura).</li>
             <li>Você controla sua conta e pode exercer seus direitos pela LGPD a qualquer momento.</li>
           </ul>
-        </section>
-      </div>
+        </DocSection>
     </PublicDocLayout>
   );
 }

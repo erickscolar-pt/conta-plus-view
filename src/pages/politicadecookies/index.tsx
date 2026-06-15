@@ -1,41 +1,67 @@
+import Link from "next/link";
 import PublicDocLayout from "@/component/layout/PublicDocLayout";
+import DocSection from "@/component/doc/DocSection";
 
 export default function PoliticaDeCookies() {
   return (
-    <PublicDocLayout title="Política de Cookies">
-      <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">Política de Cookies</h1>
-      <p className="mb-8 max-w-3xl text-slate-300">
-        Utilizamos cookies e tecnologias semelhantes para melhorar a sua experiência, analisar
-        o uso da plataforma e oferecer conteúdos mais relevantes.
-      </p>
+    <PublicDocLayout
+      title="Política de Cookies | Conta+"
+      heading="Política de Cookies"
+      description={
+        <>
+          Utilizamos cookies e tecnologias semelhantes para manter sua sessão, entender o uso da
+          plataforma e melhorar sua experiência. Saiba o que coletamos e como gerenciar suas
+          preferências. Consulte também a{" "}
+          <Link href="/politicadeprivacidade">Política de Privacidade</Link>.
+        </>
+      }
+    >
+      <DocSection title="O que são cookies?">
+        <p>
+          Cookies são pequenos arquivos de texto armazenados no seu dispositivo quando você visita
+          um site. Eles ajudam a lembrar preferências, manter você autenticado e entender como a
+          plataforma é utilizada.
+        </p>
+      </DocSection>
 
-      <div className="grid gap-4">
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
-          <h2 className="text-xl font-semibold text-slate-100">O que são cookies?</h2>
-          <p className="mt-2 text-slate-300">
-            Cookies são pequenos arquivos de texto armazenados no seu dispositivo para lembrar
-            preferências e melhorar sua navegação.
-          </p>
-        </section>
+      <DocSection title="Cookies que utilizamos">
+        <ul>
+          <li>
+            <strong>Essenciais:</strong> necessários para login, segurança e funcionamento básico
+            do Conta+ (inclui o cookie de sessão <code className="text-slate-300">@nextauth.token</code>
+            ).
+          </li>
+          <li>
+            <strong>Preferências:</strong> lembram escolhas como consentimento de cookies e avisos
+            já visualizados.
+          </li>
+          <li>
+            <strong>Analíticos:</strong> medem páginas visitadas e desempenho para melhorar o
+            produto (ex.: Google Analytics, quando habilitado).
+          </li>
+        </ul>
+      </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
-          <h2 className="text-xl font-semibold text-slate-100">Como usamos cookies</h2>
-          <ul className="mt-2 list-inside list-disc space-y-1 text-slate-300 marker:text-emerald-300">
-            <li>Salvar preferências de uso</li>
-            <li>Analisar comportamento de navegação e desempenho</li>
-            <li>Suportar comunicações e campanhas relevantes</li>
-          </ul>
-        </section>
+      <DocSection title="Como usamos cookies">
+        <ul>
+          <li>Manter sua sessão autenticada com segurança</li>
+          <li>Salvar preferências de uso e consentimentos</li>
+          <li>Analisar comportamento agregado de navegação</li>
+          <li>Medir conversão de cadastro e uso de funcionalidades</li>
+        </ul>
+      </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
-          <h2 className="text-xl font-semibold text-slate-100">Suas opções</h2>
-          <p className="mt-2 text-slate-300">
-            Você pode aceitar, recusar ou remover cookies a qualquer momento pelas configurações
-            do seu navegador.
-          </p>
-        </section>
-      </div>
+      <DocSection title="Suas opções">
+        <p>
+          Você pode aceitar cookies pelo banner exibido na primeira visita ou gerenciar/remover
+          cookies a qualquer momento nas configurações do seu navegador. Desabilitar cookies
+          essenciais pode impedir o login e o uso de partes da plataforma.
+        </p>
+        <p>
+          Para mais detalhes sobre rastreamento, veja{" "}
+          <Link href="/tecnologiasderastreamento">Tecnologias de Rastreamento</Link>.
+        </p>
+      </DocSection>
     </PublicDocLayout>
   );
 }
-

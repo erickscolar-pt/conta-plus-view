@@ -1,4 +1,6 @@
+import Link from "next/link";
 import PublicDocLayout from "@/component/layout/PublicDocLayout";
+import DocSection from "@/component/doc/DocSection";
 import { getErrorMessage, setupAPIClient } from "@/services/api";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -37,19 +39,16 @@ export default function ImportReport() {
   };
 
   return (
-    <PublicDocLayout title="Importação de Relatórios">
-      <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">
-        Importação de Relatórios
-      </h1>
-      <p className="mb-8 max-w-3xl text-slate-300">
-        Use o modelo Excel oficial do Conta+ ou envie arquivos bancários em CSV, OFX ou PDF
-        (com texto selecionável) para lançar entradas, saídas, metas e movimentações de
-        extrato com validação clara e mensagens de erro objetivas.
-      </p>
-
-      <div className="grid gap-4">
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
-          <h2 className="text-xl font-semibold text-slate-100">Como funciona</h2>
+    <PublicDocLayout
+      title="Importação de Relatórios | Conta+"
+      heading="Importação de Relatórios"
+      description={
+        <>
+          Use o modelo Excel oficial do Conta+ ou envie arquivos bancários em CSV, OFX ou PDF para lançar entradas, saídas, metas e movimentações de extrato com validação clara.
+        </>
+      }
+    >
+        <DocSection title="Como funciona">
           <ol className="mt-2 list-inside list-decimal space-y-2 text-slate-300 marker:text-emerald-300">
             <li>
               Baixe o modelo <strong className="text-slate-200">modelo-conta-plus.xlsx</strong>{" "}
@@ -69,10 +68,9 @@ export default function ImportReport() {
               confira a mensagem de sucesso com o resumo de lançamentos importados.
             </li>
           </ol>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
-          <h2 className="text-xl font-semibold text-slate-100">Abas do modelo</h2>
+        <DocSection title="Abas do modelo">
           <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
             <li>
               <strong className="text-slate-200">Salário:</strong> colunas Empresa, Valor, Data.
@@ -95,12 +93,11 @@ export default function ImportReport() {
               Entradas viram rendas; saídas viram dívidas com o tipo informado.
             </li>
           </ul>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
-          <h2 className="text-xl font-semibold text-slate-100">
+        <DocSection title="
             Extrato do banco (CSV, OFX, PDF ou Excel)
-          </h2>
+          ">
           <p className="mt-2 text-slate-300">
             Você pode importar de dois jeitos: diretamente com CSV, OFX ou PDF do banco, ou
             padronizando no modelo Excel. Se o CSV vier com colunas comuns de data,
@@ -129,10 +126,9 @@ export default function ImportReport() {
               <strong>1.234,56</strong>).
             </li>
           </ol>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
-          <h2 className="text-xl font-semibold text-slate-100">Regras de validação</h2>
+        <DocSection title="Regras de validação">
           <ul className="mt-2 list-inside list-disc space-y-1 text-slate-300 marker:text-emerald-300">
             <li>Textos principais (Empresa, Dívida, Objetivo) com pelo menos 3 caracteres.</li>
             <li>Valores numéricos positivos; moeda brasileira é interpretada automaticamente.</li>
@@ -144,10 +140,9 @@ export default function ImportReport() {
               CSV/OFX, a mensagem aponta a linha do arquivo.
             </li>
           </ul>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
-          <h2 className="text-xl font-semibold text-slate-100">Modelo de planilha</h2>
+        <DocSection title="Modelo de planilha">
           <p className="mt-2 text-slate-300">
             O arquivo inclui quatro abas e linhas de exemplo. Mantenha os nomes das abas como no
             modelo para evitar erro de leitura.
@@ -156,7 +151,7 @@ export default function ImportReport() {
             type="button"
             onClick={handleDownloadTemplate}
             disabled={loadingDownloadExcel}
-            className="mt-5 inline-flex items-center justify-center rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/25 transition-all duration-200 hover:-translate-y-0.5 hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+            className="mt-5 inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-dash to-brand-600 px-6 py-3.5 text-sm font-semibold text-white shadow-glow transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
             {loadingDownloadExcel ? "Baixando..." : "Baixar modelo-conta-plus.xlsx"}
           </button>
@@ -164,8 +159,7 @@ export default function ImportReport() {
             Dica: logado no sistema, o mesmo download está disponível no menu lateral em
             Importar planilha.
           </p>
-        </section>
-      </div>
+        </DocSection>
     </PublicDocLayout>
   );
 }

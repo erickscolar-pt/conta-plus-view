@@ -64,6 +64,39 @@ body {
   .cp-gradient-text {
     @apply bg-gradient-to-br from-white via-slate-100 to-slate-400 bg-clip-text text-transparent;
   }
+
+  .doc-prose {
+    @apply space-y-3 text-sm leading-relaxed text-cp-muted sm:text-[15px];
+
+    p {
+      @apply text-cp-muted;
+    }
+
+    strong {
+      @apply font-semibold text-slate-200;
+    }
+
+    a {
+      @apply font-medium text-primary underline underline-offset-2 transition hover:text-primary-hover;
+    }
+
+    ul,
+    ol {
+      @apply space-y-2 pl-1;
+    }
+
+    ul {
+      @apply list-inside list-disc marker:text-dash;
+    }
+
+    ol {
+      @apply list-inside list-decimal marker:text-dash;
+    }
+
+    li {
+      @apply text-cp-muted;
+    }
+  }
 }
 
 *::-webkit-scrollbar-track {

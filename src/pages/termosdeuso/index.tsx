@@ -1,35 +1,23 @@
 import Link from "next/link";
 import PublicDocLayout from "@/component/layout/PublicDocLayout";
+import DocSection from "@/component/doc/DocSection";
+import { CONTACT_EMAIL } from "@/component/doc/legalNav";
 
-const CONTACT_EMAIL = "contato@contaplus.app.br";
 const LAST_UPDATED = "8 de junho de 2026";
 
 export default function TermosDeUso() {
   return (
-    <PublicDocLayout title="Termos de Uso | Conta+">
-      <div className="mb-8 rounded-2xl border border-emerald-400/20 bg-gradient-to-r from-emerald-500/15 via-emerald-500/5 to-cyan-500/10 p-5 shadow-lg shadow-emerald-500/10">
-        <span className="mb-3 inline-flex rounded-full border border-emerald-300/30 bg-emerald-400/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-200">
-          Versão atualizada
-        </span>
-        <h1 className="mb-2 text-3xl font-bold text-white sm:text-4xl">Termos de Uso</h1>
-        <p className="max-w-3xl text-slate-200">
-          Estes termos regulam o acesso e o uso da plataforma Conta+ (contaplus.app.br). Ao
-          criar conta, navegar ou utilizar qualquer recurso, você declara ter lido e concordado
-          com as condições abaixo, bem como com a{" "}
-          <Link
-            href="/politicadeprivacidade"
-            className="text-emerald-300 underline underline-offset-2 hover:text-emerald-200"
-          >
-            Política de Privacidade
-          </Link>
-          .
-        </p>
-        <p className="mt-3 text-sm text-slate-400">Última atualização: {LAST_UPDATED}</p>
-      </div>
-
-      <div className="grid gap-4">
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">1. O serviço Conta+</h2>
+    <PublicDocLayout
+      title="Termos de Uso | Conta+"
+      heading="Termos de Uso"
+      lastUpdated={LAST_UPDATED}
+      description={
+        <>
+          Estes termos regulam o acesso e o uso da plataforma Conta+ (contaplus.app.br). Ao criar conta, navegar ou utilizar qualquer recurso, você declara ter lido e concordado com as condições abaixo, bem como com a <Link href="/politicadeprivacidade">Política de Privacidade</Link>.
+        </>
+      }
+    >
+        <DocSection title="1. O serviço Conta+">
           <p className="mt-2 text-slate-300">
             O Conta+ é uma plataforma de organização financeira pessoal que permite registrar
             receitas, despesas, metas, dívidas, importar extratos e acompanhar relatórios.
@@ -48,16 +36,15 @@ export default function TermosDeUso() {
           </ul>
           <p className="mt-3 text-slate-300">
             Recursos, limites e preços dos planos pagos podem ser consultados em{" "}
-            <Link href="/planos" className="text-emerald-300 underline underline-offset-2 hover:text-emerald-200">
+            <Link href="/planos" >
               /planos
             </Link>{" "}
             ou na landing page do site. O plano gratuito pode incluir amostra limitada de
             recursos de IA, conforme divulgado na plataforma.
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">2. Cadastro e conta</h2>
+        <DocSection title="2. Cadastro e conta">
           <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
             <li>Você deve ter 18 anos ou mais para utilizar o serviço.</li>
             <li>
@@ -71,17 +58,16 @@ export default function TermosDeUso() {
               Notifique-nos imediatamente em{" "}
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
-                className="font-medium text-emerald-300 underline underline-offset-2 hover:text-emerald-200"
+                
               >
                 {CONTACT_EMAIL}
               </a>{" "}
               caso suspeite de acesso não autorizado.
             </li>
           </ul>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">3. Uso aceitável</h2>
+        <DocSection title="3. Uso aceitável">
           <p className="mt-2 text-slate-300">Ao utilizar o Conta+, você concorda em:</p>
           <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
             <li>Respeitar a legislação brasileira aplicável.</li>
@@ -100,12 +86,11 @@ export default function TermosDeUso() {
             O descumprimento pode resultar em suspensão ou encerramento da conta, sem prejuízo
             de medidas legais cabíveis.
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">
+        <DocSection title="
             4. Conteúdo e dados inseridos por você
-          </h2>
+          ">
           <p className="mt-2 text-slate-300">
             Todas as informações financeiras, textos, arquivos importados e mensagens enviadas
             ao chat são de sua responsabilidade. Você declara possuir direito sobre os dados
@@ -116,12 +101,10 @@ export default function TermosDeUso() {
             exclusivamente para prestar o serviço contratado (incluindo geração de análises de IA
             quando você solicitar recursos premium), conforme a Política de Privacidade.
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-ai/25 bg-ai/5 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">
-            5. Consultor IA e natureza informativa
-          </h2>
+        <DocSection title="5. Consultor IA e natureza informativa
+          " variant="ai">
           <p className="mt-2 text-slate-300">
             O consultor financeiro por inteligência artificial do Conta+ AI Premium utiliza os
             dados que você registrou na plataforma para gerar respostas e análises automatizadas.
@@ -146,12 +129,11 @@ export default function TermosDeUso() {
               temporária.
             </li>
           </ul>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">
+        <DocSection title="
             6. Planos pagos, assinatura e pagamento
-          </h2>
+          ">
           <ul className="mt-2 list-inside list-disc space-y-2 text-slate-300 marker:text-emerald-300">
             <li>
               A contratação do Conta+ AI Premium é opcional. O plano gratuito permanece
@@ -177,10 +159,9 @@ export default function TermosDeUso() {
               limites correspondentes.
             </li>
           </ul>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">7. Cancelamento e reembolso</h2>
+        <DocSection title="7. Cancelamento e reembolso">
           <p className="mt-2 text-slate-300">
             Você pode deixar de renovar a assinatura Premium simplesmente não efetuando novo
             pagamento ao final do ciclo. O acesso aos recursos pagos permanece até o fim do
@@ -190,7 +171,7 @@ export default function TermosDeUso() {
             Solicitações de cancelamento ou reembolso devem ser enviadas a{" "}
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              className="font-medium text-emerald-300 underline underline-offset-2 hover:text-emerald-200"
+              
             >
               {CONTACT_EMAIL}
             </a>
@@ -198,12 +179,11 @@ export default function TermosDeUso() {
             vigente. Em caso de falha comprovada do serviço pago por período prolongado, poderemos
             conceder crédito ou reembolso proporcional, a nosso critério e dentro dos prazos legais.
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">
+        <DocSection title="
             8. Disponibilidade e alterações do serviço
-          </h2>
+          ">
           <p className="mt-2 text-slate-300">
             Buscamos manter a plataforma disponível de forma contínua, mas não garantimos
             funcionamento ininterrupto. Manutenções, atualizações e eventos de força maior podem
@@ -214,22 +194,20 @@ export default function TermosDeUso() {
             comunicando mudanças relevantes quando apropriado. Recursos experimentais podem ser
             oferecidos em caráter beta.
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">
+        <DocSection title="
             9. Propriedade intelectual
-          </h2>
+          ">
           <p className="mt-2 text-slate-300">
             A marca Conta+, interface, software, textos e demais elementos da plataforma são
             protegidos por direitos de propriedade intelectual. É vedada a cópia, reprodução ou
             exploração comercial não autorizada. Seus dados financeiros permanecem seus; a
             estrutura tecnológica do serviço é de titularidade do Conta+ e seus licenciadores.
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">10. Limitação de responsabilidade</h2>
+        <DocSection title="10. Limitação de responsabilidade">
           <p className="mt-2 text-slate-300">
             Na máxima extensão permitida pela lei, o Conta+ não se responsabiliza por perdas
             financeiras, lucros cessantes ou danos indiretos decorrentes do uso ou impossibilidade
@@ -237,20 +215,18 @@ export default function TermosDeUso() {
             IA. Nossa responsabilidade total, quando aplicável, limita-se ao valor pago por você
             nos últimos 12 meses pelo plano pago, exceto em casos de dolo ou culpa grave.
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">11. Encerramento de conta</h2>
+        <DocSection title="11. Encerramento de conta">
           <p className="mt-2 text-slate-300">
             Você pode solicitar o encerramento da sua conta a qualquer momento pelo canal de
             contato. Reservamo-nos o direito de suspender ou encerrar contas que violem estes
             termos ou representem risco à segurança. Após o encerramento, seus dados serão
             tratados conforme a Política de Privacidade.
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">12. Alterações destes termos</h2>
+        <DocSection title="12. Alterações destes termos">
           <p className="mt-2 text-slate-300">
             Estes termos podem ser atualizados para refletir novos recursos (como evoluções do
             consultor IA), ajustes de planos ou exigências legais. A versão vigente estará sempre
@@ -258,10 +234,9 @@ export default function TermosDeUso() {
             alterações relevantes implica concordância com a nova versão, salvo quando a lei
             exigir consentimento específico.
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5">
-          <h2 className="text-xl font-semibold text-slate-100">13. Lei aplicável e foro</h2>
+        <DocSection title="13. Lei aplicável e foro">
           <p className="mt-2 text-slate-300">
             Estes termos são regidos pelas leis da República Federativa do Brasil. Fica eleito o
             foro da comarca do domicílio do consumidor para dirimir controvérsias, quando
@@ -272,15 +247,14 @@ export default function TermosDeUso() {
             Dúvidas sobre estes termos:{" "}
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              className="font-medium text-emerald-300 underline underline-offset-2 hover:text-emerald-200"
+              
             >
               {CONTACT_EMAIL}
             </a>
           </p>
-        </section>
+        </DocSection>
 
-        <section className="rounded-xl border border-amber-300/20 bg-amber-500/10 p-5">
-          <h2 className="text-xl font-semibold text-amber-100">Resumo</h2>
+        <DocSection title="Resumo" variant="summary">
           <ul className="mt-2 list-inside list-disc space-y-1 text-slate-200 marker:text-amber-300">
             <li>Organizar suas contas no plano grátis não exige pagamento.</li>
             <li>O AI Premium é opcional e inclui o consultor financeiro online por IA.</li>
@@ -288,8 +262,7 @@ export default function TermosDeUso() {
             <li>Análises de IA são informativas — não substituem orientação profissional.</li>
             <li>Pagamento via PIX; assinatura válida pelo período contratado.</li>
           </ul>
-        </section>
-      </div>
+        </DocSection>
     </PublicDocLayout>
   );
 }

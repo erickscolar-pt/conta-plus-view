@@ -1,33 +1,64 @@
+import Link from "next/link";
 import PublicDocLayout from "@/component/layout/PublicDocLayout";
+import DocSection from "@/component/doc/DocSection";
 
 export default function TecnologiasDeRastreamento() {
   return (
-    <PublicDocLayout title="Tecnologias de Rastreamento">
-      <h1 className="mb-3 text-3xl font-bold text-white sm:text-4xl">Tecnologias de Rastreamento</h1>
-      <p className="mb-8 max-w-3xl text-slate-300">
-        Podemos utilizar pixels, tags e outras tecnologias para entender melhor o uso da
-        plataforma e evoluir a experiência de forma contínua.
-      </p>
+    <PublicDocLayout
+      title="Tecnologias de Rastreamento | Conta+"
+      heading="Tecnologias de Rastreamento"
+      description={
+        <>
+          Além de cookies, podemos utilizar pixels, tags e ferramentas de analytics para entender
+          como a plataforma é usada e melhorar a experiência — sempre em conformidade com a{" "}
+          <Link href="/politicadeprivacidade">Política de Privacidade</Link>.
+        </>
+      }
+    >
+      <DocSection title="O que são essas tecnologias?">
+        <p>
+          Pixels e tags são fragmentos de código que registram eventos como visita a uma página,
+          clique em botão ou conclusão de cadastro. Servem para estatísticas agregadas e
+          melhorias de produto, não para vender seus dados financeiros.
+        </p>
+      </DocSection>
 
-      <div className="grid gap-4">
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
-          <h2 className="text-xl font-semibold text-slate-100">Como utilizamos</h2>
-          <ul className="mt-2 list-inside list-disc space-y-1 text-slate-300 marker:text-emerald-300">
-            <li>Análise de comportamento de uso da aplicação</li>
-            <li>Personalização de conteúdo e comunicações</li>
-            <li>Medição de desempenho de páginas e funcionalidades</li>
-          </ul>
-        </section>
+      <DocSection title="Como utilizamos">
+        <ul>
+          <li>Análise de comportamento de uso da aplicação e da landing page</li>
+          <li>Medição de desempenho de páginas e funcionalidades</li>
+          <li>Entender funis de cadastro e conversão para planos pagos</li>
+          <li>Detectar erros técnicos e gargalos de performance</li>
+        </ul>
+      </DocSection>
 
-        <section className="rounded-xl border border-white/10 bg-slate-800/40 p-5 transition-all duration-200 hover:border-emerald-400/30 hover:bg-slate-800/55">
-          <h2 className="text-xl font-semibold text-slate-100">Suas opções</h2>
-          <p className="mt-2 text-slate-300">
-            Você pode gerenciar suas preferências nas configurações do navegador e em
-            ferramentas de gestão de cookies.
-          </p>
-        </section>
-      </div>
+      <DocSection title="Ferramentas comuns">
+        <ul>
+          <li>
+            <strong>Google Analytics</strong> — estatísticas de visitas e origem de tráfego
+          </li>
+          <li>
+            <strong>Logs de servidor</strong> — endereço IP, user-agent e timestamps para
+            segurança
+          </li>
+        </ul>
+        <p>
+          Não compartilhamos o conteúdo das suas movimentações financeiras com redes de
+          publicidade.
+        </p>
+      </DocSection>
+
+      <DocSection title="Suas opções">
+        <p>
+          Você pode gerenciar preferências nas configurações do navegador, usar extensões de
+          bloqueio de rastreadores ou recusar cookies não essenciais no banner de consentimento.
+        </p>
+        <p>
+          Dúvidas: consulte a{" "}
+          <Link href="/politicadecookies">Política de Cookies</Link> ou entre em contato pelo
+          e-mail indicado na política de privacidade.
+        </p>
+      </DocSection>
     </PublicDocLayout>
   );
 }
-
