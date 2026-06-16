@@ -4,6 +4,7 @@ import Header from "@/component/header";
 import ChatDrawer from "@/component/ai/ChatDrawer";
 import GlobalChatFab from "@/component/ai/GlobalChatFab";
 import { ChatShellProvider } from "@/contexts/ChatShellContext";
+import WebPushManager from "@/component/notifications/WebPushManager";
 import { Usuario } from "@/model/type";
 
 type LoggedLayoutProps = {
@@ -19,6 +20,7 @@ export default function LoggedLayout({ usuario, children }: LoggedLayoutProps) {
 
   return (
     <ChatShellProvider>
+      <WebPushManager />
       <div className="relative flex min-h-screen bg-cp-base text-white">
         <div
           className="pointer-events-none fixed -left-32 top-0 h-[420px] w-[420px] rounded-full bg-dash/10 blur-[120px]"

@@ -1,9 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { MdNotificationsNone, MdClose } from "react-icons/md";
+import { MdNotificationsNone, MdClose, MdNotificationsActive } from "react-icons/md";
 import { setupAPIClient } from "@/services/api";
 import { formatCurrency } from "@/helper";
+import {
+  getWebPushPermission,
+  isWebPushSupported,
+  subscribeWebPush,
+  unsubscribeWebPush,
+} from "@/utils/web-push";
+import { toast } from "react-toastify";
 
 const STORAGE_KEY = "contaplus_dismissed_notifications_v1";
 
@@ -40,11 +47,16 @@ export default function NotificationBell() {
   const [items, setItems] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [dismissed, setDismissed] = useState<Set<string>>(new Set());
+  const [pushPermission, setPushPermission] = useState<
+    NotificationPermission | "unsupported"
+  >("default");
+  const [pushBusy, setPushBusy] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setDismissed(loadDismissed());
+    setPushPermission(getWebPushPermission());
   }, []);
 
   const fetchNotifications = useCallback(async () => {
@@ -124,6 +136,40 @@ export default function NotificationBell() {
   };
 
   const badge = visible.length;
+
+  const enablePush = async () => {
+    setPushBusy(true);
+    try {
+      const result = await subscribeWebPush();
+      setPushPermission(getWebPushPermission());
+      if (result === "granted") {
+        toast.success("Alertas no celular ativados!");
+      } else if (result === "denied") {
+        toast.info("Permissão negada. Ative nas configurações do navegador.");
+      } else if (result === "no-vapid") {
+        toast.warn("Push ainda não configurado no servidor.");
+      } else if (result === "unsupported") {
+        toast.info("Seu navegador não suporta notificações push.");
+      }
+    } catch {
+      toast.error("Não foi possível ativar os alertas push.");
+    } finally {
+      setPushBusy(false);
+    }
+  };
+
+  const disablePush = async () => {
+    setPushBusy(true);
+    try {
+      await unsubscribeWebPush();
+      setPushPermission(getWebPushPermission());
+      toast.success("Alertas push desativados neste dispositivo.");
+    } catch {
+      toast.error("Não foi possível desativar os alertas push.");
+    } finally {
+      setPushBusy(false);
+    }
+  };
 
   const severityBorder = (s: NotificationItem["severity"]) => {
     if (s === "high") return "border-l-red-500";
@@ -231,6 +277,48 @@ export default function NotificationBell() {
                   </li>
                 ))}
               </ul>
+            )}
+          </div>
+
+          <div className="border-t border-white/[0.08] bg-cp-card px-4 py-3">
+            {isWebPushSupported() ? (
+              pushPermission === "granted" ? (
+                <div className="space-y-2">
+                  <p className="flex items-center gap-2 text-xs text-emerald-300">
+                    <MdNotificationsActive size={16} />
+                    Alertas na tela do celular ativos
+                  </p>
+                  <button
+                    type="button"
+                    disabled={pushBusy}
+                    onClick={() => void disablePush()}
+                    className="text-xs font-medium text-cp-muted hover:text-white disabled:opacity-60"
+                  >
+                    Desativar neste dispositivo
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <p className="text-xs leading-relaxed text-cp-muted">
+                    Receba contas em atraso, convites e avisos na{" "}
+                    <strong className="text-white/90">tela do telefone</strong> — no
+                    navegador ou no atalho instalado (PWA).
+                  </p>
+                  <button
+                    type="button"
+                    disabled={pushBusy}
+                    onClick={() => void enablePush()}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-dash to-brand-600 px-3 py-2.5 text-xs font-semibold text-white shadow-glow disabled:opacity-70"
+                  >
+                    <MdNotificationsActive size={16} />
+                    {pushBusy ? "Ativando…" : "Ativar alertas no celular"}
+                  </button>
+                </div>
+              )
+            ) : (
+              <p className="text-xs text-cp-muted">
+                Notificações push não são suportadas neste navegador.
+              </p>
             )}
           </div>
 
