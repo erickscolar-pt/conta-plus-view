@@ -40,10 +40,16 @@ export async function runDebtPlan() {
   return data;
 }
 
-export async function sendAiChat(message: string, sessionId?: string) {
+export async function sendAiChat(
+  message: string,
+  sessionId?: string,
+  period?: { periodStart?: string; periodEnd?: string },
+) {
   const { data } = await api().post<ChatResponse>('/ai/chat', {
     message,
     sessionId,
+    periodStart: period?.periodStart,
+    periodEnd: period?.periodEnd,
   });
   return data;
 }
