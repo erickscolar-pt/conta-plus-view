@@ -21,7 +21,7 @@ import InputMoney from "@/component/ui/inputMoney";
 import NotFound from "@/component/notfound";
 import { Toggle } from "@/component/ui/toggle";
 import { Dividas, ITipoDivida, Rendas, Usuario } from "@/model/type";
-import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
+import { MdAdd, MdEdit, MdDelete, MdAutoFixHigh } from "react-icons/md";
 import MovimentacoesListControls from "@/component/movimentacoes/MovimentacoesListControls";
 import { TruncatedCell } from "@/component/ui/TruncatedCell";
 import GastosMobileCards from "@/component/movimentacoes/GastosMobileCards";
@@ -86,6 +86,16 @@ export default function GastosPanel({
     "all",
   );
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [recategorizing, setRecategorizing] = useState(false);
+
+  const uncategorizedCount = useMemo(() => {
+    return dividas.filter((d) => {
+      const nome =
+        debtTypes.find((t) => t.id === d.tipo_divida_id)?.nome?.toLowerCase() ??
+        "";
+      return nome === "extrato importado";
+    }).length;
+  }, [dividas, debtTypes]);
 
   const filteredDividas = useMemo(() => {
     let list = [...dividas];
@@ -444,6 +454,71 @@ export default function GastosPanel({
     }
   }, [filterDate, filterType]);
 
+  const getRecategorizePeriod = useCallback(() => {
+    if (!filterDate) return {};
+    const ref = new Date(filterDate);
+    if (filterType === "day") {
+      const iso = ref.toISOString().split("T")[0];
+      return { periodStart: iso, periodEnd: iso };
+    }
+    const start = new Date(ref.getFullYear(), ref.getMonth(), 1);
+    const end = new Date(ref.getFullYear(), ref.getMonth() + 1, 0);
+    return {
+      periodStart: start.toISOString().split("T")[0],
+      periodEnd: end.toISOString().split("T")[0],
+    };
+  }, [filterDate, filterType]);
+
+  const handleRecategorizeImports = async () => {
+    const scopeLabel = filterDate
+      ? filterType === "month"
+        ? "do mês filtrado"
+        : "do dia filtrado"
+      : "de todo o histórico";
+
+    const confirmed = window.confirm(
+      `Recategorizar ${uncategorizedCount} lançamento(s) em "Extrato importado" ${scopeLabel}?\n\n` +
+        "As categorias serão inferidas pelas regras do extrato e pelo seu histórico.",
+    );
+    if (!confirmed) return;
+
+    setRecategorizing(true);
+    try {
+      const apiClient = setupAPIClient();
+      const response = await apiClient.post("/dividas/recategorize-imports", {
+        ...getRecategorizePeriod(),
+      });
+      const { updated, unchanged, total, message } = response.data as {
+        updated: number;
+        unchanged: number;
+        total: number;
+        message: string;
+      };
+
+      if (updated > 0) {
+        toast.success(message);
+        await fetchDividas();
+        await refreshDebtTypes();
+        onDataMutated?.();
+      } else if (total === 0) {
+        toast.info(message);
+      } else {
+        toast.warning(
+          message ||
+            `${unchanged} lançamento(s) permanecem em "Extrato importado".`,
+        );
+      }
+    } catch (e: unknown) {
+      const msg =
+        e instanceof AxiosError
+          ? getErrorMessage(e.response?.data)
+          : "Não foi possível recategorizar o extrato.";
+      toast.error(msg);
+    } finally {
+      setRecategorizing(false);
+    }
+  };
+
   const filterDividasByDate = async (date: Date, type: "day" | "month") => {
     try {
       if (date && type) {
@@ -590,6 +665,19 @@ export default function GastosPanel({
                   colorButton="#570E0E"
                   onDateSelect={filterDividasByDate}
                 />
+                {uncategorizedCount > 0 ? (
+                  <button
+                    type="button"
+                    disabled={recategorizing}
+                    onClick={handleRecategorizeImports}
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary/40 bg-primary/10 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-primary/20 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    <MdAutoFixHigh size={18} />
+                    {recategorizing
+                      ? "Recategorizando…"
+                      : `Recategorizar extrato (${uncategorizedCount})`}
+                  </button>
+                ) : null}
               </div>
               <MovimentacoesListControls
                 searchPlaceholder="Buscar por conta, categoria, parceiro ou data…"
