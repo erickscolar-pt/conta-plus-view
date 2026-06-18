@@ -10,11 +10,14 @@ import {
 } from "react";
 import Router from "next/router";
 import {
+  clearTutorialSession,
   fetchOnboardingComplete,
   isPolicyBannerDismissed,
   markOnboardingComplete,
   readLocalOnboardingComplete,
+  readTutorialSession,
   writeLocalOnboardingComplete,
+  writeTutorialSession,
 } from "@/services/onboarding";
 import { ONBOARDING_STEPS } from "@/component/tutorial/onboardingSteps";
 
@@ -53,9 +56,13 @@ export function TutorialProvider({
   onStepChange,
   onComplete,
 }: TutorialProviderProps) {
-  const [active, setActive] = useState(false);
-  const [stepIndex, setStepIndex] = useState(0);
-  const [ready, setReady] = useState(false);
+  const onboardingDone = readLocalOnboardingComplete(userId);
+  const initial = onboardingDone
+    ? { active: false, stepIndex: 0 }
+    : readTutorialSession(userId);
+  const [active, setActive] = useState(initial.active);
+  const [stepIndex, setStepIndex] = useState(initial.stepIndex);
+  const [ready, setReady] = useState(onboardingDone || initial.active);
   const importModalOpener = useRef<(() => void) | null>(null);
 
   useEffect(() => {
@@ -63,6 +70,15 @@ export function TutorialProvider({
 
     async function init() {
       if (readLocalOnboardingComplete(userId)) {
+        clearTutorialSession(userId);
+        setReady(true);
+        return;
+      }
+
+      const session = readTutorialSession(userId);
+      if (session.active) {
+        setActive(true);
+        setStepIndex(session.stepIndex);
         setReady(true);
         return;
       }
@@ -72,6 +88,7 @@ export function TutorialProvider({
         if (cancelled) return;
         if (completed) {
           writeLocalOnboardingComplete(userId);
+          clearTutorialSession(userId);
           setReady(true);
           return;
         }
@@ -83,6 +100,8 @@ export function TutorialProvider({
         if (cancelled) return;
         if (isPolicyBannerDismissed()) {
           setActive(true);
+          setStepIndex(0);
+          writeTutorialSession(userId, true, 0);
           setReady(true);
           return;
         }
@@ -97,6 +116,11 @@ export function TutorialProvider({
       cancelled = true;
     };
   }, [userId]);
+
+  useEffect(() => {
+    if (!active) return;
+    writeTutorialSession(userId, true, stepIndex);
+  }, [active, stepIndex, userId]);
 
   useEffect(() => {
     if (!active) return;
@@ -119,6 +143,7 @@ export function TutorialProvider({
 
   const completeTutorial = useCallback(async () => {
     writeLocalOnboardingComplete(userId);
+    clearTutorialSession(userId);
     try {
       await markOnboardingComplete();
     } catch {
