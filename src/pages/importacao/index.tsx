@@ -34,9 +34,9 @@ export default function ImportacaoPage({ usuario }: { usuario: Usuario }) {
           <div className="mx-auto max-w-3xl space-y-8">
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
               <p className="text-sm font-medium uppercase tracking-wider text-dash">Importação</p>
-              <h2 className="mt-1 text-2xl font-bold text-white">Importe em segundos</h2>
+              <h2 className="mt-1 text-2xl font-bold text-white">Importe seu extrato OFX</h2>
               <p className="mt-2 text-sm text-cp-muted">
-                Excel, CSV, OFX ou PDF bancário — fluxo visual e seguro.
+                Exporte o arquivo <strong className="text-white">.ofx</strong> do internet banking — é a forma principal e mais precisa de popular o Conta+. CSV, PDF e Excel também funcionam.
               </p>
             </motion.div>
 
@@ -65,11 +65,11 @@ export default function ImportacaoPage({ usuario }: { usuario: Usuario }) {
                 Arraste seu arquivo aqui
               </h3>
               <p className="mt-2 text-sm text-cp-muted">
-                .xlsx · .xls · .csv · .ofx · .pdf
+                Prefira <strong className="text-dash">.ofx</strong> do seu banco · também .csv · .pdf · .xlsx
               </p>
               <button
                 type="button"
-                onClick={() => void router.push("/importacao?open=1")}
+                onClick={() => void router.push("/importacao")}
                 className="mt-6 rounded-xl bg-gradient-to-r from-dash to-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-glow transition hover:brightness-110"
               >
                 Selecionar arquivo

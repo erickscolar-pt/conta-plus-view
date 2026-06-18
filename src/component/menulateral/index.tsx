@@ -2,6 +2,7 @@ import { useContext, useEffect, useState, useRef, type ChangeEvent } from "react
 import Router, { useRouter } from "next/router";
 import Link from "next/link";
 import { AuthContexts } from "@/contexts/AuthContexts";
+import { useTutorialOptional } from "@/contexts/TutorialContext";
 import Modal from "../ui/modal";
 import { ButtonPages } from "../ui/buttonPages";
 import { getErrorMessage, setupAPIClient } from "@/services/api";
@@ -64,6 +65,7 @@ function isAiItem(item: NavItem): boolean {
 export default function MenuLateral() {
   const router = useRouter();
   const { signOut } = useContext(AuthContexts);
+  const tutorial = useTutorialOptional();
   const [loadingDownloadExcel, setLoadingDownloadExcel] = useState(false);
   const [loadingSendFileExcel, setLoadingSendFileExcel] = useState(false);
   const [isModalExcel, setIsModalExcel] = useState(false);
@@ -85,10 +87,14 @@ export default function MenuLateral() {
   }, [mobileMenuOpen]);
 
   useEffect(() => {
-    if (router.pathname === "/importacao") {
+    if (router.pathname === "/importacao" && !tutorial?.active) {
       setIsModalExcel(true);
     }
-  }, [router.pathname]);
+  }, [router.pathname, tutorial?.active]);
+
+  useEffect(() => {
+    tutorial?.registerImportModalOpener(() => setIsModalExcel(true));
+  }, [tutorial]);
 
   const handleCloseExcel = () => {
     setIsModalExcel(false);
@@ -371,7 +377,11 @@ export default function MenuLateral() {
           <div>
             <h2 className="text-lg font-semibold text-white">Importar extrato</h2>
             <p className="mt-1 text-sm text-cp-muted">
-              Envie <span className="text-white/80">.xlsx, .xls, .csv, .ofx ou .pdf</span>.
+              O formato <strong className="text-dash">OFX (.ofx)</strong> exportado do seu banco é o
+              principal e traz a melhor categorização automática.
+            </p>
+            <p className="mt-2 text-xs text-cp-subtle">
+              Também aceitamos <span className="text-white/70">.csv, .pdf, .xlsx e .xls</span>.
             </p>
           </div>
           <ButtonPages loading={loadingDownloadExcel} onClick={downloadExcel}>
