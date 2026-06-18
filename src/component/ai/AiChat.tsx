@@ -237,7 +237,8 @@ export default function AiChat({ seedMessage, onMessageSent, disabled, disabledR
         )}
         {messages.length === 0 && !disabled && (
           <p className="text-sm text-cp-subtle">
-            Ex.: &quot;Recategorize as saídas do extrato importado&quot;, &quot;Marca a luz como paga&quot; ou
+            Ex.: &quot;Recategorize as saídas do extrato importado&quot;, &quot;Tem contas duplicadas em maio?&quot; ou
+            &quot;Marca a luz como paga&quot; ou
             &quot;Quais gastos foram maiores nos últimos {PERIOD_LABELS[periodPreset].toLowerCase()}?&quot;
           </p>
         )}
