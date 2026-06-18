@@ -3,6 +3,14 @@ import { setupAPIClient } from "./api";
 const STORAGE_PREFIX = "contaplus_onboarding_v1_";
 const SESSION_ACTIVE_PREFIX = "contaplus_tutorial_active_v1_";
 const SESSION_STEP_PREFIX = "contaplus_tutorial_step_v1_";
+const SESSION_PEEK_UNTIL_PREFIX = "contaplus_tutorial_peek_until_v1_";
+
+/** Tempo para o usuário ver a tela antes da próxima etapa do tour. */
+export const TUTORIAL_STEP_PEEK_MS = 3000;
+
+function sessionPeekUntilKey(userId: number) {
+  return `${SESSION_PEEK_UNTIL_PREFIX}${userId}`;
+}
 
 export function onboardingStorageKey(userId: number) {
   return `${STORAGE_PREFIX}${userId}`;
@@ -54,6 +62,42 @@ export function writeTutorialSession(
 
 export function clearTutorialSession(userId: number) {
   writeTutorialSession(userId, false, 0);
+  clearTutorialPeek(userId);
+}
+
+/** Oculta o modal do tour por alguns segundos (sobrevive à troca de rota). */
+export function startTutorialPeek(
+  userId: number,
+  durationMs = TUTORIAL_STEP_PEEK_MS,
+) {
+  try {
+    sessionStorage.setItem(
+      sessionPeekUntilKey(userId),
+      String(Date.now() + durationMs),
+    );
+  } catch {
+    // ignore storage failures
+  }
+}
+
+export function getTutorialPeekRemaining(userId: number): number {
+  try {
+    const raw = sessionStorage.getItem(sessionPeekUntilKey(userId));
+    if (!raw) return 0;
+    const until = Number(raw);
+    if (!Number.isFinite(until)) return 0;
+    return Math.max(0, until - Date.now());
+  } catch {
+    return 0;
+  }
+}
+
+export function clearTutorialPeek(userId: number) {
+  try {
+    sessionStorage.removeItem(sessionPeekUntilKey(userId));
+  } catch {
+    // ignore storage failures
+  }
 }
 
 export function readLocalOnboardingComplete(userId: number): boolean {

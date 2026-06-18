@@ -1,12 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MdArrowBack, MdArrowForward, MdCheckCircle, MdUploadFile } from "react-icons/md";
 import BrandLogo from "@/component/brand/BrandLogo";
 import { useTutorialInternal } from "@/contexts/TutorialContext";
 import { ONBOARDING_STEPS } from "@/component/tutorial/onboardingSteps";
 import OfxBankGuides from "@/component/tutorial/OfxBankGuides";
+import {
+  getTutorialPeekRemaining,
+  startTutorialPeek,
+  clearTutorialPeek,
+  TUTORIAL_STEP_PEEK_MS,
+} from "@/services/onboarding";
 
 export default function OnboardingTutorial() {
   const {
+    userId,
     active,
     stepIndex,
     totalSteps,
@@ -20,29 +27,81 @@ export default function OnboardingTutorial() {
   const isLast = stepIndex === totalSteps - 1;
   const progress = ((stepIndex + 1) / totalSteps) * 100;
 
+  const [panelVisible, setPanelVisible] = useState(
+    () => getTutorialPeekRemaining(userId) <= 0,
+  );
+  const [isTransitioning, setIsTransitioning] = useState(
+    () => getTutorialPeekRemaining(userId) > 0,
+  );
+
   useEffect(() => {
     if (!active) return;
     const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = panelVisible ? "hidden" : "";
     return () => {
       document.body.style.overflow = prev;
     };
-  }, [active]);
+  }, [active, panelVisible]);
+
+  useEffect(() => {
+    if (!active) return;
+
+    const remaining = getTutorialPeekRemaining(userId);
+    if (remaining <= 0) {
+      setPanelVisible(true);
+      setIsTransitioning(false);
+      return;
+    }
+
+    setPanelVisible(false);
+    setIsTransitioning(true);
+    const timer = window.setTimeout(() => {
+      clearTutorialPeek(userId);
+      setPanelVisible(true);
+      setIsTransitioning(false);
+    }, remaining);
+
+    return () => window.clearTimeout(timer);
+  }, [active, userId, stepIndex]);
 
   if (!ready || !active || !step) {
     return null;
   }
 
+  function goToStep(nextIndex: number) {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setPanelVisible(false);
+    startTutorialPeek(userId, TUTORIAL_STEP_PEEK_MS);
+    setStepIndex(nextIndex);
+  }
+
   async function handleNext() {
+    if (isTransitioning) return;
     if (isLast) {
       await completeTutorial();
       return;
     }
-    setStepIndex((i) => Math.min(i + 1, totalSteps - 1));
+    goToStep(Math.min(stepIndex + 1, totalSteps - 1));
   }
 
   function handlePrev() {
-    setStepIndex((i) => Math.max(i - 1, 0));
+    if (isFirst || isTransitioning) return;
+    goToStep(Math.max(stepIndex - 1, 0));
+  }
+
+  if (!panelVisible) {
+    return (
+      <div
+        className="pointer-events-none fixed inset-x-0 bottom-[calc(5.5rem+env(safe-area-inset-bottom,0px))] z-[125] flex justify-center px-4 lg:bottom-8"
+        role="status"
+        aria-live="polite"
+      >
+        <p className="rounded-full border border-white/10 bg-cp-card/95 px-4 py-2.5 text-xs text-cp-muted shadow-lg backdrop-blur-sm sm:text-sm">
+          Explore a tela — próxima dica do tour em instantes…
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -102,7 +161,7 @@ export default function OnboardingTutorial() {
           <button
             type="button"
             onClick={handlePrev}
-            disabled={isFirst}
+            disabled={isFirst || isTransitioning}
             className="inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-medium text-cp-muted transition hover:bg-white/[0.04] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
           >
             <MdArrowBack size={18} />
@@ -112,7 +171,8 @@ export default function OnboardingTutorial() {
           <button
             type="button"
             onClick={() => void handleNext()}
-            className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-dash to-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:brightness-110"
+            disabled={isTransitioning}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-dash to-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isLast ? (
               <>

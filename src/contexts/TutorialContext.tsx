@@ -155,6 +155,7 @@ export function TutorialProvider({
 
   const value = useMemo(
     () => ({
+      userId,
       active,
       stepIndex,
       totalSteps: ONBOARDING_STEPS.length,
@@ -165,6 +166,7 @@ export function TutorialProvider({
       completeTutorial,
     }),
     [
+      userId,
       active,
       stepIndex,
       requestImportModal,
@@ -192,6 +194,7 @@ export function TutorialProvider({
 }
 
 type InternalValue = {
+  userId: number;
   active: boolean;
   stepIndex: number;
   totalSteps: number;
