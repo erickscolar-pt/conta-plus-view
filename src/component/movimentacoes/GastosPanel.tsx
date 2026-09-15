@@ -21,10 +21,18 @@ import InputMoney from "@/component/ui/inputMoney";
 import NotFound from "@/component/notfound";
 import { Toggle } from "@/component/ui/toggle";
 import { Dividas, ITipoDivida, Rendas, Usuario } from "@/model/type";
-import { MdAdd, MdEdit, MdDelete, MdAutoFixHigh } from "react-icons/md";
+import { MdAdd, MdEdit, MdDelete, MdAutoFixHigh, MdSwapHoriz } from "react-icons/md";
 import MovimentacoesListControls from "@/component/movimentacoes/MovimentacoesListControls";
 import { TruncatedCell } from "@/component/ui/TruncatedCell";
 import GastosMobileCards from "@/component/movimentacoes/GastosMobileCards";
+import { listarTransferencias } from "@/services/transferencias";
+import {
+  isTransferenciaGasto,
+  periodFromGastoFilter,
+  sortGastosByDateDesc,
+  transferenciaEnviadaToGastoRow,
+  TRANSFERENCIA_CATEGORY_FILTER,
+} from "@/component/movimentacoes/gastoTransferRows";
 
 const filterSelectClass =
   "min-w-[9rem] rounded-lg border border-white/10 bg-cp-base/80 px-2 py-1.5 text-sm text-white focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20";
@@ -38,6 +46,8 @@ export interface GastosPanelProps {
   onDataMutated?: () => void;
   /** Incrementar para abrir o modal de criação a partir da página. */
   openCreateSignal?: number;
+  /** Incrementar após criar transferência (ou outra mutação) para recarregar a lista. */
+  refreshKey?: number;
 }
 interface RequestData {
   nome_divida: string;
@@ -57,6 +67,7 @@ export default function GastosPanel({
   embedded = false,
   onDataMutated,
   openCreateSignal = 0,
+  refreshKey = 0,
 }: GastosPanelProps) {
   const [isModalEdit, setIsModalEdit] = useState(false);
   const [isModalCreate, setIsModalCreate] = useState(false);
@@ -75,6 +86,9 @@ export default function GastosPanel({
   const [modalDividas, setModalDividas] = useState<Dividas>();
   const [loading, setLoading] = useState(false);
   const [dividas, setDividas] = useState<Dividas[]>(initialDividas);
+  const [transferenciasEnviadas, setTransferenciasEnviadas] = useState<Dividas[]>(
+    [],
+  );
   const [rendas, setRendas] = useState<Rendas[]>(initialRendas);
   const [isInstallments, setIsInstallments] = useState(false);
   const [installments, setInstallments] = useState(1);
@@ -106,20 +120,39 @@ export default function GastosPanel({
     }).length;
   }, [dividas, debtTypes]);
 
+  const gastoRows = useMemo(() => {
+    return [...dividas, ...transferenciasEnviadas].sort(sortGastosByDateDesc);
+  }, [dividas, transferenciasEnviadas]);
+
   const filteredDividas = useMemo(() => {
-    let list = [...dividas];
+    let list = [...gastoRows];
     if (paymentFilter === "paid") {
       list = list.filter((d) => d.payment === true);
     } else if (paymentFilter === "unpaid") {
-      list = list.filter((d) => !d.payment);
+      list = list.filter((d) => !d.payment && !isTransferenciaGasto(d));
     }
-    if (categoryFilter !== "all") {
+    if (categoryFilter === TRANSFERENCIA_CATEGORY_FILTER) {
+      list = list.filter((d) => isTransferenciaGasto(d));
+    } else if (categoryFilter !== "all") {
       const cid = Number(categoryFilter);
-      list = list.filter((d) => d.tipo_divida_id === cid);
+      list = list.filter(
+        (d) => !isTransferenciaGasto(d) && d.tipo_divida_id === cid,
+      );
     }
     const q = searchQuery.trim().toLowerCase();
     if (q) {
       list = list.filter((d) => {
+        if (isTransferenciaGasto(d)) {
+          return (
+            (d.nome_divida || "").toLowerCase().includes(q) ||
+            (d.username || "").toLowerCase().includes(q) ||
+            (d.operationId || "").toLowerCase().includes(q) ||
+            "transferência".includes(q) ||
+            "transferencia".includes(q) ||
+            String(d.valor ?? "").includes(q) ||
+            formatDate(d.data_inclusao).toLowerCase().includes(q)
+          );
+        }
         const cat =
           debtTypes
             .find((t) => t.id === d.tipo_divida_id)
@@ -136,7 +169,7 @@ export default function GastosPanel({
     }
     return list;
   }, [
-    dividas,
+    gastoRows,
     searchQuery,
     paymentFilter,
     categoryFilter,
@@ -150,7 +183,7 @@ export default function GastosPanel({
 
   useEffect(() => {
     setPage(1);
-  }, [searchQuery, pageSize, dividas, paymentFilter, categoryFilter]);
+  }, [searchQuery, pageSize, gastoRows, paymentFilter, categoryFilter]);
 
   useEffect(() => {
     if (page > totalPages) setPage(totalPages);
@@ -172,12 +205,17 @@ export default function GastosPanel({
       acc + ((divida.payment === true && divida.quantoVouPagar) || 0),
     0
   );
+  const totalTransferenciasEnviadas = transferenciasEnviadas.reduce(
+    (acc, row) => acc + (row.quantoVouPagar || 0),
+    0,
+  );
   const totalRendas = rendas.reduce(
     (acc: number, renda: Rendas) => acc + (renda.valor || 0),
     0
   );
 
-  const getTipoDivida = (tipoDividaId: number) => {
+  const getTipoDivida = (tipoDividaId: number, row?: Dividas) => {
+    if (row && isTransferenciaGasto(row)) return "Transferência";
     const tipoDivida = debtTypes.find((tipo) => tipo.id === tipoDividaId);
     return tipoDivida ? tipoDivida.nome : "Categoria não encontrada";
   };
@@ -189,7 +227,15 @@ export default function GastosPanel({
       headerClassName: "min-w-0 max-w-[10rem] sm:max-w-[14rem] md:max-w-[18rem]",
       cellClassName: "min-w-0 max-w-[10rem] sm:max-w-[14rem] md:max-w-[18rem]",
       render: (d: Dividas) => (
-        <TruncatedCell text={d.nome_divida} className="max-w-full" />
+        <div className="min-w-0 space-y-1">
+          <TruncatedCell text={d.nome_divida} className="max-w-full" />
+          {isTransferenciaGasto(d) ? (
+            <span className="inline-flex items-center gap-1 rounded-md bg-dash/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-dash ring-1 ring-dash/25">
+              <MdSwapHoriz size={12} aria-hidden />
+              Transferência
+            </span>
+          ) : null}
+        </div>
       ),
     },
     { title: "Valor do boleto", key: "valor", formatter: formatCurrency },
@@ -200,7 +246,7 @@ export default function GastosPanel({
       cellClassName: "w-[7.5rem] max-w-[9rem]",
       render: (d: Dividas) => (
         <TruncatedCell
-          text={getTipoDivida(d.tipo_divida_id ?? 0)}
+          text={getTipoDivida(d.tipo_divida_id ?? 0, d)}
           className="max-w-full"
         />
       ),
@@ -217,30 +263,41 @@ export default function GastosPanel({
     {
       title: "Quanto meu parceiro(a) paga",
       key: "valor_debito_vinculo",
-      formatter: formatCurrency,
+      render: (d: Dividas) =>
+        isTransferenciaGasto(d)
+          ? "—"
+          : formatCurrency(d.valor_debito_vinculo ?? 0),
     },
     {
       title: "Quanto vou pagar",
       key: "quantoVouPagar",
       formatter: formatCurrency,
     },
-    { title: "N° Parcela", key: "plot" },
+    {
+      title: "N° Parcela",
+      key: "plot",
+      render: (d: Dividas) => (isTransferenciaGasto(d) ? "—" : d.plot || "—"),
+    },
     { title: "Vence dia", key: "data_inclusao", formatter: formatDate },
     {
       title: "Pago",
       key: "",
-      render: (divida: Dividas) => (
-        <Toggle
-          key={divida.id}
-          checked={divida.payment ?? false}
-          onChange={(e) => handleTogglePaid(divida.id, e.target.checked)}
-        />
-      ),
+      render: (divida: Dividas) =>
+        isTransferenciaGasto(divida) ? (
+          <span className="text-xs font-medium text-emerald-300">Enviado</span>
+        ) : (
+          <Toggle
+            key={divida.id}
+            checked={divida.payment ?? false}
+            onChange={(e) => handleTogglePaid(divida.id, e.target.checked)}
+          />
+        ),
     },
     {
       title: "",
       key: "edit",
       render: (divida: Dividas) =>
+        !isTransferenciaGasto(divida) &&
         divida.is_edit && (
           <button
             className="flex h-8 w-8 items-center justify-center rounded-full bg-sky-500/30 text-white hover:bg-sky-500/50"
@@ -255,6 +312,7 @@ export default function GastosPanel({
       title: "",
       key: "delete",
       render: (divida: Dividas) =>
+        !isTransferenciaGasto(divida) &&
         divida.is_edit && (
           <button
             className="flex h-8 w-8 items-center justify-center rounded-full bg-red-500/40 text-white hover:bg-red-500/60"
@@ -268,6 +326,7 @@ export default function GastosPanel({
   ];
 
   async function handleTogglePaid(id: number, check: boolean) {
+    if (transferenciasEnviadas.some((t) => t.id === id)) return;
     const apiClient = setupAPIClient();
 
     try {
@@ -289,6 +348,7 @@ export default function GastosPanel({
   }
 
   const handleEdit = (divida: Dividas) => {
+    if (isTransferenciaGasto(divida)) return;
     if (divida.vinculo) {
       setSelectedValueEdit(JSON.stringify(divida.vinculo.id));
     }
@@ -302,6 +362,7 @@ export default function GastosPanel({
   };
 
   async function handleDelete(Divida: Dividas) {
+    if (isTransferenciaGasto(Divida)) return;
     setLoading(true);
     const apiClient = setupAPIClient();
 
@@ -438,28 +499,44 @@ export default function GastosPanel({
 
   const fetchDividas = useCallback(async () => {
     const apiClient = setupAPIClient();
+    const period = periodFromGastoFilter(filterDate, filterType);
     try {
+      const transferPromise = listarTransferencias({
+        ...period,
+        direcao: "enviadas",
+        limit: 200,
+      }).then((result) =>
+        (result.items ?? [])
+          .filter((t) => t.status !== "cancelada")
+          .map(transferenciaEnviadaToGastoRow),
+      );
+
       if (filterDate !== "") {
-        const response = await apiClient.get(
-          `/dividas/${filterDate}/${filterType}`
-        );
-        const responseRendas = await apiClient.get(
-          `/rendas/${filterDate}/month`
-        );
+        const [response, responseRendas, transferRows] = await Promise.all([
+          apiClient.get(`/dividas/${filterDate}/${filterType}`),
+          apiClient.get(`/rendas/${filterDate}/month`),
+          transferPromise.catch(() => [] as Dividas[]),
+        ]);
 
         setDividas(response.data);
         setRendas(responseRendas.data);
+        setTransferenciasEnviadas(transferRows);
       } else {
-        const response = await apiClient.get("/dividas");
-        const responserendas = await apiClient.get("/rendas");
+        const [response, responserendas, transferRows] = await Promise.all([
+          apiClient.get("/dividas"),
+          apiClient.get("/rendas"),
+          transferPromise.catch(() => [] as Dividas[]),
+        ]);
         setRendas(responserendas.data);
         setDividas(response.data);
+        setTransferenciasEnviadas(transferRows);
       }
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : String(error);
       console.error("Erro ao buscar as Dividas:", msg);
       setDividas([]);
       setRendas([]);
+      setTransferenciasEnviadas([]);
     }
   }, [filterDate, filterType]);
 
@@ -619,7 +696,7 @@ export default function GastosPanel({
   useEffect(() => {
     void fetchDividas();
     void refreshDebtTypes();
-  }, [fetchDividas, refreshDebtTypes]);
+  }, [fetchDividas, refreshDebtTypes, refreshKey]);
 
   const createBtnClass = embedded
     ? "inline-flex items-center gap-2 rounded-xl bg-expense/20 px-4 py-2.5 text-sm font-semibold text-red-100 ring-1 ring-expense/30 transition hover:bg-expense/30"
@@ -648,8 +725,8 @@ export default function GastosPanel({
               <>
                 <h2 className="text-lg font-semibold text-white">Saídas</h2>
                 <p className="text-sm text-cp-muted">
-                  Contas, cartão e obrigações — com vínculo familiar quando
-                  aplicável.
+                  Contas, cartão, obrigações e transferências enviadas — com
+                  vínculo familiar quando aplicável.
                 </p>
               </>
             )}
@@ -724,6 +801,9 @@ export default function GastosPanel({
                         className={filterSelectClass}
                       >
                         <option value="all">Todas</option>
+                        <option value={TRANSFERENCIA_CATEGORY_FILTER}>
+                          Transferência
+                        </option>
                         {debtTypes.map((t) => (
                           <option key={t.id} value={String(t.id)}>
                             {t.nome}
@@ -737,7 +817,7 @@ export default function GastosPanel({
               {(searchQuery.trim() ||
                 paymentFilter !== "all" ||
                 categoryFilter !== "all") &&
-              filteredDividas.length < dividas.length ? (
+              filteredDividas.length < gastoRows.length ? (
                 <p className="mb-3 text-xs text-white0">
                   Os totais no rodapé consideram todas as saídas do período, não só os filtros da tabela.
                 </p>
@@ -747,7 +827,7 @@ export default function GastosPanel({
                   <>
                     <GastosMobileCards
                       items={paginatedDividas}
-                      getTipoNome={getTipoDivida}
+                      getTipoNome={(id, row) => getTipoDivida(id, row)}
                       onTogglePaid={handleTogglePaid}
                       onEdit={handleEdit}
                       onDelete={handleDelete}
@@ -758,11 +838,13 @@ export default function GastosPanel({
                         data={paginatedDividas}
                         color="#C07C7C"
                         minWidthClassName="min-w-[1100px]"
-                        rowKey={(d) => d.id}
+                        rowKey={(d) =>
+                          isTransferenciaGasto(d) ? `trf-${d.id}` : `div-${d.id}`
+                        }
                       />
                     </div>
                   </>
-                ) : dividas.length > 0 ? (
+                ) : gastoRows.length > 0 ? (
                   <p className="py-10 text-center text-sm text-cp-muted">
                     Nenhuma saída corresponde aos filtros ou à pesquisa.
                   </p>
@@ -785,6 +867,12 @@ export default function GastosPanel({
                     </span>
                   </div>
                   <div>
+                    Transferências enviadas:{" "}
+                    <span className="text-lg font-bold text-dash">
+                      {formatCurrency(totalTransferenciasEnviadas)}
+                    </span>
+                  </div>
+                  <div>
                     Renda neste mês:{" "}
                     <span className="text-lg font-bold text-white">
                       {formatCurrency(totalRendas)}
@@ -794,12 +882,14 @@ export default function GastosPanel({
                     Sobra:{" "}
                     <span
                       className={`text-lg font-bold ${
-                        totalRendas - total < 0
+                        totalRendas - total - totalTransferenciasEnviadas < 0
                           ? "text-red-300"
                           : "text-income"
                       }`}
                     >
-                      {formatCurrency(totalRendas - total)}
+                      {formatCurrency(
+                        totalRendas - total - totalTransferenciasEnviadas,
+                      )}
                     </span>
                   </div>
                 </div>

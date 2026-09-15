@@ -24,6 +24,12 @@ export interface Dividas {
   n_installments?: number;
   plot?: string;
   tipo_divida_id?: number;
+  /**
+   * Linha sintética na aba Saídas: transferência enviada (não é `dividas` no banco).
+   * Só leitura — não entra no total de dívida / comprometimento.
+   */
+  kind?: "divida" | "transferencia";
+  operationId?: string;
 }
 export interface Objetivos {
   id: number;

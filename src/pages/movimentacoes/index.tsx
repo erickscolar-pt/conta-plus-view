@@ -64,6 +64,7 @@ export default function Movimentacoes({
   const [entradaSignal, setEntradaSignal] = useState(0);
   const [saidaSignal, setSaidaSignal] = useState(0);
   const [transferSignal, setTransferSignal] = useState(0);
+  const [listRefreshKey, setListRefreshKey] = useState(0);
 
   useEffect(() => {
     const nextTab = parseTab(router.query.tab);
@@ -101,6 +102,7 @@ export default function Movimentacoes({
       setKpiRendas(r.data);
       setKpiDividas(d.data);
       setKpiTransferSaldo(t.totals.saldo);
+      setListRefreshKey((n) => n + 1);
     } catch {
       /* ignore */
     }
@@ -243,6 +245,7 @@ export default function Movimentacoes({
                   embedded
                   onDataMutated={refreshKpis}
                   openCreateSignal={saidaSignal}
+                  refreshKey={listRefreshKey}
                 />
               )}
               {tab === "transferencias" && (

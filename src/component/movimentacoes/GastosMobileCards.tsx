@@ -2,11 +2,12 @@ import type { ReactNode } from "react";
 import { formatCurrency, formatDate } from "@/helper";
 import { Dividas } from "@/model/type";
 import { Toggle } from "@/component/ui/toggle";
-import { MdDelete, MdEdit } from "react-icons/md";
+import { MdDelete, MdEdit, MdSwapHoriz } from "react-icons/md";
+import { isTransferenciaGasto } from "@/component/movimentacoes/gastoTransferRows";
 
 type GastosMobileCardsProps = {
   items: Dividas[];
-  getTipoNome: (tipoDividaId: number) => string;
+  getTipoNome: (tipoDividaId: number, row?: Dividas) => string;
   onTogglePaid: (id: number, paid: boolean) => void;
   onEdit: (d: Dividas) => void;
   onDelete: (d: Dividas) => void;
@@ -37,21 +38,28 @@ export default function GastosMobileCards({
   return (
     <ul className="space-y-3 md:hidden">
       {items.map((d) => {
+        const isTransfer = isTransferenciaGasto(d);
         const temParceiro =
           !!(d.username && String(d.username).trim()) ||
           (d.valor_debito_vinculo != null && d.valor_debito_vinculo > 0);
         return (
           <li
-            key={d.id}
+            key={isTransfer ? `trf-${d.id}` : `div-${d.id}`}
             className="rounded-2xl border border-white/[0.08] bg-cp-card p-4 shadow-card ring-1 ring-expense/10"
           >
             <div className="flex flex-col gap-1">
               <p className="text-sm font-medium leading-snug text-white">
                 {d.nome_divida || "—"}
               </p>
+              {isTransfer ? (
+                <span className="inline-flex w-fit items-center gap-1 rounded-md bg-dash/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-dash ring-1 ring-dash/25">
+                  <MdSwapHoriz size={12} aria-hidden />
+                  Transferência
+                </span>
+              ) : null}
               <div className="flex items-baseline justify-between gap-2">
                 <span className="text-[11px] font-medium uppercase tracking-wide text-cp-subtle">
-                  Quanto vou pagar
+                  {isTransfer ? "Valor enviado" : "Quanto vou pagar"}
                 </span>
                 <span className="text-lg font-semibold tabular-nums text-expense">
                   {formatCurrency(d.quantoVouPagar ?? 0)}
@@ -60,37 +68,56 @@ export default function GastosMobileCards({
             </div>
 
             <div className="mt-3 space-y-2 border-t border-white/[0.06] pt-3">
-              <Row label="Valor do boleto" value={formatCurrency(d.valor)} />
+              {!isTransfer ? (
+                <Row label="Valor do boleto" value={formatCurrency(d.valor)} />
+              ) : null}
               <Row
                 label="Categoria"
-                value={getTipoNome(d.tipo_divida_id ?? 0)}
+                value={getTipoNome(d.tipo_divida_id ?? 0, d)}
               />
-              <Row label="Vence" value={formatDate(d.data_inclusao)} />
-              {d.plot ? (
+              <Row
+                label={isTransfer ? "Data" : "Vence"}
+                value={formatDate(d.data_inclusao)}
+              />
+              {!isTransfer && d.plot ? (
                 <Row label="Parcela" value={String(d.plot)} />
               ) : null}
               {temParceiro ? (
                 <>
                   {d.username ? (
-                    <Row label="Dividir com" value={d.username} />
+                    <Row
+                      label={isTransfer ? "Para" : "Dividir com"}
+                      value={d.username}
+                    />
                   ) : null}
-                  <Row
-                    label="Parceiro(a) paga"
-                    value={formatCurrency(d.valor_debito_vinculo ?? 0)}
-                  />
+                  {!isTransfer ? (
+                    <Row
+                      label="Parceiro(a) paga"
+                      value={formatCurrency(d.valor_debito_vinculo ?? 0)}
+                    />
+                  ) : null}
                 </>
+              ) : null}
+              {isTransfer && d.operationId ? (
+                <Row label="Operação" value={d.operationId} />
               ) : null}
             </div>
 
             <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] pt-3">
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-cp-subtle">Pago</span>
-                <Toggle
-                  checked={!!d.payment}
-                  onChange={(e) => onTogglePaid(d.id, e.target.checked)}
-                />
-              </div>
-              {d.is_edit ? (
+              {isTransfer ? (
+                <span className="text-xs font-medium text-emerald-300">
+                  Enviado
+                </span>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-cp-subtle">Pago</span>
+                  <Toggle
+                    checked={!!d.payment}
+                    onChange={(e) => onTogglePaid(d.id, e.target.checked)}
+                  />
+                </div>
+              )}
+              {!isTransfer && d.is_edit ? (
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
@@ -98,15 +125,15 @@ export default function GastosMobileCards({
                     onClick={() => onEdit(d)}
                     title="Editar"
                   >
-                    <MdEdit size={20} />
+                    <MdEdit size={18} />
                   </button>
                   <button
                     type="button"
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-expense/20 text-expense ring-1 ring-expense/25 transition hover:bg-expense/30"
+                    className="flex h-9 w-9 items-center justify-center rounded-full bg-red-500/25 text-red-200 ring-1 ring-red-500/30 transition hover:bg-red-500/40"
                     onClick={() => onDelete(d)}
                     title="Excluir"
                   >
-                    <MdDelete size={20} />
+                    <MdDelete size={18} />
                   </button>
                 </div>
               ) : null}
