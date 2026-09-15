@@ -3,6 +3,13 @@ import { registerServiceWorker } from "@/utils/pwa";
 
 const PUSH_ENDPOINT_STORAGE = "contaplus_web_push_endpoint_v1";
 
+export const NOTIFICATIONS_CHANGED_EVENT = "contaplus:notifications-changed";
+
+export function emitNotificationsChanged() {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new Event(NOTIFICATIONS_CHANGED_EVENT));
+}
+
 export function isWebPushSupported(): boolean {
   return (
     typeof window !== "undefined" &&
@@ -36,6 +43,17 @@ async function getVapidPublicKey(): Promise<string | null> {
   return data.publicKey ?? null;
 }
 
+async function unregisterStaleEndpoint(currentEndpoint: string): Promise<void> {
+  const previous = localStorage.getItem(PUSH_ENDPOINT_STORAGE);
+  if (!previous || previous === currentEndpoint) return;
+  try {
+    const api = setupAPIClient();
+    await api.post("/notifications/push/unregister-web", { endpoint: previous });
+  } catch {
+    // endpoint antigo pode já ter sido removido no servidor
+  }
+}
+
 export async function subscribeWebPush(): Promise<
   NotificationPermission | "unsupported" | "no-vapid"
 > {
@@ -63,6 +81,8 @@ export async function subscribeWebPush(): Promise<
   if (!json.endpoint || !json.keys?.p256dh || !json.keys?.auth) {
     throw new Error("Inscrição push inválida");
   }
+
+  await unregisterStaleEndpoint(json.endpoint);
 
   const api = setupAPIClient();
   await api.post("/notifications/push/register-web", {
@@ -102,4 +122,11 @@ export async function syncWebPushSubscription(): Promise<void> {
   } catch {
     // ignore background sync errors
   }
+}
+
+export async function dismissNotifications(ids: string[]): Promise<void> {
+  const unique = Array.from(new Set(ids.filter((id) => id.trim().length > 0)));
+  if (unique.length === 0) return;
+  const api = setupAPIClient();
+  await api.post("/notifications/dismiss", { ids: unique });
 }

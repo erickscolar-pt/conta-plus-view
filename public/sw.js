@@ -1,4 +1,4 @@
-const CACHE = "contaplus-pwa-v4";
+const CACHE = "contaplus-pwa-v5";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -34,11 +34,12 @@ self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
+  if (url.pathname === "/sw.js") return;
 
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        if (response.ok && url.pathname.match(/\.(png|ico|webmanifest|js)$/)) {
+        if (response.ok && url.pathname.match(/\.(png|ico|webmanifest)$/)) {
           const clone = response.clone();
           caches.open(CACHE).then((cache) => cache.put(event.request, clone));
         }
@@ -47,6 +48,17 @@ self.addEventListener("fetch", (event) => {
       .catch(() => caches.match(event.request)),
   );
 });
+
+function notifyClients(payload) {
+  return self.clients
+    .matchAll({ type: "window", includeUncontrolled: true })
+    .then((windowClients) => {
+      windowClients.forEach((client) => {
+        client.postMessage({ type: "PUSH_RECEIVED", payload });
+      });
+      return windowClients;
+    });
+}
 
 self.addEventListener("push", (event) => {
   let payload = {
@@ -68,37 +80,66 @@ self.addEventListener("push", (event) => {
     // usa payload padrão
   }
 
+  const tag = payload.data?.notificationId || "contaplus-alert";
+
   event.waitUntil(
-    self.registration.showNotification(payload.title, {
-      body: payload.body,
-      icon: "/icon-192.png",
-      badge: "/icon-192.png",
-      data: payload.data,
-      tag: payload.data?.notificationId || "contaplus-alert",
-      renotify: true,
-    }),
+    (async () => {
+      const windowClients = await notifyClients(payload);
+      const hasVisibleClient = windowClients.some(
+        (client) => client.visibilityState === "visible",
+      );
+      if (hasVisibleClient) return;
+
+      const existing = await self.registration.getNotifications({ tag });
+      existing.forEach((notification) => notification.close());
+
+      await self.registration.showNotification(payload.title, {
+        body: payload.body,
+        icon: "/icon-192.png",
+        badge: "/icon-192.png",
+        data: payload.data,
+        tag,
+        renotify: false,
+      });
+    })(),
   );
 });
 
+function withNotifRead(href, notificationId) {
+  const url = new URL(href || "/movimentacoes", self.location.origin);
+  if (notificationId) {
+    url.hash = `notifRead=${encodeURIComponent(notificationId)}`;
+  }
+  return url.toString();
+}
+
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const href = event.notification.data?.href || "/movimentacoes";
-  const url = new URL(href, self.location.origin).toString();
+  const data = event.notification.data || {};
+  const notificationId = data.notificationId;
+  const url = withNotifRead(data.href, notificationId);
 
   event.waitUntil(
-    clients.matchAll({ type: "window", includeUncontrolled: true }).then((windowClients) => {
-      for (const client of windowClients) {
-        if (client.url.startsWith(self.location.origin) && "focus" in client) {
-          return client.focus().then((focused) => {
-            if ("navigate" in focused) {
-              return focused.navigate(url);
-            }
-          });
+    self.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((windowClients) => {
+        for (const client of windowClients) {
+          if (client.url.startsWith(self.location.origin) && "focus" in client) {
+            client.postMessage({
+              type: "NOTIFICATION_CLICKED",
+              notificationId,
+              href: data.href,
+            });
+            return client.focus().then((focused) => {
+              if (focused && "navigate" in focused) {
+                return focused.navigate(url);
+              }
+            });
+          }
         }
-      }
-      if (clients.openWindow) {
-        return clients.openWindow(url);
-      }
-    }),
+        if (self.clients.openWindow) {
+          return self.clients.openWindow(url);
+        }
+      }),
   );
 });

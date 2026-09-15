@@ -13,7 +13,10 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
   if (typeof window === "undefined" || !("serviceWorker" in navigator)) return null;
 
   try {
-    return await navigator.serviceWorker.register(SW_PATH, { scope: "/" });
+    return await navigator.serviceWorker.register(SW_PATH, {
+      scope: "/",
+      updateViaCache: "none",
+    });
   } catch {
     return null;
   }

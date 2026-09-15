@@ -5,11 +5,14 @@ import { MdNotificationsNone, MdClose, MdNotificationsActive } from "react-icons
 import { setupAPIClient } from "@/services/api";
 import { formatCurrency } from "@/helper";
 import {
+  dismissNotifications,
   getWebPushPermission,
   isWebPushSupported,
+  NOTIFICATIONS_CHANGED_EVENT,
   subscribeWebPush,
   unsubscribeWebPush,
 } from "@/utils/web-push";
+import { isStandalonePwa } from "@/utils/pwa";
 import { toast } from "react-toastify";
 
 const STORAGE_KEY = "contaplus_dismissed_notifications_v1";
@@ -59,8 +62,8 @@ export default function NotificationBell() {
     setPushPermission(getWebPushPermission());
   }, []);
 
-  const fetchNotifications = useCallback(async () => {
-    setLoading(true);
+  const fetchNotifications = useCallback(async (opts?: { silent?: boolean }) => {
+    if (!opts?.silent) setLoading(true);
     try {
       const api = setupAPIClient();
       const { data } = await api.get<{ items: NotificationItem[] }>(
@@ -70,12 +73,20 @@ export default function NotificationBell() {
     } catch {
       setItems([]);
     } finally {
-      setLoading(false);
+      if (!opts?.silent) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
     fetchNotifications();
+  }, [fetchNotifications]);
+
+  useEffect(() => {
+    const onChanged = () => {
+      void fetchNotifications();
+    };
+    window.addEventListener(NOTIFICATIONS_CHANGED_EVENT, onChanged);
+    return () => window.removeEventListener(NOTIFICATIONS_CHANGED_EVENT, onChanged);
   }, [fetchNotifications]);
 
   /** Atualiza após aceitar convite (/codigo) ou voltar de outra aba */
@@ -114,25 +125,74 @@ export default function NotificationBell() {
     return () => document.removeEventListener("mousedown", onDoc);
   }, [open]);
 
+  const persistDismiss = useCallback(async (ids: string[]) => {
+    const unique = Array.from(
+      new Set(ids.filter((id) => id.trim().length > 0)),
+    );
+    if (unique.length === 0) return;
+    setDismissed((current) => {
+      const next = new Set(current);
+      unique.forEach((id) => next.add(id));
+      saveDismissed(next);
+      return next;
+    });
+    try {
+      await dismissNotifications(unique);
+    } catch {
+      // a lista volta do servidor no próximo fetch se a API falhar
+    }
+    if ("serviceWorker" in navigator) {
+      void navigator.serviceWorker.ready.then(async (reg) => {
+        const shown = await reg.getNotifications();
+        shown
+          .filter((n) => unique.includes(String(n.data?.notificationId ?? "")))
+          .forEach((n) => n.close());
+      });
+    }
+    void fetchNotifications({ silent: true });
+  }, [fetchNotifications]);
+
+  useEffect(() => {
+    const consumeHash = () => {
+      if (typeof window === "undefined") return;
+      const raw = window.location.hash.replace(/^#/, "");
+      const params = new URLSearchParams(raw);
+      const id = params.get("notifRead");
+      if (!id) return;
+      void persistDismiss([id]);
+      const { pathname, search } = window.location;
+      window.history.replaceState(null, "", `${pathname}${search}`);
+    };
+    consumeHash();
+    window.addEventListener("hashchange", consumeHash);
+    return () => window.removeEventListener("hashchange", consumeHash);
+  }, [persistDismiss]);
+
+  useEffect(() => {
+    const SYNC_KEY = "contaplus_dismissed_notifications_synced_v1";
+    if (typeof window === "undefined") return;
+    if (localStorage.getItem(SYNC_KEY) === "1") return;
+    const ids = Array.from(loadDismissed());
+    if (ids.length === 0) {
+      localStorage.setItem(SYNC_KEY, "1");
+      return;
+    }
+    void persistDismiss(ids).finally(() => {
+      localStorage.setItem(SYNC_KEY, "1");
+    });
+  }, [persistDismiss]);
+
   const visible = useMemo(
     () => items.filter((i) => !dismissed.has(i.id)),
     [items, dismissed],
   );
 
   const dismissOne = (id: string) => {
-    const next = new Set(dismissed);
-    next.add(id);
-    setDismissed(next);
-    saveDismissed(next);
+    void persistDismiss([id]);
   };
 
   const dismissAll = () => {
-    const next = new Set(dismissed);
-    for (const i of visible) {
-      next.add(i.id);
-    }
-    setDismissed(next);
-    saveDismissed(next);
+    void persistDismiss(visible.map((item) => item.id));
   };
 
   const badge = visible.length;
@@ -143,7 +203,11 @@ export default function NotificationBell() {
       const result = await subscribeWebPush();
       setPushPermission(getWebPushPermission());
       if (result === "granted") {
-        toast.success("Alertas no celular ativados!");
+                    toast.success(
+                      isStandalonePwa()
+                        ? "Alertas do app instalado ativados!"
+                        : "Alertas no celular ativados!",
+                    );
       } else if (result === "denied") {
         toast.info("Permissão negada. Ative nas configurações do navegador.");
       } else if (result === "no-vapid") {
@@ -259,7 +323,10 @@ export default function NotificationBell() {
                           <Link
                             href={n.href}
                             className="mt-2 inline-block text-xs font-semibold text-brand-400 hover:text-brand-300"
-                            onClick={() => setOpen(false)}
+                            onClick={() => {
+                              void persistDismiss([n.id]);
+                              setOpen(false);
+                            }}
                           >
                             Abrir →
                           </Link>
@@ -286,7 +353,7 @@ export default function NotificationBell() {
                 <div className="space-y-2">
                   <p className="flex items-center gap-2 text-xs text-emerald-300">
                     <MdNotificationsActive size={16} />
-                    Alertas na tela do celular ativos
+                    Alertas ativos neste dispositivo
                   </p>
                   <button
                     type="button"
@@ -301,8 +368,10 @@ export default function NotificationBell() {
                 <div className="space-y-2">
                   <p className="text-xs leading-relaxed text-cp-muted">
                     Receba contas em atraso, convites e avisos na{" "}
-                    <strong className="text-white/90">tela do telefone</strong> — no
-                    navegador ou no atalho instalado (PWA).
+                    <strong className="text-white/90">tela do telefone</strong>
+                    {isStandalonePwa()
+                      ? " neste app instalado, mesmo com o navegador fechado."
+                      : " — no navegador ou no atalho instalado (PWA)."}
                   </p>
                   <button
                     type="button"
