@@ -36,6 +36,8 @@ export interface GastosPanelProps {
   tipodivida: ITipoDivida[];
   embedded?: boolean;
   onDataMutated?: () => void;
+  /** Incrementar para abrir o modal de criação a partir da página. */
+  openCreateSignal?: number;
 }
 interface RequestData {
   nome_divida: string;
@@ -54,6 +56,7 @@ export default function GastosPanel({
   tipodivida,
   embedded = false,
   onDataMutated,
+  openCreateSignal = 0,
 }: GastosPanelProps) {
   const [isModalEdit, setIsModalEdit] = useState(false);
   const [isModalCreate, setIsModalCreate] = useState(false);
@@ -77,6 +80,12 @@ export default function GastosPanel({
   const [installments, setInstallments] = useState(1);
   const [filterDate, setFilterDate] = useState("");
   const [filterType, setFilterType] = useState<"day" | "month">("day");
+
+  useEffect(() => {
+    if (openCreateSignal && openCreateSignal > 0) {
+      setIsModalCreate(true);
+    }
+  }, [openCreateSignal]);
   const [debtTypes, setDebtTypes] = useState<ITipoDivida[]>(tipodivida ?? []);
   const [newDebtTypeName, setNewDebtTypeName] = useState("");
   const [searchQuery, setSearchQuery] = useState("");

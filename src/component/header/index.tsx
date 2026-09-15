@@ -6,6 +6,7 @@ import { Usuario } from "@/model/type";
 import avatar from "../../../public/Avatar.png";
 import { FaPlus } from "react-icons/fa6";
 import { motion } from "framer-motion";
+import { useNovaMovimentacao } from "@/contexts/NovaMovimentacaoContext";
 
 function firstName(nome?: string) {
   if (!nome?.trim()) return "Usuário";
@@ -29,6 +30,7 @@ function formatToday(compact = false) {
 
 export default function Header({ usuario }: { usuario?: Usuario }) {
   const greeting = firstName(usuario?.nome);
+  const { openNovaMovimentacao } = useNovaMovimentacao();
 
   return (
     <header className="sticky top-0 z-30 border-b border-white/[0.08] bg-cp-base/80 px-3 py-3 backdrop-blur-xl sm:px-6 sm:py-4 lg:px-8">
@@ -55,7 +57,7 @@ export default function Header({ usuario }: { usuario?: Usuario }) {
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
           <button
             type="button"
-            onClick={() => Router.push("/movimentacoes")}
+            onClick={openNovaMovimentacao}
             className="hidden items-center gap-2 rounded-xl bg-gradient-to-r from-dash to-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:brightness-110 sm:inline-flex"
           >
             <FaPlus className="text-xs" />

@@ -45,6 +45,8 @@ export type GanhosPanelProps = {
   usuario: Usuario;
   embedded?: boolean;
   onDataMutated?: () => void;
+  /** Incrementar para abrir o modal de criação a partir da página. */
+  openCreateSignal?: number;
 };
 
 interface RequestData {
@@ -60,6 +62,7 @@ export default function GanhosPanel({
   usuario: _usuario,
   embedded = false,
   onDataMutated,
+  openCreateSignal = 0,
 }: GanhosPanelProps) {
   const [isModalEdit, setIsModalEdit] = useState(false);
   const [isModalCreate, setIsModalCreate] = useState(false);
@@ -76,6 +79,12 @@ export default function GanhosPanel({
   const [searchQuery, setSearchQuery] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    if (openCreateSignal && openCreateSignal > 0) {
+      setIsModalCreate(true);
+    }
+  }, [openCreateSignal]);
 
   const filteredRendas = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();

@@ -15,7 +15,7 @@ import {
   FaTableList,
   FaPiggyBank,
 } from "react-icons/fa6";
-import { MdFilterAltOff, MdLink } from "react-icons/md";
+import { MdFilterAltOff, MdLink, MdSwapHoriz } from "react-icons/md";
 import ChartGraficLine from "@/component/chartgraficline";
 import MetricCard from "@/component/metriccard";
 import AiChatPrompts from "@/component/ai/AiChatPrompts";
@@ -36,6 +36,9 @@ export interface DashboardSummary {
   totalObjetivos: number;
   /** Soma das metas com desconta_entrada = true (afeta o saldo). */
   totalObjetivosDescontamEntrada?: number;
+  totalTransferenciasEnviadas?: number;
+  totalTransferenciasRecebidas?: number;
+  saldoTransferencias?: number;
   saldoPeriodo: number;
   periodoInicio: string;
   periodoFim: string;
@@ -47,9 +50,16 @@ export interface DashboardTransaction {
   description: string;
   date: string;
   value: number;
-  type: "renda" | "divida" | "meta";
+  type:
+    | "renda"
+    | "divida"
+    | "meta"
+    | "transferencia_enviada"
+    | "transferencia_recebida";
   categoria?: string;
   descontaEntrada?: boolean;
+  contraparte?: string;
+  operationId?: string;
 }
 
 export interface DashboardData {
@@ -69,6 +79,12 @@ export interface DashboardData {
     paidVsOpenByType: { tipo: string; paid: number; open: number }[];
     cumulativeBalance: { day: string; balance: number }[];
     debtCommitment: number;
+    transferFlow?: {
+      enviadas: number;
+      recebidas: number;
+      saldo: number;
+      quantidade: number;
+    };
   };
 }
 
@@ -111,6 +127,8 @@ const TYPE_LABEL: Record<DashboardTransaction["type"], string> = {
   renda: "Entrada",
   divida: "Dívida / gasto",
   meta: "Objetivo",
+  transferencia_enviada: "Transferência enviada",
+  transferencia_recebida: "Transferência recebida",
 };
 
 export default function Dashboard({
@@ -499,7 +517,7 @@ export default function Dashboard({
                 />
                 <MetricCard
                   title="Saldo"
-                  subtitle="Receitas − despesas − metas"
+                  subtitle="Receitas − despesas − metas ± transferências"
                   value={formatCurrency(totals.saldo)}
                   icon={FaScaleBalanced}
                   variant="balance"
@@ -512,6 +530,47 @@ export default function Dashboard({
                   variant="savings"
                 />
               </section>
+
+              {(summary?.totalTransferenciasEnviadas ||
+                summary?.totalTransferenciasRecebidas ||
+                graficoBarra?.insights?.transferFlow?.quantidade) ? (
+                <section className="flex flex-col gap-2 rounded-2xl border border-primary/20 bg-primary/5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-start gap-3">
+                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
+                      <MdSwapHoriz size={20} />
+                    </span>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                        Transferências entre pessoas conectadas
+                      </p>
+                      <p className="mt-0.5 text-sm text-cp-muted">
+                        Não entram em receitas, despesas nem no comprometimento.
+                        O saldo do período já considera o fluxo.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-3 text-sm">
+                    <span className="text-expense">
+                      Enviadas{" "}
+                      <strong>
+                        {formatCurrency(summary?.totalTransferenciasEnviadas ?? 0)}
+                      </strong>
+                    </span>
+                    <span className="text-income">
+                      Recebidas{" "}
+                      <strong>
+                        {formatCurrency(summary?.totalTransferenciasRecebidas ?? 0)}
+                      </strong>
+                    </span>
+                    <span className="text-white">
+                      Saldo{" "}
+                      <strong>
+                        {formatCurrency(summary?.saldoTransferencias ?? 0)}
+                      </strong>
+                    </span>
+                  </div>
+                </section>
+              ) : null}
 
               {byType.length > 0 && (
                 <section className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-sm backdrop-blur-sm">
@@ -742,6 +801,16 @@ export default function Dashboard({
                                   Não desconta do saldo
                                 </div>
                               ) : null}
+                              {(row.type === "transferencia_enviada" ||
+                                row.type === "transferencia_recebida") &&
+                              row.contraparte ? (
+                                <div className="mt-0.5 truncate text-xs text-cp-subtle">
+                                  {row.type === "transferencia_enviada"
+                                    ? `Para ${row.contraparte}`
+                                    : `De ${row.contraparte}`}
+                                  {row.operationId ? ` · ${row.operationId}` : ""}
+                                </div>
+                              ) : null}
                             </td>
                             <td className="px-4 py-3 sm:px-6">
                               <span
@@ -750,14 +819,30 @@ export default function Dashboard({
                                     ? "bg-income/20 text-income"
                                     : row.type === "divida"
                                       ? "bg-red-500/20 text-red-300"
-                                      : "bg-sky-500/20 text-sky-300"
+                                      : row.type === "transferencia_enviada"
+                                        ? "bg-primary/20 text-primary"
+                                        : row.type === "transferencia_recebida"
+                                          ? "bg-primary/20 text-primary"
+                                          : "bg-sky-500/20 text-sky-300"
                                 }`}
                               >
                                 {TYPE_LABEL[row.type]}
                               </span>
                             </td>
-                            <td className="whitespace-nowrap px-4 py-3 text-right font-medium tabular-nums text-white sm:px-6">
-                              {formatCurrency(row.value)}
+                            <td
+                              className={`whitespace-nowrap px-4 py-3 text-right font-medium tabular-nums sm:px-6 ${
+                                row.type === "transferencia_enviada"
+                                  ? "text-expense"
+                                  : row.type === "transferencia_recebida"
+                                    ? "text-income"
+                                    : "text-white"
+                              }`}
+                            >
+                              {row.type === "transferencia_enviada"
+                                ? `- ${formatCurrency(row.value)}`
+                                : row.type === "transferencia_recebida"
+                                  ? `+ ${formatCurrency(row.value)}`
+                                  : formatCurrency(row.value)}
                             </td>
                           </tr>
                         ))

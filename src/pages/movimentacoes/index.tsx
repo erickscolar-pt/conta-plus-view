@@ -13,14 +13,17 @@ import {
 } from "@/model/type";
 import GanhosPanel from "@/component/movimentacoes/GanhosPanel";
 import GastosPanel from "@/component/movimentacoes/GastosPanel";
+import TransferenciasPanel from "@/component/movimentacoes/TransferenciasPanel";
 import MetricCard from "@/component/metriccard";
 import {
   FaArrowTrendDown,
   FaArrowTrendUp,
   FaScaleBalanced,
 } from "react-icons/fa6";
+import { MdSwapHoriz } from "react-icons/md";
+import { listarTransferencias } from "@/services/transferencias";
 
-type TabId = "entradas" | "saidas";
+type TabId = "entradas" | "saidas" | "transferencias";
 
 interface PageProps {
   rendas: Rendas[];
@@ -37,6 +40,14 @@ function sumSaidas(list: Dividas[]) {
   return list.reduce((a, d) => a + (d.quantoVouPagar || 0), 0);
 }
 
+function parseTab(value: string | string[] | undefined): TabId | null {
+  const q = Array.isArray(value) ? value[0] : value;
+  if (q === "saidas" || q === "gastos") return "saidas";
+  if (q === "entradas" || q === "ganhos") return "entradas";
+  if (q === "transferencias") return "transferencias";
+  return null;
+}
+
 export default function Movimentacoes({
   rendas: initialRendas,
   dividas: initialDividas,
@@ -44,29 +55,60 @@ export default function Movimentacoes({
   tipodivida,
 }: PageProps) {
   const router = useRouter();
-  const [tab, setTab] = useState<TabId>("entradas");
+  const [tab, setTab] = useState<TabId>(
+    () => parseTab(router.query.tab) ?? "entradas",
+  );
   const [kpiRendas, setKpiRendas] = useState(initialRendas);
   const [kpiDividas, setKpiDividas] = useState(initialDividas);
+  const [kpiTransferSaldo, setKpiTransferSaldo] = useState(0);
+  const [entradaSignal, setEntradaSignal] = useState(0);
+  const [saidaSignal, setSaidaSignal] = useState(0);
+  const [transferSignal, setTransferSignal] = useState(0);
 
   useEffect(() => {
-    const q = router.query.tab as string | undefined;
-    if (q === "saidas" || q === "gastos") setTab("saidas");
-    else if (q === "entradas" || q === "ganhos") setTab("entradas");
-  }, [router.query.tab]);
+    const nextTab = parseTab(router.query.tab);
+    if (nextTab) setTab(nextTab);
+
+    const nova = router.query.nova;
+    if (nova !== "1") return;
+
+    const kind = nextTab ?? tab;
+    if (kind === "saidas") setSaidaSignal((n) => n + 1);
+    else if (kind === "transferencias") setTransferSignal((n) => n + 1);
+    else setEntradaSignal((n) => n + 1);
+
+    const query = { ...router.query };
+    delete query.nova;
+    void router.replace(
+      { pathname: "/movimentacoes", query },
+      undefined,
+      { shallow: true },
+    );
+  }, [router.query.tab, router.query.nova]);
 
   const refreshKpis = useCallback(async () => {
     const api = setupAPIClient();
+    const now = new Date();
+    const periodStart = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+    const last = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const periodEnd = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(last).padStart(2, "0")}`;
     try {
-      const [r, d] = await Promise.all([
+      const [r, d, t] = await Promise.all([
         api.get("/rendas"),
         api.get("/dividas"),
+        listarTransferencias({ periodStart, periodEnd, limit: 200 }),
       ]);
       setKpiRendas(r.data);
       setKpiDividas(d.data);
+      setKpiTransferSaldo(t.totals.saldo);
     } catch {
       /* ignore */
     }
   }, []);
+
+  useEffect(() => {
+    void refreshKpis();
+  }, [refreshKpis]);
 
   const totalEntradas = useMemo(
     () => sumEntradas(kpiRendas),
@@ -76,7 +118,7 @@ export default function Movimentacoes({
     () => sumSaidas(kpiDividas),
     [kpiDividas],
   );
-  const saldo = totalEntradas - totalSaidas;
+  const saldo = totalEntradas - totalSaidas + kpiTransferSaldo;
 
   const setTabAndUrl = (t: TabId) => {
     setTab(t);
@@ -103,12 +145,12 @@ export default function Movimentacoes({
                   Movimentações
                 </h1>
                 <p className="mt-1 max-w-2xl text-sm text-cp-muted md:text-base">
-                  Entradas e saídas no mesmo lugar: veja o saldo e alterne entre
-                  abas para lançar ou revisar cada lado.
+                  Entradas, saídas e transferências entre pessoas conectadas —
+                  a transferência não conta como receita nem despesa.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
                 <MetricCard
                   title="Entradas (tudo)"
                   value={formatCurrency(totalEntradas)}
@@ -122,8 +164,15 @@ export default function Movimentacoes({
                   variant="expense"
                 />
                 <MetricCard
+                  title="Transferências"
+                  subtitle="Recebidas − enviadas"
+                  value={formatCurrency(kpiTransferSaldo)}
+                  icon={MdSwapHoriz}
+                  variant="balance"
+                />
+                <MetricCard
                   title="Saldo"
-                  subtitle="Entradas − saídas"
+                  subtitle="Entradas − saídas ± transferências"
                   value={formatCurrency(saldo)}
                   icon={FaScaleBalanced}
                   variant={saldo >= 0 ? "income" : "expense"}
@@ -131,9 +180,9 @@ export default function Movimentacoes({
               </div>
 
               <div
-                className="inline-flex rounded-2xl border border-white/[0.08] bg-cp-card p-1 shadow-card"
+                className="inline-flex max-w-full flex-wrap rounded-2xl border border-white/[0.08] bg-cp-card p-1 shadow-card"
                 role="tablist"
-                aria-label="Alternar entre entradas e saídas"
+                aria-label="Alternar entre entradas, saídas e transferências"
               >
                 <button
                   type="button"
@@ -161,6 +210,19 @@ export default function Movimentacoes({
                 >
                   Saídas
                 </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={tab === "transferencias"}
+                  className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition sm:px-6 ${
+                    tab === "transferencias"
+                      ? "bg-primary/20 text-primary ring-1 ring-primary/30"
+                      : "text-cp-muted hover:text-white"
+                  }`}
+                  onClick={() => setTabAndUrl("transferencias")}
+                >
+                  Transferências
+                </button>
               </div>
 
               {tab === "entradas" && (
@@ -169,6 +231,7 @@ export default function Movimentacoes({
                   usuario={usuario}
                   embedded
                   onDataMutated={refreshKpis}
+                  openCreateSignal={entradaSignal}
                 />
               )}
               {tab === "saidas" && (
@@ -179,6 +242,14 @@ export default function Movimentacoes({
                   tipodivida={tipodivida}
                   embedded
                   onDataMutated={refreshKpis}
+                  openCreateSignal={saidaSignal}
+                />
+              )}
+              {tab === "transferencias" && (
+                <TransferenciasPanel
+                  embedded
+                  onDataMutated={refreshKpis}
+                  openCreateSignal={transferSignal}
                 />
               )}
             </div>

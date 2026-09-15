@@ -185,6 +185,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     bullets: [
       "Aba Entradas: salários, freelances, Pix recebidos e outras receitas.",
       "Aba Saídas: contas, cartão, compras e obrigações — com categorias.",
+      "Aba Transferências: envie dinheiro para pessoas conectadas. Não é receita nem despesa.",
       "Filtre por data, busque lançamentos e marque pagamentos como feitos.",
       "Após importar OFX, use Recategorizar extrato se algo ficar sem categoria.",
     ],

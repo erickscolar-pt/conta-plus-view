@@ -3,6 +3,7 @@ import Router, { useRouter } from "next/router";
 import Link from "next/link";
 import { AuthContexts } from "@/contexts/AuthContexts";
 import { useTutorialOptional } from "@/contexts/TutorialContext";
+import { useNovaMovimentacao } from "@/contexts/NovaMovimentacaoContext";
 import Modal from "../ui/modal";
 import { ButtonPages } from "../ui/buttonPages";
 import { getErrorMessage, setupAPIClient } from "@/services/api";
@@ -66,6 +67,7 @@ export default function MenuLateral() {
   const router = useRouter();
   const { signOut } = useContext(AuthContexts);
   const tutorial = useTutorialOptional();
+  const { openNovaMovimentacao } = useNovaMovimentacao();
   const [loadingDownloadExcel, setLoadingDownloadExcel] = useState(false);
   const [loadingSendFileExcel, setLoadingSendFileExcel] = useState(false);
   const [isModalExcel, setIsModalExcel] = useState(false);
@@ -152,14 +154,35 @@ export default function MenuLateral() {
           dividas?: number;
           metas?: number;
           extratoIgnorados?: number;
+          transferencias?: number;
+          transferenciasJaRegistradas?: number;
         };
+        possiveisTransferencias?: Array<{
+          contraparte?: string;
+          candidatos?: string[];
+        }>;
       };
       const c = data.counts;
+      const transferBit =
+        c != null && ((c.transferencias ?? 0) > 0 || (c.transferenciasJaRegistradas ?? 0) > 0)
+          ? `, ${c.transferencias ?? 0} transferência(s) entre pessoas conectadas${
+              c.transferenciasJaRegistradas
+                ? ` (${c.transferenciasJaRegistradas} já registrada(s))`
+                : ""
+            }`
+          : "";
       const detail =
         c != null
-          ? ` (${c.rendas ?? 0} entrada(s), ${c.dividas ?? 0} saída(s) categorizadas${c.extratoIgnorados ? `, ${c.extratoIgnorados} ignorado(s)` : ""}, ${c.metas ?? 0} meta(s)).`
+          ? ` (${c.rendas ?? 0} entrada(s), ${c.dividas ?? 0} saída(s) categorizadas${c.extratoIgnorados ? `, ${c.extratoIgnorados} ignorado(s)` : ""}${transferBit}, ${c.metas ?? 0} meta(s)).`
           : "";
       toast.success((data.message ?? "Importação concluída.") + detail);
+      const ambiguous = data.possiveisTransferencias ?? [];
+      if (ambiguous.length > 0) {
+        toast.info(
+          `${ambiguous.length} lançamento(s) podem ser transferência, mas o nome no extrato ficou ambíguo. Confira em Movimentações.`,
+          { autoClose: 9000 },
+        );
+      }
       setIsModalExcel(false);
     } catch (error) {
       toast.error(
@@ -267,6 +290,10 @@ export default function MenuLateral() {
             onClick={() => {
               if (isMenu) {
                 setMobileMenuOpen((open) => !open);
+                return;
+              }
+              if (primary) {
+                openNovaMovimentacao();
                 return;
               }
               if (href) navigate(href);

@@ -5,6 +5,7 @@ import ChatDrawer from "@/component/ai/ChatDrawer";
 import GlobalChatFab from "@/component/ai/GlobalChatFab";
 import { ChatShellProvider } from "@/contexts/ChatShellContext";
 import { TutorialProvider } from "@/contexts/TutorialContext";
+import { NovaMovimentacaoProvider } from "@/contexts/NovaMovimentacaoContext";
 import OnboardingTutorial from "@/component/tutorial/OnboardingTutorial";
 import WebPushManager from "@/component/notifications/WebPushManager";
 import { Usuario } from "@/model/type";
@@ -23,6 +24,7 @@ export default function LoggedLayout({ usuario, children }: LoggedLayoutProps) {
   return (
     <TutorialProvider userId={usuario.id}>
       <ChatShellProvider>
+        <NovaMovimentacaoProvider>
         <WebPushManager />
         <div className="relative flex min-h-screen bg-cp-base text-white">
           <div
@@ -47,6 +49,7 @@ export default function LoggedLayout({ usuario, children }: LoggedLayoutProps) {
           <ChatDrawer />
         </div>
         <OnboardingTutorial />
+        </NovaMovimentacaoProvider>
       </ChatShellProvider>
     </TutorialProvider>
   );

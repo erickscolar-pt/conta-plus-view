@@ -70,6 +70,44 @@ export interface ITipoDivida {
   updatedAt: string;
 }
 
+/** Pessoa vinculada elegível a receber transferência. */
+export interface PessoaConectada {
+  id: number;
+  nome: string;
+  username: string;
+  vinculada: boolean;
+}
+
+export type TransferenciaDirecao = "enviada" | "recebida";
+
+/**
+ * Dinheiro movimentado entre dois usuários Conta+ vinculados, na perspectiva de
+ * quem está olhando. Não é receita nem despesa.
+ */
+export interface Transferencia {
+  id: number;
+  operationId: string;
+  direcao: TransferenciaDirecao;
+  valor: number;
+  /** ISO `YYYY-MM-DD` */
+  data: string;
+  descricao: string | null;
+  status: string;
+  origem: string;
+  contraparte: {
+    id: number;
+    nome: string;
+    username: string;
+  };
+  criadoEm: string;
+}
+
+export interface TransferenciasTotais {
+  enviadas: number;
+  recebidas: number;
+  saldo: number;
+}
+
 export interface MarketItem {
   id: number;
   barcode?: string | null;
