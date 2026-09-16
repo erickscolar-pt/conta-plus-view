@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import Link from "next/link";
@@ -16,7 +16,6 @@ import {
   modalInset,
   modalLabel,
   modalMuted,
-  modalScrollArea,
   modalSecondaryBtn,
   modalTitle,
 } from "@/component/ui/modal/modalClasses";
@@ -50,6 +49,63 @@ function formatDateBr(yyyyMmDd: string): string {
   const [y, m, d] = yyyyMmDd.split("-");
   if (!y || !m || !d) return yyyyMmDd;
   return `${d}/${m}/${y}`;
+}
+
+function FooterActions({ children }: { children: ReactNode }) {
+  return (
+    <div className="sticky bottom-0 z-10 -mx-5 mt-2 border-t border-white/[0.08] bg-cp-card/95 px-5 py-4 backdrop-blur-sm sm:-mx-8 sm:px-8">
+      <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">{children}</div>
+    </div>
+  );
+}
+
+function VincularAlguemCard({ onClose }: { onClose: () => void }) {
+  return (
+    <div className={`${modalInset} border-primary/25 bg-primary/5`}>
+      <div className="flex items-start gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary ring-1 ring-primary/30">
+          <MdPersonAddAlt size={22} />
+        </span>
+        <div className="min-w-0 space-y-2">
+          <p className="text-sm font-semibold text-white">
+            Você ainda não tem ninguém vinculado
+          </p>
+          <p className={modalMuted}>
+            Transferências só funcionam entre contas Conta+ conectadas. Convide
+            quem já tem cadastro — o vínculo libera o envio nos dois sentidos.
+          </p>
+          <ol className="list-decimal space-y-1.5 pl-4 text-sm text-cp-muted">
+            <li>
+              Abra <strong className="text-white/90">Perfil</strong>
+            </li>
+            <li>
+              Em compartilhar contas,{" "}
+              <strong className="text-white/90">gere um link de convite</strong>
+            </li>
+            <li>
+              Envie o link para a pessoa (WhatsApp, e-mail, etc.)
+            </li>
+            <li>
+              Depois que ela aceitar, o nome aparece aqui para transferir
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+        <Link
+          href="/perfil"
+          onClick={onClose}
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-hover"
+        >
+          <MdPersonAddAlt size={18} />
+          Ir ao Perfil e convidar
+        </Link>
+        <button type="button" className={modalSecondaryBtn} onClick={onClose}>
+          Fechar
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export default function TransferenciaModal({
@@ -161,12 +217,12 @@ export default function TransferenciaModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
-      <div className={`flex flex-col gap-4 ${modalScrollArea}`}>
-        <header className="flex items-start gap-3">
+      <div className="flex flex-col gap-4">
+        <header className="flex items-start gap-3 pr-8">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary ring-1 ring-primary/25">
             <MdSwapHoriz size={22} />
           </span>
-          <div>
+          <div className="min-w-0">
             <h2 className={modalTitle}>
               {step === "success"
                 ? "Transferência enviada!"
@@ -176,7 +232,7 @@ export default function TransferenciaModal({
             </h2>
             <p className={modalMuted}>
               {step === "form"
-                ? "Envie dinheiro para alguém que também usa o Conta+. A transferência será registrada automaticamente nas duas contas."
+                ? "Envie dinheiro para alguém vinculado no Conta+. O valor é registrado nas duas contas."
                 : step === "confirm"
                   ? "Confira os dados antes de confirmar."
                   : "A operação já aparece nas duas contas."}
@@ -187,26 +243,21 @@ export default function TransferenciaModal({
         {step === "form" && (
           <>
             {semPessoas ? (
-              <div className={modalInset}>
-                <p className="text-sm font-medium text-white">
-                  Você ainda não possui pessoas conectadas.
-                </p>
-                <p className={modalMuted}>
-                  Conecte uma pessoa ao Conta+ para enviar ou receber
-                  transferências automaticamente.
-                </p>
-                <Link
-                  href="/perfil"
-                  className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-hover"
-                >
-                  <MdPersonAddAlt size={18} />
-                  Convidar pessoa
-                </Link>
-              </div>
+              <VincularAlguemCard onClose={onClose} />
             ) : (
               <>
                 <div className={modalInset}>
-                  <span className={modalLabel}>Para quem?</span>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className={modalLabel}>Para quem?</span>
+                    <Link
+                      href="/perfil"
+                      onClick={onClose}
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary-hover"
+                    >
+                      <MdPersonAddAlt size={14} />
+                      Convidar alguém
+                    </Link>
+                  </div>
 
                   <div className="relative">
                     <MdSearch
@@ -226,12 +277,26 @@ export default function TransferenciaModal({
                   {loadingPessoas ? (
                     <p className={modalMuted}>Carregando pessoas conectadas…</p>
                   ) : pessoasFiltradas.length === 0 ? (
-                    <p className={modalMuted}>
-                      Nenhuma pessoa conectada corresponde à busca.
-                    </p>
+                    <div className="space-y-2 rounded-xl border border-dashed border-white/15 bg-cp-base/30 px-3 py-3">
+                      <p className="text-sm text-cp-muted">
+                        Nenhuma pessoa vinculada corresponde à busca.
+                      </p>
+                      <p className="text-xs leading-relaxed text-cp-subtle">
+                        Só entram aqui quem já aceitou o convite. Para adicionar
+                        alguém novo, gere o link em{" "}
+                        <Link
+                          href="/perfil"
+                          onClick={onClose}
+                          className="font-semibold text-primary hover:text-primary-hover"
+                        >
+                          Perfil
+                        </Link>
+                        .
+                      </p>
+                    </div>
                   ) : (
                     <ul
-                      className="max-h-52 space-y-2 overflow-y-auto"
+                      className="max-h-40 space-y-2 overflow-y-auto overscroll-contain sm:max-h-48"
                       role="radiogroup"
                       aria-label="Pessoas conectadas"
                     >
@@ -304,8 +369,12 @@ export default function TransferenciaModal({
                   contas e não conta como receita nem despesa.
                 </p>
 
-                <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-                  <button type="button" className={modalSecondaryBtn} onClick={onClose}>
+                <FooterActions>
+                  <button
+                    type="button"
+                    className={modalSecondaryBtn}
+                    onClick={onClose}
+                  >
                     Cancelar
                   </button>
                   <Button variant="primary" onClick={goToConfirm}>
@@ -313,7 +382,7 @@ export default function TransferenciaModal({
                       ? `Enviar ${formatCurrency(valor)}`
                       : "Enviar transferência"}
                   </Button>
-                </div>
+                </FooterActions>
               </>
             )}
           </>
@@ -343,21 +412,21 @@ export default function TransferenciaModal({
                   {formatDateBr(data)}
                 </dd>
               </div>
-              {descricao.trim() && (
+              {descricao.trim() ? (
                 <div className="flex items-baseline justify-between gap-3">
                   <dt className={modalMuted}>Descrição</dt>
                   <dd className="text-right text-sm text-white">
                     {descricao.trim()}
                   </dd>
                 </div>
-              )}
+              ) : null}
             </dl>
 
             <p className={modalInfo}>
               A operação será registrada automaticamente nas duas contas.
             </p>
 
-            <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+            <FooterActions>
               <button
                 type="button"
                 className={modalSecondaryBtn}
@@ -367,13 +436,22 @@ export default function TransferenciaModal({
                 <MdArrowBack size={16} className="mr-1" />
                 Voltar
               </button>
-              <button type="button" className={modalSecondaryBtn} onClick={onClose} disabled={saving}>
+              <button
+                type="button"
+                className={modalSecondaryBtn}
+                onClick={onClose}
+                disabled={saving}
+              >
                 Cancelar
               </button>
-              <Button variant="primary" loading={saving} onClick={() => void handleConfirm()}>
+              <Button
+                variant="primary"
+                loading={saving}
+                onClick={() => void handleConfirm()}
+              >
                 Confirmar transferência
               </Button>
-            </div>
+            </FooterActions>
           </>
         )}
 
@@ -394,16 +472,18 @@ export default function TransferenciaModal({
             <dl className={modalInset}>
               <div className="flex items-baseline justify-between gap-3">
                 <dt className={modalMuted}>Data</dt>
-                <dd className="text-sm text-white">{formatDateBr(criada.data)}</dd>
+                <dd className="text-sm text-white">
+                  {formatDateBr(criada.data)}
+                </dd>
               </div>
-              {criada.descricao && (
+              {criada.descricao ? (
                 <div className="flex items-baseline justify-between gap-3">
                   <dt className={modalMuted}>Descrição</dt>
                   <dd className="text-right text-sm text-white">
                     {criada.descricao}
                   </dd>
                 </div>
-              )}
+              ) : null}
               <div className="flex items-baseline justify-between gap-3">
                 <dt className={modalMuted}>Status</dt>
                 <dd className="text-sm font-medium text-income">Concluída</dd>
@@ -416,7 +496,7 @@ export default function TransferenciaModal({
               </div>
             </dl>
 
-            <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+            <FooterActions>
               <button
                 type="button"
                 className={modalSecondaryBtn}
@@ -427,7 +507,7 @@ export default function TransferenciaModal({
               <Button variant="primary" onClick={onClose}>
                 Ver no extrato
               </Button>
-            </div>
+            </FooterActions>
           </>
         )}
       </div>

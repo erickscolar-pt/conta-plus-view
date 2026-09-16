@@ -20,6 +20,9 @@ import { MdAdd, MdEdit, MdDelete } from "react-icons/md";
 import MovimentacoesListControls from "@/component/movimentacoes/MovimentacoesListControls";
 import { TruncatedCell } from "@/component/ui/TruncatedCell";
 import GanhosMobileCards from "@/component/movimentacoes/GanhosMobileCards";
+import BulkActionBar, {
+  SelectionCheckbox,
+} from "@/component/movimentacoes/BulkActionBar";
 
 /** Valor para input type=date (yyyy-mm-dd) a partir da data salva na API */
 function dateToInputValue(iso: string | undefined): string {
@@ -79,6 +82,8 @@ export default function GanhosPanel({
   const [searchQuery, setSearchQuery] = useState("");
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [bulkBusy, setBulkBusy] = useState(false);
 
   useEffect(() => {
     if (openCreateSignal && openCreateSignal > 0) {
@@ -105,6 +110,7 @@ export default function GanhosPanel({
 
   useEffect(() => {
     setPage(1);
+    setSelectedIds(new Set());
   }, [searchQuery, pageSize, rendas]);
 
   useEffect(() => {
@@ -118,6 +124,30 @@ export default function GanhosPanel({
     return filteredRendas.slice(start, start + pageSize);
   }, [filteredRendas, safePage, pageSize]);
 
+  const pageAllSelected =
+    paginatedRendas.length > 0 &&
+    paginatedRendas.every((r) => selectedIds.has(r.id));
+
+  function toggleSelect(id: number, next: boolean) {
+    setSelectedIds((prev) => {
+      const copy = new Set(prev);
+      if (next) copy.add(id);
+      else copy.delete(id);
+      return copy;
+    });
+  }
+
+  function toggleSelectPage(next: boolean) {
+    setSelectedIds((prev) => {
+      const copy = new Set(prev);
+      for (const r of paginatedRendas) {
+        if (next) copy.add(r.id);
+        else copy.delete(r.id);
+      }
+      return copy;
+    });
+  }
+
   const total = rendas.reduce(
     (acc: number, renda: Rendas) => acc + (renda.valor || 0),
     0,
@@ -129,6 +159,19 @@ export default function GanhosPanel({
   );
 
   const columns = [
+    {
+      title: "",
+      key: "select",
+      render: (renda: Rendas) => (
+        <input
+          type="checkbox"
+          checked={selectedIds.has(renda.id)}
+          onChange={(e) => toggleSelect(renda.id, e.target.checked)}
+          className="h-4 w-4 rounded border-white/20 bg-cp-base text-primary focus:ring-primary/40"
+          aria-label={`Selecionar ${renda.nome_renda}`}
+        />
+      ),
+    },
     { title: "Valor", key: "valor", formatter: formatCurrency },
     {
       title: "Recebido de",
@@ -173,17 +216,59 @@ export default function GanhosPanel({
   };
 
   async function handleDelete(renda: Rendas) {
+    if (!window.confirm(`Excluir a entrada "${renda.nome_renda}"?`)) return;
     setLoading(true);
     const apiClient = setupAPIClient();
     setIsModalEdit(false);
-    const response = await apiClient.delete(`/rendas/${renda.id}`);
-    if (response) {
-      setLoading(false);
+    try {
+      await apiClient.delete(`/rendas/${renda.id}`);
       toast.warning("Renda excluída!");
+      setSelectedIds((prev) => {
+        const copy = new Set(prev);
+        copy.delete(renda.id);
+        return copy;
+      });
       await fetchRendas();
       onDataMutated?.();
-    } else {
+    } catch {
       toast.warning("Erro ao deletar renda");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleBulkDelete() {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0) return;
+    if (
+      !window.confirm(
+        `Excluir ${ids.length} entrada(s) selecionada(s)? Esta ação não pode ser desfeita.`,
+      )
+    ) {
+      return;
+    }
+    setBulkBusy(true);
+    try {
+      const { data } = await setupAPIClient().post<{
+        deleted: number;
+        failed: number[];
+      }>("/rendas/bulk-delete", { ids });
+      toast.success(
+        data.failed?.length
+          ? `${data.deleted} excluída(s); ${data.failed.length} falharam.`
+          : `${data.deleted} entrada(s) excluída(s).`,
+      );
+      setSelectedIds(new Set());
+      await fetchRendas();
+      onDataMutated?.();
+    } catch (e: unknown) {
+      toast.error(
+        e instanceof AxiosError
+          ? getErrorMessage(e.response?.data)
+          : "Não foi possível excluir as entradas.",
+      );
+    } finally {
+      setBulkBusy(false);
     }
   }
 
@@ -360,6 +445,22 @@ export default function GanhosPanel({
             onPageChange={setPage}
             totalItems={filteredRendas.length}
             itemLabel="entradas"
+            extraFilters={
+              paginatedRendas.length > 0 ? (
+                <SelectionCheckbox
+                  checked={pageAllSelected}
+                  onChange={toggleSelectPage}
+                  label="Selecionar página"
+                />
+              ) : null
+            }
+          />
+          <BulkActionBar
+            selectedCount={selectedIds.size}
+            itemLabel="entrada"
+            busy={bulkBusy}
+            onClear={() => setSelectedIds(new Set())}
+            onConfirmAction={() => void handleBulkDelete()}
           />
           {searchQuery.trim() && filteredRendas.length < rendas.length ? (
             <p className="mb-3 text-xs text-white0">
@@ -371,6 +472,8 @@ export default function GanhosPanel({
               <>
                 <GanhosMobileCards
                   items={paginatedRendas}
+                  selectedIds={selectedIds}
+                  onToggleSelect={toggleSelect}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
                 />

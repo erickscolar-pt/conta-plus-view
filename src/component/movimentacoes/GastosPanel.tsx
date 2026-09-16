@@ -25,6 +25,9 @@ import { MdAdd, MdEdit, MdDelete, MdAutoFixHigh, MdSwapHoriz } from "react-icons
 import MovimentacoesListControls from "@/component/movimentacoes/MovimentacoesListControls";
 import { TruncatedCell } from "@/component/ui/TruncatedCell";
 import GastosMobileCards from "@/component/movimentacoes/GastosMobileCards";
+import BulkActionBar, {
+  SelectionCheckbox,
+} from "@/component/movimentacoes/BulkActionBar";
 import { listarTransferencias } from "@/services/transferencias";
 import {
   isTransferenciaGasto,
@@ -110,6 +113,8 @@ export default function GastosPanel({
   );
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [recategorizing, setRecategorizing] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [bulkBusy, setBulkBusy] = useState(false);
 
   const uncategorizedCount = useMemo(() => {
     return dividas.filter((d) => {
@@ -186,6 +191,10 @@ export default function GastosPanel({
   }, [searchQuery, pageSize, gastoRows, paymentFilter, categoryFilter]);
 
   useEffect(() => {
+    setSelectedIds(new Set());
+  }, [gastoRows]);
+
+  useEffect(() => {
     if (page > totalPages) setPage(totalPages);
   }, [page, totalPages]);
 
@@ -195,6 +204,35 @@ export default function GastosPanel({
     const start = (safePage - 1) * pageSize;
     return filteredDividas.slice(start, start + pageSize);
   }, [filteredDividas, safePage, pageSize]);
+
+  const deletableOnPage = useMemo(
+    () => paginatedDividas.filter((d) => !isTransferenciaGasto(d)),
+    [paginatedDividas],
+  );
+
+  const pageAllSelected =
+    deletableOnPage.length > 0 &&
+    deletableOnPage.every((d) => selectedIds.has(d.id));
+
+  function toggleSelect(id: number, next: boolean) {
+    setSelectedIds((prev) => {
+      const copy = new Set(prev);
+      if (next) copy.add(id);
+      else copy.delete(id);
+      return copy;
+    });
+  }
+
+  function toggleSelectPage(next: boolean) {
+    setSelectedIds((prev) => {
+      const copy = new Set(prev);
+      for (const d of deletableOnPage) {
+        if (next) copy.add(d.id);
+        else copy.delete(d.id);
+      }
+      return copy;
+    });
+  }
 
   const total = dividas.reduce(
     (acc: number, divida: Dividas) => acc + (divida.quantoVouPagar || 0),
@@ -221,6 +259,22 @@ export default function GastosPanel({
   };
 
   const columns = [
+    {
+      title: "",
+      key: "select",
+      render: (d: Dividas) =>
+        isTransferenciaGasto(d) ? (
+          <span className="inline-block w-4" aria-hidden />
+        ) : (
+          <input
+            type="checkbox"
+            checked={selectedIds.has(d.id)}
+            onChange={(e) => toggleSelect(d.id, e.target.checked)}
+            className="h-4 w-4 rounded border-white/20 bg-cp-base text-primary focus:ring-primary/40"
+            aria-label={`Selecionar ${d.nome_divida}`}
+          />
+        ),
+    },
     {
       title: "Conta",
       key: "nome_divida",
@@ -363,18 +417,60 @@ export default function GastosPanel({
 
   async function handleDelete(Divida: Dividas) {
     if (isTransferenciaGasto(Divida)) return;
+    if (!window.confirm(`Excluir a saída "${Divida.nome_divida}"?`)) return;
     setLoading(true);
     const apiClient = setupAPIClient();
 
     setIsModalEdit(false);
-    const response = await apiClient.delete(`/dividas/${Divida.id}`);
-    if (response) {
-      setLoading(false);
+    try {
+      await apiClient.delete(`/dividas/${Divida.id}`);
       toast.warning("Divida excluida!");
-      fetchDividas();
+      setSelectedIds((prev) => {
+        const copy = new Set(prev);
+        copy.delete(Divida.id);
+        return copy;
+      });
+      await fetchDividas();
       onDataMutated?.();
-    } else {
+    } catch {
       toast.warning("Erro ao deletar Divida");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleBulkDelete() {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0) return;
+    if (
+      !window.confirm(
+        `Excluir ${ids.length} saída(s) selecionada(s)? Esta ação não pode ser desfeita.`,
+      )
+    ) {
+      return;
+    }
+    setBulkBusy(true);
+    try {
+      const { data } = await setupAPIClient().post<{
+        deleted: number;
+        failed: number[];
+      }>("/dividas/bulk-delete", { ids });
+      toast.success(
+        data.failed?.length
+          ? `${data.deleted} excluída(s); ${data.failed.length} falharam.`
+          : `${data.deleted} saída(s) excluída(s).`,
+      );
+      setSelectedIds(new Set());
+      await fetchDividas();
+      onDataMutated?.();
+    } catch (e: unknown) {
+      toast.error(
+        e instanceof AxiosError
+          ? getErrorMessage(e.response?.data)
+          : "Não foi possível excluir as saídas.",
+      );
+    } finally {
+      setBulkBusy(false);
     }
   }
 
@@ -777,6 +873,13 @@ export default function GastosPanel({
                 itemLabel="saídas"
                 extraFilters={
                   <>
+                    {deletableOnPage.length > 0 ? (
+                      <SelectionCheckbox
+                        checked={pageAllSelected}
+                        onChange={toggleSelectPage}
+                        label="Selecionar página"
+                      />
+                    ) : null}
                     <label className="flex flex-col gap-1 text-sm text-cp-muted sm:flex-row sm:items-center sm:gap-2">
                       <span className="whitespace-nowrap">Pagamento</span>
                       <select
@@ -814,6 +917,13 @@ export default function GastosPanel({
                   </>
                 }
               />
+              <BulkActionBar
+                selectedCount={selectedIds.size}
+                itemLabel="saída"
+                busy={bulkBusy}
+                onClear={() => setSelectedIds(new Set())}
+                onConfirmAction={() => void handleBulkDelete()}
+              />
               {(searchQuery.trim() ||
                 paymentFilter !== "all" ||
                 categoryFilter !== "all") &&
@@ -828,6 +938,8 @@ export default function GastosPanel({
                     <GastosMobileCards
                       items={paginatedDividas}
                       getTipoNome={(id, row) => getTipoDivida(id, row)}
+                      selectedIds={selectedIds}
+                      onToggleSelect={toggleSelect}
                       onTogglePaid={handleTogglePaid}
                       onEdit={handleEdit}
                       onDelete={handleDelete}

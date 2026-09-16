@@ -21,9 +21,12 @@ import {
 import MovimentacoesListControls from "@/component/movimentacoes/MovimentacoesListControls";
 import TransferenciaModal from "@/component/movimentacoes/TransferenciaModal";
 import TransferenciasMobileCards from "@/component/movimentacoes/TransferenciasMobileCards";
+import BulkActionBar, {
+  SelectionCheckbox,
+} from "@/component/movimentacoes/BulkActionBar";
 import { TruncatedCell } from "@/component/ui/TruncatedCell";
 import { formatCurrency } from "@/helper";
-import { getErrorMessage } from "@/services/api";
+import { getErrorMessage, setupAPIClient } from "@/services/api";
 import {
   cancelarTransferencia,
   listarTransferencias,
@@ -32,6 +35,10 @@ import type { Transferencia, TransferenciasTotais } from "@/model/type";
 
 const filterSelectClass =
   "min-w-[9rem] rounded-lg border border-white/10 bg-cp-base/80 px-2 py-1.5 text-sm text-white focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20";
+
+function canCancelTransferencia(t: Transferencia) {
+  return t.direcao === "enviada" && t.status === "concluida";
+}
 
 function pad(n: number) {
   return String(n).padStart(2, "0");
@@ -84,6 +91,8 @@ export default function TransferenciasPanel({
   const [createOpen, setCreateOpen] = useState(false);
   const [detail, setDetail] = useState<Transferencia | null>(null);
   const [canceling, setCanceling] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const [bulkBusy, setBulkBusy] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -153,17 +162,59 @@ export default function TransferenciasPanel({
     safePage * pageSize,
   );
 
+  const cancellableOnPage = paginated.filter(canCancelTransferencia);
+
+  const pageAllSelected =
+    cancellableOnPage.length > 0 &&
+    cancellableOnPage.every((t) => selectedIds.has(t.id));
+
+  function toggleSelect(id: number, next: boolean) {
+    setSelectedIds((prev) => {
+      const copy = new Set(prev);
+      if (next) copy.add(id);
+      else copy.delete(id);
+      return copy;
+    });
+  }
+
+  function toggleSelectPage(next: boolean) {
+    setSelectedIds((prev) => {
+      const copy = new Set(prev);
+      for (const t of cancellableOnPage) {
+        if (next) copy.add(t.id);
+        else copy.delete(t.id);
+      }
+      return copy;
+    });
+  }
+
   useEffect(() => {
     setPage(1);
   }, [searchQuery, direcao, periodStart, periodEnd]);
 
+  useEffect(() => {
+    setSelectedIds(new Set());
+  }, [items]);
+
   async function handleCancel(t: Transferencia) {
-    if (t.direcao !== "enviada" || t.status !== "concluida") return;
+    if (!canCancelTransferencia(t)) return;
+    if (
+      !window.confirm(
+        "Cancelar esta transferência? Os dois lados (enviada e recebida) serão desfeitos.",
+      )
+    ) {
+      return;
+    }
     setCanceling(true);
     try {
       await cancelarTransferencia(t.id);
       toast.success("Transferência cancelada nos dois lados.");
       setDetail(null);
+      setSelectedIds((prev) => {
+        const copy = new Set(prev);
+        copy.delete(t.id);
+        return copy;
+      });
       await load();
       onDataMutated?.();
     } catch (e: unknown) {
@@ -177,92 +228,140 @@ export default function TransferenciasPanel({
     }
   }
 
-  const columns = useMemo(
-    () => [
-      {
-        title: "Data",
-        key: "data",
-        render: (t: Transferencia) => formatDateBr(t.data),
-      },
-      {
-        title: "Descrição",
-        key: "descricao",
-        render: (t: Transferencia) => (
-          <TruncatedCell
-            text={
-              t.descricao ||
-              (t.direcao === "enviada"
-                ? `PIX para ${t.contraparte.nome}`
-                : `PIX de ${t.contraparte.nome}`)
-            }
+  async function handleBulkCancel() {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0) return;
+    if (
+      !window.confirm(
+        `Cancelar ${ids.length} transferência(s) selecionada(s)? Os dois lados de cada operação serão desfeitos.`,
+      )
+    ) {
+      return;
+    }
+    setBulkBusy(true);
+    try {
+      const { data } = await setupAPIClient().post<{
+        canceled: number;
+        failed: number[];
+      }>("/transferencias/bulk-cancel", { ids });
+      toast.success(
+        data.failed?.length
+          ? `${data.canceled} cancelada(s); ${data.failed.length} falharam.`
+          : `${data.canceled} transferência(s) cancelada(s).`,
+      );
+      setSelectedIds(new Set());
+      await load();
+      onDataMutated?.();
+    } catch (e: unknown) {
+      toast.error(
+        e instanceof AxiosError
+          ? getErrorMessage(e.response?.data)
+          : "Não foi possível cancelar as transferências.",
+      );
+    } finally {
+      setBulkBusy(false);
+    }
+  }
+
+  const columns = [
+    {
+      title: "",
+      key: "select",
+      render: (t: Transferencia) =>
+        canCancelTransferencia(t) ? (
+          <input
+            type="checkbox"
+            checked={selectedIds.has(t.id)}
+            onChange={(e) => toggleSelect(t.id, e.target.checked)}
+            className="h-4 w-4 rounded border-white/20 bg-cp-base text-primary focus:ring-primary/40"
+            aria-label={`Selecionar transferência ${t.operationId}`}
           />
+        ) : (
+          <span className="inline-block w-4" aria-hidden />
         ),
-      },
-      {
-        title: "Tipo",
-        key: "direcao",
-        render: (t: Transferencia) => (
-          <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-semibold text-primary ring-1 ring-primary/25">
-            {t.direcao === "enviada"
-              ? "Transferência enviada"
-              : "Transferência recebida"}
-          </span>
-        ),
-      },
-      {
-        title: "Pessoa",
-        key: "contraparte.nome",
-        render: (t: Transferencia) => (
-          <div>
-            <p className="text-sm text-white">{t.contraparte.nome}</p>
-            <p className="text-xs text-cp-subtle">@{t.contraparte.username}</p>
-          </div>
-        ),
-      },
-      {
-        title: "Valor",
-        key: "valor",
-        render: (t: Transferencia) => {
-          const cancelada = t.status !== "concluida";
-          return (
-            <span
-              className={`font-semibold tabular-nums ${
-                cancelada
-                  ? "text-cp-subtle line-through"
-                  : t.direcao === "enviada"
-                    ? "text-expense"
-                    : "text-income"
-              }`}
-            >
-              {t.direcao === "enviada" ? "- " : "+ "}
-              {formatCurrency(t.valor)}
-            </span>
-          );
-        },
-      },
-      {
-        title: "Status",
-        key: "status",
-        render: (t: Transferencia) =>
-          t.status === "concluida" ? "Concluída" : "Cancelada",
-      },
-      {
-        title: "Ações",
-        key: "acoes",
-        render: (t: Transferencia) => (
-          <button
-            type="button"
-            className="inline-flex items-center gap-1 rounded-lg border border-white/[0.08] px-2.5 py-1.5 text-xs text-cp-muted transition hover:bg-white/[0.04] hover:text-white"
-            onClick={() => setDetail(t)}
+    },
+    {
+      title: "Data",
+      key: "data",
+      render: (t: Transferencia) => formatDateBr(t.data),
+    },
+    {
+      title: "Descrição",
+      key: "descricao",
+      render: (t: Transferencia) => (
+        <TruncatedCell
+          text={
+            t.descricao ||
+            (t.direcao === "enviada"
+              ? `PIX para ${t.contraparte.nome}`
+              : `PIX de ${t.contraparte.nome}`)
+          }
+        />
+      ),
+    },
+    {
+      title: "Tipo",
+      key: "direcao",
+      render: (t: Transferencia) => (
+        <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-semibold text-primary ring-1 ring-primary/25">
+          {t.direcao === "enviada"
+            ? "Transferência enviada"
+            : "Transferência recebida"}
+        </span>
+      ),
+    },
+    {
+      title: "Pessoa",
+      key: "contraparte.nome",
+      render: (t: Transferencia) => (
+        <div>
+          <p className="text-sm text-white">{t.contraparte.nome}</p>
+          <p className="text-xs text-cp-subtle">@{t.contraparte.username}</p>
+        </div>
+      ),
+    },
+    {
+      title: "Valor",
+      key: "valor",
+      render: (t: Transferencia) => {
+        const cancelada = t.status !== "concluida";
+        return (
+          <span
+            className={`font-semibold tabular-nums ${
+              cancelada
+                ? "text-cp-subtle line-through"
+                : t.direcao === "enviada"
+                  ? "text-expense"
+                  : "text-income"
+            }`}
           >
-            <MdInfoOutline size={14} />
-            Detalhes
-          </button>
-        ),
+            {t.direcao === "enviada" ? "- " : "+ "}
+            {formatCurrency(t.valor)}
+          </span>
+        );
       },
-    ],
-    [],
-  );
+    },
+    {
+      title: "Status",
+      key: "status",
+      render: (t: Transferencia) =>
+        t.status === "concluida" ? "Concluída" : "Cancelada",
+    },
+    {
+      title: "Ações",
+      key: "acoes",
+      render: (t: Transferencia) => (
+        <button
+          type="button"
+          className="inline-flex items-center gap-1 rounded-lg border border-white/[0.08] px-2.5 py-1.5 text-xs text-cp-muted transition hover:bg-white/[0.04] hover:text-white"
+          onClick={() => setDetail(t)}
+        >
+          <MdInfoOutline size={14} />
+          Detalhes
+        </button>
+      ),
+    },
+  ];
 
   const btnClass = embedded
     ? "inline-flex items-center gap-2 rounded-xl bg-primary/20 px-4 py-2.5 text-sm font-semibold text-primary ring-1 ring-primary/30 transition hover:bg-primary/30"
@@ -314,21 +413,38 @@ export default function TransferenciasPanel({
             totalItems={filtered.length}
             itemLabel="transferências"
             extraFilters={
-              <label className="flex items-center gap-2 text-sm text-cp-muted">
-                Direção
-                <select
-                  className={filterSelectClass}
-                  value={direcao}
-                  onChange={(e) =>
-                    setDirecao(e.target.value as DirecaoFiltro)
-                  }
-                >
-                  <option value="todas">Todas</option>
-                  <option value="enviadas">Enviadas</option>
-                  <option value="recebidas">Recebidas</option>
-                </select>
-              </label>
+              <>
+                {cancellableOnPage.length > 0 ? (
+                  <SelectionCheckbox
+                    checked={pageAllSelected}
+                    onChange={toggleSelectPage}
+                    label="Selecionar página"
+                  />
+                ) : null}
+                <label className="flex items-center gap-2 text-sm text-cp-muted">
+                  Direção
+                  <select
+                    className={filterSelectClass}
+                    value={direcao}
+                    onChange={(e) =>
+                      setDirecao(e.target.value as DirecaoFiltro)
+                    }
+                  >
+                    <option value="todas">Todas</option>
+                    <option value="enviadas">Enviadas</option>
+                    <option value="recebidas">Recebidas</option>
+                  </select>
+                </label>
+              </>
             }
+          />
+          <BulkActionBar
+            selectedCount={selectedIds.size}
+            itemLabel="transferência"
+            actionLabel="Cancelar selecionadas"
+            busy={bulkBusy}
+            onClear={() => setSelectedIds(new Set())}
+            onConfirmAction={() => void handleBulkCancel()}
           />
 
           {loading ? (
@@ -339,6 +455,8 @@ export default function TransferenciasPanel({
             <>
               <TransferenciasMobileCards
                 items={paginated}
+                selectedIds={selectedIds}
+                onToggleSelect={toggleSelect}
                 onDetail={setDetail}
               />
               <div className="hidden overflow-x-auto md:block">

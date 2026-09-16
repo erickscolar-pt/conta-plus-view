@@ -8,6 +8,8 @@ import { isTransferenciaGasto } from "@/component/movimentacoes/gastoTransferRow
 type GastosMobileCardsProps = {
   items: Dividas[];
   getTipoNome: (tipoDividaId: number, row?: Dividas) => string;
+  selectedIds?: Set<number>;
+  onToggleSelect?: (id: number, next: boolean) => void;
   onTogglePaid: (id: number, paid: boolean) => void;
   onEdit: (d: Dividas) => void;
   onDelete: (d: Dividas) => void;
@@ -31,6 +33,8 @@ function Row({
 export default function GastosMobileCards({
   items,
   getTipoNome,
+  selectedIds,
+  onToggleSelect,
   onTogglePaid,
   onEdit,
   onDelete,
@@ -47,23 +51,34 @@ export default function GastosMobileCards({
             key={isTransfer ? `trf-${d.id}` : `div-${d.id}`}
             className="rounded-2xl border border-white/[0.08] bg-cp-card p-4 shadow-card ring-1 ring-expense/10"
           >
-            <div className="flex flex-col gap-1">
-              <p className="text-sm font-medium leading-snug text-white">
-                {d.nome_divida || "—"}
-              </p>
-              {isTransfer ? (
-                <span className="inline-flex w-fit items-center gap-1 rounded-md bg-dash/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-dash ring-1 ring-dash/25">
-                  <MdSwapHoriz size={12} aria-hidden />
-                  Transferência
-                </span>
+            <div className="flex items-start gap-3">
+              {!isTransfer && onToggleSelect ? (
+                <input
+                  type="checkbox"
+                  checked={selectedIds?.has(d.id) ?? false}
+                  onChange={(e) => onToggleSelect(d.id, e.target.checked)}
+                  className="mt-1 h-4 w-4 rounded border-white/20 bg-cp-base text-primary focus:ring-primary/40"
+                  aria-label={`Selecionar ${d.nome_divida}`}
+                />
               ) : null}
-              <div className="flex items-baseline justify-between gap-2">
-                <span className="text-[11px] font-medium uppercase tracking-wide text-cp-subtle">
-                  {isTransfer ? "Valor enviado" : "Quanto vou pagar"}
-                </span>
-                <span className="text-lg font-semibold tabular-nums text-expense">
-                  {formatCurrency(d.quantoVouPagar ?? 0)}
-                </span>
+              <div className="min-w-0 flex-1 flex flex-col gap-1">
+                <p className="text-sm font-medium leading-snug text-white">
+                  {d.nome_divida || "—"}
+                </p>
+                {isTransfer ? (
+                  <span className="inline-flex w-fit items-center gap-1 rounded-md bg-dash/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-dash ring-1 ring-dash/25">
+                    <MdSwapHoriz size={12} aria-hidden />
+                    Transferência
+                  </span>
+                ) : null}
+                <div className="flex items-baseline justify-between gap-2">
+                  <span className="text-[11px] font-medium uppercase tracking-wide text-cp-subtle">
+                    {isTransfer ? "Valor enviado" : "Quanto vou pagar"}
+                  </span>
+                  <span className="text-lg font-semibold tabular-nums text-expense">
+                    {formatCurrency(d.quantoVouPagar ?? 0)}
+                  </span>
+                </div>
               </div>
             </div>
 

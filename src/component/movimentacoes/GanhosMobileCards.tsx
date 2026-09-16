@@ -4,12 +4,16 @@ import { MdDelete, MdEdit } from "react-icons/md";
 
 type GanhosMobileCardsProps = {
   items: Rendas[];
+  selectedIds?: Set<number>;
+  onToggleSelect?: (id: number, next: boolean) => void;
   onEdit: (r: Rendas) => void;
   onDelete: (r: Rendas) => void;
 };
 
 export default function GanhosMobileCards({
   items,
+  selectedIds,
+  onToggleSelect,
   onEdit,
   onDelete,
 }: GanhosMobileCardsProps) {
@@ -20,17 +24,28 @@ export default function GanhosMobileCards({
           key={r.id}
           className="rounded-2xl border border-white/[0.08] bg-cp-card p-4 shadow-card ring-1 ring-income/10"
         >
-          <div className="flex flex-col gap-1">
-            <p className="text-sm font-medium leading-snug text-white">
-              {r.nome_renda || "—"}
-            </p>
-            <div className="flex items-baseline justify-between gap-2">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-cp-subtle">
-                Valor
-              </span>
-              <span className="text-lg font-semibold tabular-nums text-income">
-                {formatCurrency(r.valor)}
-              </span>
+          <div className="flex items-start gap-3">
+            {onToggleSelect ? (
+              <input
+                type="checkbox"
+                checked={selectedIds?.has(r.id) ?? false}
+                onChange={(e) => onToggleSelect(r.id, e.target.checked)}
+                className="mt-1 h-4 w-4 rounded border-white/20 bg-cp-base text-primary focus:ring-primary/40"
+                aria-label={`Selecionar ${r.nome_renda}`}
+              />
+            ) : null}
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium leading-snug text-white">
+                {r.nome_renda || "—"}
+              </p>
+              <div className="mt-1 flex items-baseline justify-between gap-2">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-cp-subtle">
+                  Valor
+                </span>
+                <span className="text-lg font-semibold tabular-nums text-income">
+                  {formatCurrency(r.valor)}
+                </span>
+              </div>
             </div>
           </div>
           <p className="mt-3 border-t border-white/[0.06] pt-3 text-xs text-cp-muted">

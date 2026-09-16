@@ -4,6 +4,8 @@ import type { Transferencia } from "@/model/type";
 
 type TransferenciasMobileCardsProps = {
   items: Transferencia[];
+  selectedIds?: Set<number>;
+  onToggleSelect?: (id: number, next: boolean) => void;
   onDetail: (t: Transferencia) => void;
 };
 
@@ -13,8 +15,14 @@ function formatDateBr(yyyyMmDd: string): string {
   return `${d}/${m}/${y}`;
 }
 
+function canSelectTransferencia(t: Transferencia) {
+  return t.direcao === "enviada" && t.status === "concluida";
+}
+
 export default function TransferenciasMobileCards({
   items,
+  selectedIds,
+  onToggleSelect,
   onDetail,
 }: TransferenciasMobileCardsProps) {
   return (
@@ -22,38 +30,52 @@ export default function TransferenciasMobileCards({
       {items.map((t) => {
         const enviada = t.direcao === "enviada";
         const cancelada = t.status !== "concluida";
+        const selectable = canSelectTransferencia(t);
         return (
           <li
             key={t.id}
             className="rounded-2xl border border-white/[0.08] bg-cp-card p-4 shadow-card ring-1 ring-primary/10"
           >
-            <div className="flex flex-col gap-1">
-              <p className="text-sm font-medium leading-snug text-white">
-                {t.descricao ||
-                  (enviada
-                    ? `Transferência para ${t.contraparte.nome}`
-                    : `Transferência de ${t.contraparte.nome}`)}
-              </p>
-              <span className="text-xs text-cp-subtle">
-                {enviada ? "Para " : "De "}
-                <span className="text-white/90">{t.contraparte.nome}</span>
-              </span>
-              <div className="mt-1 flex items-baseline justify-between gap-2">
-                <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-semibold text-primary ring-1 ring-primary/25">
-                  {enviada ? "Transferência enviada" : "Transferência recebida"}
+            <div className="flex items-start gap-3">
+              {selectable && onToggleSelect ? (
+                <input
+                  type="checkbox"
+                  checked={selectedIds?.has(t.id) ?? false}
+                  onChange={(e) => onToggleSelect(t.id, e.target.checked)}
+                  className="mt-1 h-4 w-4 rounded border-white/20 bg-cp-base text-primary focus:ring-primary/40"
+                  aria-label={`Selecionar transferência ${t.operationId}`}
+                />
+              ) : null}
+              <div className="min-w-0 flex-1 flex flex-col gap-1">
+                <p className="text-sm font-medium leading-snug text-white">
+                  {t.descricao ||
+                    (enviada
+                      ? `Transferência para ${t.contraparte.nome}`
+                      : `Transferência de ${t.contraparte.nome}`)}
+                </p>
+                <span className="text-xs text-cp-subtle">
+                  {enviada ? "Para " : "De "}
+                  <span className="text-white/90">{t.contraparte.nome}</span>
                 </span>
-                <span
-                  className={`text-lg font-semibold tabular-nums ${
-                    cancelada
-                      ? "text-cp-subtle line-through"
-                      : enviada
-                        ? "text-expense"
-                        : "text-income"
-                  }`}
-                >
-                  {enviada ? "- " : "+ "}
-                  {formatCurrency(t.valor)}
-                </span>
+                <div className="mt-1 flex items-baseline justify-between gap-2">
+                  <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[11px] font-semibold text-primary ring-1 ring-primary/25">
+                    {enviada
+                      ? "Transferência enviada"
+                      : "Transferência recebida"}
+                  </span>
+                  <span
+                    className={`text-lg font-semibold tabular-nums ${
+                      cancelada
+                        ? "text-cp-subtle line-through"
+                        : enviada
+                          ? "text-expense"
+                          : "text-income"
+                    }`}
+                  >
+                    {enviada ? "- " : "+ "}
+                    {formatCurrency(t.valor)}
+                  </span>
+                </div>
               </div>
             </div>
             <p className="mt-3 border-t border-white/[0.06] pt-3 text-xs text-cp-muted">

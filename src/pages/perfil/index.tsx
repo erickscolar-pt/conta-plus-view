@@ -14,6 +14,7 @@ import { MdContentCopy, MdLink, MdPersonRemove, MdSave } from "react-icons/md";
 import { copyTextToClipboard } from "@/utils/copyToClipboard";
 import SubscriptionPlanPanel from "@/component/billing/SubscriptionPlanPanel";
 import CancelAccountPanel from "@/component/account/CancelAccountPanel";
+import ResetFinancialPanel from "@/component/account/ResetFinancialPanel";
 
 export type PendingInviteSummary = {
   inviterUserId: number;
@@ -479,6 +480,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
               </section>
 
               <CancelAccountPanel />
+              <ResetFinancialPanel />
             </div>
           </div>
         </main>
