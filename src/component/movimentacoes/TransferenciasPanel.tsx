@@ -76,6 +76,16 @@ export default function TransferenciasPanel({
 }: TransferenciasPanelProps) {
   const initialRange = useMemo(() => currentMonthRange(), []);
   const [items, setItems] = useState<Transferencia[]>([]);
+  const [internas, setInternas] = useState<
+    Array<{
+      id: number;
+      valor: number;
+      data: string;
+      descricao: string | null;
+      origemLabel: string;
+      destinoLabel: string;
+    }>
+  >([]);
   const [totals, setTotals] = useState<TransferenciasTotais>({
     enviadas: 0,
     recebidas: 0,
@@ -105,8 +115,17 @@ export default function TransferenciasPanel({
       });
       setItems(result.items);
       setTotals(result.totals);
+      try {
+        const { data } = await setupAPIClient().get("/files/internal-transfers", {
+          params: { start: periodStart, end: periodEnd },
+        });
+        setInternas(Array.isArray(data) ? data : []);
+      } catch {
+        setInternas([]);
+      }
     } catch {
       setItems([]);
+      setInternas([]);
       setTotals({ enviadas: 0, recebidas: 0, saldo: 0 });
     } finally {
       setLoading(false);
@@ -475,6 +494,32 @@ export default function TransferenciasPanel({
           ) : (
             <NotFound />
           )}
+
+          {internas.length > 0 ? (
+            <div className="mt-6 rounded-xl border border-white/10 bg-cp-card-secondary/30 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-dash">
+                Entre minhas contas
+              </p>
+              <p className="mt-1 text-xs text-cp-muted">
+                Pix da mesma titularidade — não conta como gasto nem como renda.
+              </p>
+              <ul className="mt-3 space-y-2">
+                {internas.map((row) => (
+                  <li
+                    key={row.id}
+                    className="flex flex-wrap items-center justify-between gap-2 text-sm text-white/90"
+                  >
+                    <span>
+                      {formatDateBr(row.data)} · {row.origemLabel} → {row.destinoLabel}
+                    </span>
+                    <span className="tabular-nums font-medium">
+                      {formatCurrency(row.valor)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
 
           <div className="mt-6 flex flex-col gap-3 border-t border-white/10 pt-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-2">

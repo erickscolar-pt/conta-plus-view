@@ -15,6 +15,7 @@ import { copyTextToClipboard } from "@/utils/copyToClipboard";
 import SubscriptionPlanPanel from "@/component/billing/SubscriptionPlanPanel";
 import CancelAccountPanel from "@/component/account/CancelAccountPanel";
 import ResetFinancialPanel from "@/component/account/ResetFinancialPanel";
+import ImportSettingsPanel from "@/component/account/ImportSettingsPanel";
 
 export type PendingInviteSummary = {
   inviterUserId: number;
@@ -479,6 +480,7 @@ export default function Perfil({ usuario, invitesSummary }: Usuarios) {
                 ) : null}
               </section>
 
+              <ImportSettingsPanel />
               <CancelAccountPanel />
               <ResetFinancialPanel />
             </div>

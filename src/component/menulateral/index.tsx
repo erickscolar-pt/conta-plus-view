@@ -156,6 +156,9 @@ export default function MenuLateral() {
           extratoIgnorados?: number;
           transferencias?: number;
           transferenciasJaRegistradas?: number;
+          transferenciasInternas?: number;
+          transferenciasInternasJaRegistradas?: number;
+          lancamentosJaRegistrados?: number;
         };
         possiveisTransferencias?: Array<{
           contraparte?: string;
@@ -171,9 +174,19 @@ export default function MenuLateral() {
                 : ""
             }`
           : "";
+      const internalBit =
+        c != null &&
+        ((c.transferenciasInternas ?? 0) > 0 ||
+          (c.transferenciasInternasJaRegistradas ?? 0) > 0)
+          ? `, ${c.transferenciasInternas ?? 0} entre suas contas`
+          : "";
+      const matchedBit =
+        c != null && (c.lancamentosJaRegistrados ?? 0) > 0
+          ? `, ${c.lancamentosJaRegistrados} já existente(s) (ignorado/substituído)`
+          : "";
       const detail =
         c != null
-          ? ` (${c.rendas ?? 0} entrada(s), ${c.dividas ?? 0} saída(s) categorizadas${c.extratoIgnorados ? `, ${c.extratoIgnorados} ignorado(s)` : ""}${transferBit}, ${c.metas ?? 0} meta(s)).`
+          ? ` (${c.rendas ?? 0} entrada(s), ${c.dividas ?? 0} saída(s) pagas${c.extratoIgnorados ? `, ${c.extratoIgnorados} ignorado(s)` : ""}${transferBit}${internalBit}${matchedBit}, ${c.metas ?? 0} meta(s)).`
           : "";
       toast.success((data.message ?? "Importação concluída.") + detail);
       const ambiguous = data.possiveisTransferencias ?? [];
